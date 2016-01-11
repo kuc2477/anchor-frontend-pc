@@ -5,12 +5,22 @@
   "description": "get notified for your news",
   "main": "main.js",
   "scripts": {
+    "test": "better-npm-run test",
     "start": "better-npm-run start",
     "start-hot": "better-npm-run start-hot",
     "start-hot-server": "better-npm-run start-hot-server",
-    "build": "better-npm-run build"
+    "build": "better-npm-run build",
+    "lint": "eslint app test *.js"
   },
   "betterScripts": {
+    "test": {
+      "command": "karma start ./karma.conf.js",
+      "env": {
+        "HOT": false,
+        "NODE_ENV": "development",
+        "DEV_SERVER_PORT": 8000
+      }
+    },
     "start": {
       "command": "electron ./",
       "env": {
@@ -20,12 +30,14 @@
     "start-hot": {
       "command": "electron ./",
       "env": {
-        "HOT": 1,
-        "NODE_ENV": "development"
+        "HOT": true,
+        "NODE_ENV": "development",
+        "DEV_SERVER_PORT": 8000
       }
     },
     "start-hot-server": {
-      "command": "node ./server.js"
+      "command": "node ./server.js",
+      "HOT_SERVER_PORT": 3000
     },
     "build": {
       "command": "webpack --config webpack.config.prod.js --progress --profile --colors",
@@ -40,14 +52,23 @@
   "author": "Ha Junsoo",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.1.1",
     "electron-debug": "^0.5.1",
     "envify": "^3.4.0",
     "history": "^1.17.0",
+    "immutable": "^3.7.6",
+    "lodash": "^3.10.1",
+    "material-ui": "^0.14.2",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
     "react-redux": "^4.0.6",
     "react-router": "^1.0.3",
-    "redux": "^3.0.5"
+    "react-tap-event-plugin": "^0.2.1",
+    "redux": "^3.0.5",
+    "redux-logger": "^2.3.1",
+    "redux-thunk": "^1.0.3",
+    "superagent": "^1.6.1",
+    "superagent-bluebird-promise": "^3.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.4.0",
@@ -56,12 +77,27 @@
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-react-hmre": "^1.0.1",
     "babel-preset-stage-0": "^6.3.13",
     "better-npm-run": "0.0.5",
     "css-loader": "^0.23.1",
     "electron-prebuilt": "^0.36.2",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^3.1.0",
+    "eslint-plugin-react": "^3.15.0",
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.19",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-jasmine": "^0.3.6",
+    "karma-jasmine-matchers": "^2.0.0-beta2",
+    "karma-sinon": "^1.0.4",
+    "karma-spec-reporter": "0.0.23",
+    "karma-webpack": "^1.7.0",
+    "react-addons-test-utils": "^0.14.6",
+    "sinon": "^1.17.2",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.10",
     "webpack-dev-middleware": "^1.4.0",

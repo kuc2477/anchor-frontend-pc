@@ -16,7 +16,7 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx'],
     packageMains: [
-      'webpack', 'browser', 'web', 'browserify', 
+      'webpack', 'browser', 'web', 'browserify',
       ['jam', 'main'], 'main'
     ]
   },

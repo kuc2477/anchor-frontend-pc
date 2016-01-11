@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')()
 }
 
-// shutdown application when all windows are closed 
+// shutdown application when all windows are closed
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
@@ -22,17 +22,17 @@ app.on('window-all-closed', () => {
 })
 
 app.on('ready', () => {
-  const mainWindow = new BrowserWindow({width: 800, height: 600})
+  let mainWindow = new BrowserWindow({ width: 800, height: 600 })
 
   // open browser and load index page
   mainWindow.loadURL(
-    process.env.HOT ?  
+    process.env.HOT ?
       `file://${__dirname}/app/app.dev.html` :
       `file://${__dirname}/app/app.html`
   )
-  
+
   // remove reference to main window after close
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', () => {
     mainWindow = null
   })
 
