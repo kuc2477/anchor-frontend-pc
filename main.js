@@ -1,0 +1,48 @@
+const electron = require('electron')
+const app = electron.app
+
+const BrowserWindow = electron.BrowserWindow
+const Menu = electron.Menu
+const crashReporter = electron.crashReporter
+
+
+// launch crash reporter
+crashReporter.start('Anchor')
+
+// run electron-debug if it's in dev environment
+if (process.env.NODE_ENV === 'development') {
+  require('electron-debug')()
+}
+
+// shutdown application when all windows are closed 
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+app.on('ready', () => {
+  const mainWindow = new BrowserWindow({width: 800, height: 600})
+
+  // open browser and load index page
+  mainWindow.loadURL(
+    process.env.HOT ?  
+      `file://${__dirname}/app/app.dev.html` :
+      `file://${__dirname}/app/app.html`
+  )
+  
+  // remove reference to main window after close
+  mainWindow.on('closed', function() {
+    mainWindow = null
+  })
+
+  // open devtools if it's in dev environment
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.openDevTools()
+  }
+
+  // set menu on window
+  const template = []
+  const menu = Menu.buildFromTemplate(template)
+  mainWindow.setMenu(menu)
+})
