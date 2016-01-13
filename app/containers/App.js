@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import { UserPropType } from '../constants/types'
+import { UserPropType } from '../constants/types.js'
 
 
 export default class App extends React.Component {

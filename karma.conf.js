@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Tue Jan 12 2016 15:49:24 GMT+0900 (대한민국 표준시)
+'use strict'
 
 module.exports = (config) => {
   config.set({
@@ -14,9 +15,7 @@ module.exports = (config) => {
 
 
     // list of files / patterns to load in the browser
-    files: [
-      'app/tests/**/*.spec.js'
-    ],
+    files: ['tests.webpack.js'],
 
 
     // list of files to exclude
@@ -27,15 +26,20 @@ module.exports = (config) => {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'app/tests/**/*.spec.js': ['webpack']
+      'tests.webpack.js': ['webpack'],
     },
+
+    // test specific webpack configuration 
+    webpack: { module: require('./webpack.config.base').module },
+    webpackMiddleware: { noInfo: true },
 
     // plugins
     plugins: [
-      'karma-spec-reporter',
-      'karma-jasmine',
+      'karma-chrome-launcher',
       'karma-webpack',
-      'karma-jasmine-matchers'
+      'karma-jasmine',
+      'karma-jasmine-matchers',
+      'karma-spec-reporter'
     ],
 
     // test results reporter to use
@@ -75,4 +79,5 @@ module.exports = (config) => {
     // how many browser should be started simultaneous
     concurrency: Infinity
   })
+  console.log(config)
 }

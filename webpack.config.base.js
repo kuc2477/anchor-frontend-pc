@@ -1,12 +1,21 @@
+'use strict'
+
 const path = require('path')
+
 
 module.exports = {
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      loaders: ['babel-loader'],
-      exclude: /node_modules/
-    }]
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        loaders: ['babel-loader'],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.json$/,
+        loaders: ['json-loader']
+      }
+    ]
   },
   output: {
     path: path.join(__dirname, 'dist'),

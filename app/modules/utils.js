@@ -1,4 +1,4 @@
-import { CSRF_TOKEN_KEY } from '../constants/string'
+import { CSRF_TOKEN_KEY } from '../constants/strings.js'
 
 
 export function getCookie(name) {

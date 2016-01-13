@@ -3,8 +3,8 @@ import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import { AppBar, Tabs, Tab } from 'material-ui'
 
-import { UserPropType } from '../../constants/types'
-import { HOME, NEWS_LIST } from '../../constants/routes'
+import { UserPropType } from '../../constants/types.js'
+import { HOME, NEWS_LIST } from '../../constants/routes.js'
 
 
 export default class Nav extends React.Component {
