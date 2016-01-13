@@ -1,21 +1,9 @@
 import { combineReducers } from 'redux'
 
-import auth from './base/auth.js'
+import auth from './auth'
+import schedules from './schedules'
 
-
-// =======================
-// Reducers for each pages
-// =======================
-
-const combinedBase = combineReducers({
-  auth
-})
-
-
-// ===========
-// App reducer
-// ===========
 
 export default combineReducers({
-  base: combinedBase
+  auth, schedules
 })

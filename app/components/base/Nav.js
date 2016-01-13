@@ -1,35 +1,26 @@
 import _ from 'lodash'
 
 import React, { PropTypes } from 'react'
+import { PropTypes as RouterPropTypes } from 'react-router'
 import { AppBar, Tabs, Tab } from 'material-ui'
 
 import { UserPropType } from '../../constants/types.js'
-import { HOME, NEWS_LIST } from '../../constants/routes.js'
+import { NEWS, SCHEDULES } from '../../constants/routes.js'
 
 
 export default class Nav extends React.Component {
   static propTypes = {
-    user: UserPropType.isRequired,
+    user: UserPropType,
     title: PropTypes.string.isRequired
   };
 
+  static contextTypes = {
+    history: RouterPropTypes.history
+  };
+
   static defaultProps = {
-    title: this.constructor.MENU.title
+    title: 'Anchor'
   };
-
-  static MENU = {
-    title: 'Anchor',
-    groups: [
-      [
-        { route: HOME },
-        { route: NEWS_LIST }
-      ]
-    ]
-  };
-
-  static APP_BAR_STYLE = { position: 'fixed' };
-  static TAB_ITEM_STYLE = { marginRight: 20 };
-
 
   constructor(props) {
     super(props)
@@ -37,19 +28,29 @@ export default class Nav extends React.Component {
   }
 
   componentWillReceiveProps() {
-    if (this.state.tabIndex !== this.getSelectedIndex()) {
-      this.setState({ tabIndex })
+    if (this.state.tabIndex !== this._getSelectedIndex()) {
+      this.setState({ tabIndex: this._getSelectedIndex() })
     }
   }
 
 
-  onTabActive(tab) {
-    this.context.history.pushState(null, tab.props.path)
-    this.setState({ tabIndex: this.getSelectedIndex() })
+  static NAV_GROUPS = [
+    [
+      { route: NEWS },
+      { route: SCHEDULES }
+    ]
+  ];
+  static APP_BAR_STYLE = { position: 'fixed' };
+  static TAB_ITEM_STYLE = { marginRight: 120 };
+
+
+  _onTabActive(tab) {
+    this.context.history.pushState(null, tab.props.route)
+    this.setState({ tabIndex: this._getSelectedIndex() })
   }
 
-  getTabRoutes() {
-    return _(this.constructor.MENU).flatten().filter(nav => {
+  _getTabRoutes() {
+    return _(this.constructor.NAV_GROUPS).flatten().filter(nav => {
       return (
         !nav.onlyVisibleToAnonymous && !nav.onlyVisibleToAuthenticated ||
         (nav.onlyVisibleToAuthenticated && this.props.user) ||
@@ -58,20 +59,22 @@ export default class Nav extends React.Component {
     }).map(nav => nav.route).value()
   }
 
-  getSelectedIndex() {
+  _getSelectedIndex() {
     const history = this.context.history
-    const routes = this.getTabRoutes()
-    return _.findInde(routes, route => history.isActive(route.path))
+    const routes = this._getTabRoutes()
+    return _.findIndex(routes, route => history.isActive(route.path))
   }
 
 
   render() {
-    const tabItems = this.getTabRoutes().map(
-      (route, index) => <Tab
+    const tabItems = this._getTabRoutes().map(
+      (route, index) =>
+      <Tab
         key={index}
         value={JSON.stringify(index)}
-        label={route.label} path={route.path}
-        onActive={::this.onTabActive} />
+        label={route.label} route={route.path}
+        onActive={::this._onTabActive}
+      />
     )
 
     const tabs = (
@@ -84,11 +87,12 @@ export default class Nav extends React.Component {
     )
 
     return (
-      <AppBar 
+      <AppBar
         style={this.constructor.APP_BAR_STYLE}
         title={this.props.title}
         showMenuIconButton={false}
-        iconElementRight={tabs} />
+        iconElementRight={tabs}
+      />
     )
   }
 }

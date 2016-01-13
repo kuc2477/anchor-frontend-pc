@@ -1,13 +1,19 @@
-export const HOME = {
-  path: 'home',
-  label: 'HOME',
-  loginRequired: false
-}
+import Schedules from '../containers/Schedules'
+import News from '../containers/News'
 
-export const NEWS_LIST = {
-  path: 'news-list',
+
+export const NEWS = {
+  component: News,
+  path: 'news',
   label: 'NEWS',
   loginRequired: true
 }
 
-export default { HOME, NEWS_LIST }
+export const SCHEDULES = {
+  component: Schedules,
+  path: 'sites',
+  label: 'SITES',
+  loginRequired: true,
+}
+
+export default { NEWS, SCHEDULES }

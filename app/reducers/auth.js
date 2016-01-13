@@ -5,11 +5,11 @@ import {
   RECEIVE_AUTHENTICATION,
   REQUEST_CSRF_TOKEN,
   RECEIVE_CSRF_TOKEN
-} from '../../actions/base/auth'
+} from '../actions/auth'
 
 
 export const initialState = new Immutable.Map({
-  user: null,
+  user: new Immutable.Map(),
   isAuthenticating: false,
   didAuthenticationFail: false,
   csrfInitialized: false

@@ -8,7 +8,7 @@
     "test": "better-npm-run test",
     "start": "better-npm-run start",
     "start-hot": "better-npm-run start-hot",
-    "start-hot-server": "better-npm-run start-hot-server",
+    "hot-server": "better-npm-run hot-server",
     "build": "better-npm-run build",
     "lint": "eslint app test *.js"
   },
@@ -16,9 +16,7 @@
     "test": {
       "command": "karma start ./karma.conf.js",
       "env": {
-        "HOT": false,
-        "NODE_ENV": "development",
-        "DEV_SERVER_PORT": 8000
+        "NODE_ENV": "production"
       }
     },
     "start": {
@@ -32,12 +30,14 @@
       "env": {
         "HOT": true,
         "NODE_ENV": "development",
-        "DEV_SERVER_PORT": 8000
+        "DEV_SERVER_PORT": 5000
       }
     },
-    "start-hot-server": {
+    "hot-server": {
       "command": "node ./server.js",
-      "HOT_SERVER_PORT": 3000
+      "env": {
+        "HOT_SERVER_PORT": 3000
+      }
     },
     "build": {
       "command": "webpack --config webpack.config.prod.js --progress --profile --colors",
@@ -55,18 +55,24 @@
     "bluebird": "^3.1.1",
     "electron-debug": "^0.5.1",
     "envify": "^3.4.0",
+    "flexboxgrid": "^6.3.0",
     "history": "^1.17.0",
     "immutable": "^3.7.6",
     "lodash": "^3.10.1",
     "material-ui": "^0.14.2",
+    "normalize.css": "^3.0.3",
+    "normalizr": "^2.0.0",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
+    "react-immutable-proptypes": "^1.5.1",
+    "react-infinite": "^0.8.0",
     "react-redux": "^4.0.6",
     "react-router": "^1.0.3",
     "react-tap-event-plugin": "^0.2.1",
     "redux": "^3.0.5",
     "redux-logger": "^2.3.1",
     "redux-thunk": "^1.0.3",
+    "sass-loader": "^3.1.2",
     "superagent": "^1.6.1",
     "superagent-bluebird-promise": "^3.0.0"
   },
@@ -95,10 +101,16 @@
     "karma-jasmine": "^0.3.6",
     "karma-jasmine-matchers": "^2.0.0-beta2",
     "karma-sinon": "^1.0.4",
+    "karma-sourcemap-loader": "^0.3.6",
     "karma-spec-reporter": "0.0.23",
     "karma-webpack": "^1.7.0",
+    "node-sass": "^3.4.2",
     "react-addons-test-utils": "^0.14.6",
+    "redux-devtools": "^3.0.1",
+    "redux-devtools-dock-monitor": "^1.0.1",
+    "redux-devtools-log-monitor": "^1.0.2",
     "sinon": "^1.17.2",
+    "socket.io-client": "^1.4.4",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.10",
     "webpack-dev-middleware": "^1.4.0",

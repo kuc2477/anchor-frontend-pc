@@ -1,12 +1,24 @@
 import React, { PropTypes } from 'react'
+import { PropTypes as RouterPropTypes } from 'react-router'
+import { connect } from 'react-redux'
 
-import { UserPropType } from '../constants/types.js'
+import Nav from '../components/base/Nav'
+import { UserPropType } from '../constants/types'
+
+import '../styles/generics/app.scss'
+import '../styles/generics/vendor.css'
 
 
-export default class App extends React.Component {
+class App extends React.Component {
   static propTypes = {
-    user: UserPropType.isRequired,
-    children: PropTypes.node
+    user: UserPropType,
+    children: PropTypes.node,
+    // need history to inherit history as contexts to all childs in app
+    history: RouterPropTypes.history.isRequired
+  };
+
+  static childContextTypes = {
+    history: RouterPropTypes.history
   };
 
   constructor(props) {
@@ -14,11 +26,16 @@ export default class App extends React.Component {
   }
 
   render() {
-    // TODO: ADD NAVIGATION BAR
     return (
       <div>
-        {this.props.children}
+        <Nav user={this.props.user} />
+        <div style={{ paddingTop: 64 }}>{this.props.children}</div>
       </div>
     )
   }
 }
+
+
+export default connect(app => ({
+  user: app.auth.get('user')
+}))(App)

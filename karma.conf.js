@@ -1,7 +1,5 @@
 // Karma configuration
 // Generated on Tue Jan 12 2016 15:49:24 GMT+0900 (대한민국 표준시)
-'use strict'
-
 module.exports = (config) => {
   config.set({
 
@@ -19,24 +17,27 @@ module.exports = (config) => {
 
 
     // list of files to exclude
-    exclude: [
-    ],
+    exclude: [],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'tests.webpack.js': ['webpack'],
+      'tests.webpack.js': ['webpack', 'sourcemap'],
     },
 
     // test specific webpack configuration 
-    webpack: { module: require('./webpack.config.base').module },
+    webpack: {
+      module: require('./webpack.config.base').module,
+      devtool: 'inline-source-map'
+    },
     webpackMiddleware: { noInfo: true },
 
     // plugins
     plugins: [
       'karma-chrome-launcher',
       'karma-webpack',
+      'karma-sourcemap-loader',
       'karma-jasmine',
       'karma-jasmine-matchers',
       'karma-spec-reporter'
@@ -63,7 +64,7 @@ module.exports = (config) => {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: false,
+    autoWatch: true,
 
 
     // start these browsers
@@ -79,5 +80,4 @@ module.exports = (config) => {
     // how many browser should be started simultaneous
     concurrency: Infinity
   })
-  console.log(config)
 }

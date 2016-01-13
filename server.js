@@ -5,7 +5,7 @@ const webpack = require('webpack')
 const config = require('./webpack.config.dev')
 
 // configure express server and webpack compiler
-const PORT = process.env.DEV_SERVER_PORT
+const PORT = process.env.HOT_SERVER_PORT
 const app = express()
 const compiler = webpack(config)
 

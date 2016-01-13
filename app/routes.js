@@ -1,13 +1,14 @@
 import React from 'react'
-import { Route, IndexRoute } from 'react-router'
+import { Route, IndexRedirect } from 'react-router'
 
 import App from './containers/App'
-import NewsList from './containers/NewsList'
+import { SCHEDULES, NEWS } from './constants/routes'
 
 
 export default (
   <Route path="/" component={App} >
-    <IndexRoute component={NewsList} />
-    <Route path="news" component={NewsList} />
+    <IndexRedirect to={NEWS.path} />
+    <Route path={NEWS.path} component={NEWS.component} />
+    <Route path={SCHEDULES.path} component={SCHEDULES.component} />
   </Route>
 )

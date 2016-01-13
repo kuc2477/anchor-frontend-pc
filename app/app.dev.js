@@ -7,6 +7,7 @@ import { createHistory } from 'history'
 
 import routes from './routes'
 import configureStore from './store/configureStore'
+import DevTools from './components/dev/DevTools'
 
 
 // inject tap event plugin
@@ -16,9 +17,12 @@ injectTapEventPlugin()
 document.addEventListener('DOMContentLoaded', () => {
   render(
     <Provider history={createHistory()} store={configureStore()} >
-      <Router>
-        {routes}
-      </Router>
+      <div>
+        <Router>
+          {routes}
+        </Router>
+        <DevTools />
+      </div>
     </Provider>,
     document.getElementById('root')
   )

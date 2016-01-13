@@ -1,8 +1,8 @@
 import request from 'superagent-bluebird-promise'
 
-import urls from '../../modules/urls'
-import { CSRF_TOKEN_HEADER } from '../../constants/strings'
-import { getCSRFToken } from '../../modules/utils'
+import urls from '../modules/urls'
+import { CSRF_TOKEN_HEADER } from '../constants/strings'
+import { getCSRFToken } from '../modules/utils'
 
 
 // ==========
@@ -24,7 +24,6 @@ export function authenticate(username, password, next = '/') {
   return (dispatch) => {
     // start authentication
     dispatch(requestAuthentication())
-
 
     // TODO: dispatch `receiveAuthentication` with user information sent from
     //       backend server.

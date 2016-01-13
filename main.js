@@ -43,7 +43,7 @@ app.on('ready', () => {
     mainWindow.openDevTools()
   }
 
-  // set menu on window
+  // set menu on window 
   const template = []
   const menu = Menu.buildFromTemplate(template)
   mainWindow.setMenu(menu)
