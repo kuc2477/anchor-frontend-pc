@@ -1,37 +1,67 @@
 import Immutable from 'immutable'
 
 import {
-  REQUEST_AUTHENTICATION,
-  RECEIVE_AUTHENTICATION,
-  REQUEST_CSRF_TOKEN,
-  RECEIVE_CSRF_TOKEN
+  AUTH_START,
+  AUTH_SUCCSESS,
+  AUTH_ERROR,
+  USER_INIT_SUCCESS,
+  USER_INIT_ERROR,
+  CSRF_INIT_SUCCESS,
+  CSRF_INIT_ERROR
 } from '../actions/auth'
 
 
 export const initialState = new Immutable.Map({
-  user: new Immutable.Map(),
+  // user, auth
+  user: null,
   isAuthenticating: false,
-  didAuthenticationFail: false,
-  csrfInitialized: false
+  didAuthFail: null,
+  didUserInitFail: false,
+  errorMessage: null,
+  // csrf
+  CSRFInitialized: false,
+  didCSRFInitFail: false
 })
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case REQUEST_AUTHENTICATION:
+    case AUTH_START:
       return state.set('isAuthenticating', true)
 
-    case RECEIVE_AUTHENTICATION:
+    case AUTH_SUCCSESS:
       return state.merge({
         user: action.user,
         isAuthenticating: false,
-        didAuthenticationFail: !action.isAuthenticating,
+        didAuthFail: false,
+        errorMessage: null
       })
 
-    case REQUEST_CSRF_TOKEN:
-      return state
+    case AUTH_ERROR:
+      return state.merge({
+        isAuthenticating: false,
+        didAuthFail: true,
+        errorMessage: action.reason
+      })
 
-    case RECEIVE_CSRF_TOKEN:
-      return state.set('csrfInitialized', true)
+    case USER_INIT_SUCCESS:
+      return state.merge({
+        user: new Immutable.Map(action.user),
+        didUserInitFail: false
+      })
+
+    case USER_INIT_ERROR:
+      return state.merge({
+        didUserInitFail: true
+      })
+
+    case CSRF_INIT_SUCCESS:
+      return state.merge({
+        CSRFInitialized: true,
+        didCSRFInitFail: false,
+      })
+
+    case CSRF_INIT_ERROR:
+      return state.set('didCSRFInitFail', true)
 
     default:
       return state

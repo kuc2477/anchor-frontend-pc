@@ -10,9 +10,9 @@ import { NewsPropType } from '../../constants/types'
 export default class NewsList extends React.Component {
   static propTypes = {
     news: ImmutablePropTypes.listOf(PropTypes.number).isRequired,
-    newsById: PropTypes.instanceOf(Immutable.Map),
-    isFetching: PropTypes.bool,
-    load: PropTypes.func
+    newsById: PropTypes.instanceOf(Immutable.Map).isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    load: PropTypes.func.isRequired
   };
 
   static defaultProps = {

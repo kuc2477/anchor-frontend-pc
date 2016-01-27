@@ -7,7 +7,7 @@ import MenuItem from 'material-ui/lib/menus/menu-item'
 import {
   CYCLE_OPTIONS,
   CYCLE_OPTION_TEXTS
-} from '../../constants/arrays'
+} from '../../../constants/arrays'
 
 
 export default class CycleSelectField extends React.Component {
@@ -15,7 +15,7 @@ export default class CycleSelectField extends React.Component {
     onBlur: PropTypes.func,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
-    value: PropTypes.number.isRequired
+    value: PropTypes.number
   };
 
   static STYLE = {
@@ -26,7 +26,7 @@ export default class CycleSelectField extends React.Component {
   _getCycleMenuItemNodes() {
     return _.zip(CYCLE_OPTIONS, CYCLE_OPTION_TEXTS).map((zipped) => {
       const [cycle, text] = zipped
-      return <MenuItem value={cycle} primaryText={text} /> })
+      return <MenuItem key={cycle} value={cycle} primaryText={text} /> })
   }
 
 

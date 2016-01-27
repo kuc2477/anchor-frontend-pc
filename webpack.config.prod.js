@@ -1,5 +1,6 @@
 'use strict'
 
+const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpackTargetElectronRenderer = require('webpack-target-electron-renderer')
@@ -11,12 +12,12 @@ const config = Object.create(baseConfig)
 
 // configure entry point
 config.devtool = 'source-map'
-config.entry = './app/app'
+config.entry = './app/app.js'
 
 // configure publicpath & module transformers
-config.output.publicPath = '/dist/'
+config.output.publicPath = './'
 config.module.loaders.push({
-  // module level css 
+  // module level css
   test: /^((?!\.module).)*\.css$/,
   loader: ExtractTextPlugin.extract(
     'style-loader',

@@ -13,12 +13,10 @@ class App extends React.Component {
   static propTypes = {
     user: UserPropType,
     children: PropTypes.node,
-    // need history to inherit history as contexts to all childs in app
-    history: RouterPropTypes.history.isRequired
   };
 
   static childContextTypes = {
-    history: RouterPropTypes.history
+    router: RouterPropTypes.router
   };
 
   static STYLE = {

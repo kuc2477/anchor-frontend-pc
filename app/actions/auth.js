@@ -1,42 +1,90 @@
 import request from 'superagent-bluebird-promise'
 
 import urls from '../modules/urls'
+import { getCSRFToken, setSessionKey, authorize } from '../modules/auth'
+import { parseCookie } from '../modules/utils'
 import { CSRF_TOKEN_HEADER } from '../constants/strings'
-import { getCSRFToken } from '../modules/utils'
 
 
 // ==========
 // Basic auth
 // ==========
 
-export const REQUEST_AUTHENTICATION = 'REQUEST_AUTHENTICATION'
-export function requestAuthentication() {
-  return { type: REQUEST_AUTHENTICATION }
+export const AUTH_START = 'AUTH_START'
+export function authStart() {
+  return { type: AUTH_START }
 }
 
-export const RECEIVE_AUTHENTICATION = 'RECEIVE_AUTHENTICATION'
-export function receiveAuthentication(isAuthenticated, user = null) {
-  return { type: RECEIVE_AUTHENTICATION, isAuthenticated, user }
+export const AUTH_SUCCSESS = 'AUTH_SUCCSESS'
+export function authSuccess(user) {
+  return { type: AUTH_SUCCSESS, user }
 }
 
+export const AUTH_ERROR = 'AUTH_ERROR'
+export function authError(reason = 'Wrong email & password combination') {
+  return { type: AUTH_ERROR, reason }
+}
 
-export function authenticate(username, password, next = '/') {
+export function authenticate(email, password, router, next = '/') {
   return (dispatch) => {
-    // start authentication
-    dispatch(requestAuthentication())
-
-    // TODO: dispatch `receiveAuthentication` with user information sent from
-    //       backend server.
+    dispatch(authStart())
     request
       .post(urls.login()).type('form')
       .set(CSRF_TOKEN_HEADER, getCSRFToken())
-      .send({ username, password }).then(() => {
+      .send({ email, password })
+      .end((error, response) => {
+        if (error) {
+          dispatch(authError())
+          return
+        }
+        const { body, header } = response
         // on authentication success
-        dispatch(receiveAuthentication(true))
-        window.location = next
-      }, () => {
-        // on failure
-        dispatch(receiveAuthentication(false))
+        setSessionKey(parseCookie(header['set-cookie'].pop(), 'session'))
+        //setLiteralCookie(header['set-cookie'].pop())
+        dispatch(authSuccess(body.user))
+        router.push(next)
+      })
+  }
+}
+
+export const LOGOUT = 'LOGOUT'
+export function logout() {
+  return { type: LOGOUT }
+}
+
+
+// =========================================================
+// User information initialization (via token within cookie)
+// =========================================================
+
+const USER_INIT_START = 'USER_INIT_START'
+export function userInitStart () {
+  return { type: USER_INIT_START }
+}
+
+const USER_INIT_SUCCESS = 'USER_INIT_SUCCESS'
+export function userInitSuccess(user) {
+  return { type: USER_INIT_SUCCESS, user }
+}
+
+const USER_INIT_ERROR = 'USER_INIT_ERROR'
+export function userInitError(reason = 'Unknown reason') {
+  return { type: USER_INIT_ERROR, reason }
+}
+
+export function initUser(router, callback = () => {}) {
+  return (dispatch) => {
+    dispatch(userInitStart())
+    request
+      .get(urls.userinfo())
+      .use(authorize())
+      .end((error, response) => {
+        if (error) {
+          dispatch(userInitError())
+          return
+        }
+        dispatch(userInitSuccess(response.body.user))
+        callback()
       })
   }
 }
@@ -46,33 +94,55 @@ export function authenticate(username, password, next = '/') {
 // CSRF setup
 // ==========
 
-export const REQUEST_CSRF_TOKEN = 'REQUEST_CSRF_TOKEN'
-export function requestCSRFToken() {
-  return { type: REQUEST_CSRF_TOKEN }
+export const CSRF_INIT_START = 'CSRF_INIT_START'
+export function CSRFInitStart() {
+  return { type: CSRF_INIT_START }
 }
 
-export const RECEIVE_CSRF_TOKEN = 'RECEIVE_CSRF_TOKEN'
-export function receiveCSRFToken(CSRFToken) {
-  return { type: RECEIVE_CSRF_TOKEN, token: CSRFToken }
+export const CSRF_INIT_SUCCESS = 'CSRF_INIT_SUCCESS'
+export function CSRFInitSuccess() {
+  return { type: CSRF_INIT_SUCCESS }
 }
 
-export function initializeCSRFToken() {
-  request
-    .get(urls.csrf())
-    .then(response => response.body)
-    .then((response) => {
-      // TODO: NOT IMPLEMENTED YET
-    }, (error) => {
-      // NOT IMPLEMENTED YET
-    })
+export const CSRF_INIT_ERROR = 'CSRF_INIT_ERROR'
+export function CSRFInitError() {
+  return { type: CSRF_INIT_ERROR }
+}
+
+export function initCSRF() {
+  return (dispatch) => {
+    // start csrf init
+    dispatch(CSRFInitStart())
+
+    // TODO: should handle exceptional case where csrf token not set on
+    // response cookie.
+    request
+      .get(urls.csrf())
+      .end((error, response) => {
+        if (error) {
+          dispatch(CSRFInitError())
+          return
+        }
+        dispatch(CSRFInitSuccess())
+      })
+  }
 }
 
 
 export default {
-  requestAuthentication,
-  receiveAuthentication,
+  // auth
+  authStart,
+  authSuccess,
+  authError,
   authenticate,
-  requestCSRFToken,
-  receiveCSRFToken,
-  initializeCSRFToken
+  // user info
+  userInitStart,
+  userInitSuccess,
+  userInitError,
+  initUser,
+  // csrf
+  CSRFInitStart,
+  CSRFInitSuccess,
+  CSRFInitError,
+  initCSRF
 }

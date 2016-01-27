@@ -24,7 +24,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('ready', () => {
-  let mainWindow = new BrowserWindow({ width: 800, height: 600 })
+  let mainWindow = new BrowserWindow({ width: 1072, height: 700 })
 
   // open browser and load index page
   mainWindow.loadURL(
@@ -39,7 +39,7 @@ app.on('ready', () => {
   })
 
   // open devtools if it's in dev environment
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || true) {
     mainWindow.openDevTools()
   }
 

@@ -2,12 +2,12 @@ import React from 'react'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { Router } from 'react-router'
-import { createHistory } from 'history'
 
-import routes from './routes'
-import configureStore from './store/configureStore'
+import router from './router'
+import store from './store'
 import DevTools from './components/dev/DevTools'
+
+import { FLOW_CLASS } from './constants/strings'
 
 
 // inject tap event plugin
@@ -16,11 +16,9 @@ injectTapEventPlugin()
 // render app after dom content load
 document.addEventListener('DOMContentLoaded', () => {
   render(
-    <Provider history={createHistory()} store={configureStore()} >
+    <Provider store={store} >
       <div>
-        <Router>
-          {routes}
-        </Router>
+        {router}
         <DevTools />
       </div>
     </Provider>,

@@ -1,7 +1,7 @@
 import request from 'superagent-bluebird-promise'
 
 import { CSRF_TOKEN_HEADER } from '../constants/strings'
-import { getCSRFToken } from '../modules/utils'
+import { getCSRFToken } from '../modules/auth'
 import urls from '../modules/urls'
 
 // =====

@@ -6,12 +6,8 @@ export const MAX_DIST_RANGE_MIN = 0
 export const MAX_DIST_RANGE_MAX = 5
 export const MAX_DIST_DEFALT = 2
 
-
-export default {
-  MAX_DEPTH_RANGE_MIN,
-  MAX_DEPTH_RANGE_MAX,
-  MAX_DEPTH_DEFAULT,
-  MAX_DIST_RANGE_MIN,
-  MAX_DIST_RANGE_MAX,
-  MAX_DIST_DEFALT
-}
+export const FLOW_MAX_WIDTH = '1400px'
+export const FLOW_MIN_WIDTH = '300px'
+export const FLOW_LINE_RATIO = 1.2
+export const FLOW_MIN = 18
+export const FLOW_MAX = 28

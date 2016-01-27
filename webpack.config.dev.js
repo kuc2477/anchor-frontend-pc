@@ -13,7 +13,7 @@ config.debug = true
 config.devtool = 'cheap-module-eval-source-map'
 config.entry = [
   'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
-  './app/app.dev'
+  './app/app.dev.js'
 ]
 
 // configure publicpath & module transformers

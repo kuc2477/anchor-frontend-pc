@@ -1,26 +1,23 @@
 import _ from 'lodash'
+import Immutable from 'immutable'
 
 import React from 'react'
-import Slider from 'material-ui/lib/slider'
 import SelectField from 'material-ui/lib/select-field'
 import MenuItem from 'material-ui/lib/menus/menu-item'
 
-import ScheduleNameField from './ScheduleNameField'
-import ScheduleURLField from './ScheduleURLField'
-import CycleSelectField from './CycleSelectField'
+import ScheduleNameField from './fields/ScheduleNameField'
+import ScheduleURLField from './fields/ScheduleURLField'
+import CycleSelectField from './fields/CycleSelectField'
+import MaxDepthSlider from './fields/MaxDepthSlider'
+import MaxDistanceSlider from './fields/MaxDistanceSlider'
+import BrotherSiteFieldSet from './fields/BrotherSiteFieldSet'
 
-import {
-  MAX_DEPTH_DEFAULT,
-  MAX_DEPTH_RANGE_MIN,
-  MAX_DEPTH_RANGE_MAX,
-  MAX_DIST_DEFALT,
-  MAX_DIST_RANGE_MIN,
-  MAX_DIST_RANGE_MAX
-} from '../../constants/numbers'
+import { SchedulePropType } from '../../constants/types'
 
 
 export default class DashBoard extends React.Component {
   static propTypes = {
+    schedule: SchedulePropType
   };
 
   static STYLE = {
@@ -28,29 +25,17 @@ export default class DashBoard extends React.Component {
   };
 
   render() {
+    const { schedule } = this.props
+    const brothers = schedule ? schedule.get('brothers') : new Immutable.List()
+
     return (
       <div style={this.constructor.STYLE}>
         <ScheduleNameField />
-
         <ScheduleURLField />
-
         <CycleSelectField />
-
-        Maximum depth
-        <Slider
-          step={1}
-          max={MAX_DEPTH_RANGE_MAX}
-          min={MAX_DEPTH_RANGE_MIN}
-          defaultValue={MAX_DEPTH_DEFAULT}
-        />
-
-        Maximum distance
-        <Slider
-          step={1}
-          max={MAX_DIST_RANGE_MAX}
-          min={MAX_DIST_RANGE_MIN}
-          defaultValue={MAX_DIST_DEFALT}
-        />
+        <MaxDepthSlider />
+        <MaxDistanceSlider />
+        <BrotherSiteFieldSet brothers={brothers} />
       </div>
     )
   }

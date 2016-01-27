@@ -1,13 +1,13 @@
 export const app = () => {
-  console.log(process.env)
-  console.log(process.env.DEV_SERVER_PORT)
   return process.env.NODE_ENV === 'production' ?
   'PRODUCTION_BACKEND_NOT_IMPLEMENTED' :
     `http://localhost:${process.env.DEV_SERVER_PORT}`
 }
 
 export const login = () => `${app()}/login`
+export const logout = () => `${app()}/logout`
 export const csrf = () => `${app()}/csrf`
+export const userinfo = () => `${app()}/userinfo`
 
 export const news = (page = 0) => `${app()}/news?page=${page}`
 export const sites = (page = 0) => `${app()}/sites?page=${page}`
@@ -20,7 +20,7 @@ export const schedule = (id) => `${app()}/schedules/${id}`
 
 
 export default {
-  app, login, csrf,
+  app, login, logout, csrf, userinfo,
   news, newsItem,
   sites, site,
   schedules, schedule
