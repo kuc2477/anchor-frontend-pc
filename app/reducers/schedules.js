@@ -70,6 +70,15 @@ export default (state = initialState, action) => {
         didSaveFail: true
       })
 
+    case DELETE_SCHEDULE_START:
+      return state
+
+    case DELETE_SCHEDULE_SUCCESS:
+      return state
+
+    case DELETE_SCHEDULE_ERROR:
+      return state
+
     default:
       return state
   }

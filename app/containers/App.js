@@ -21,15 +21,18 @@ class App extends React.Component {
     history: RouterPropTypes.history
   };
 
-  constructor(props) {
-    super(props)
-  }
+  static STYLE = {
+    paddingTop: 64,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingBottom: 15
+  };
 
   render() {
     return (
       <div>
         <Nav user={this.props.user} />
-        <div style={{ paddingTop: 64 }}>{this.props.children}</div>
+        <div style={this.constructor.STYLE}>{this.props.children}</div>
       </div>
     )
   }
