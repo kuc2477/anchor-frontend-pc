@@ -3,12 +3,17 @@ import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 
 import DevTools from '../components/dev/DevTools'
+import apiMiddleware from '../middlewares/api'
 import reducer from '../reducers'
 
 
 // store enhanvers
 const enhancers = [
-  applyMiddleware(thunkMiddleware, createLogger()),
+  applyMiddleware(
+    thunkMiddleware,
+    apiMiddleware,
+    createLogger(),
+  ),
   DevTools.instrument()
 ]
 

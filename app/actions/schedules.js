@@ -1,7 +1,7 @@
 import request from 'superagent-bluebird-promise'
 
 import { CSRF_TOKEN_HEADER } from '../constants/strings'
-import { getCSRFToken } from '../modules/auth'
+import { authorize, authorizeCSRF  } from '../modules/auth'
 import urls from '../modules/urls'
 
 
@@ -29,11 +29,8 @@ export function fetchSchedules(pageNumber) {
     dispatch(fetchSchedulesStart())
     request
       .get(urls.schedules(pageNumber))
-      .then(response => response.body)
-      .then((response) => {
-        // TODO: NOT IMPLEMENTED YET
-      }, (error) => {
-        // TODO: NOT IMPLEMENTED YET
+      .end((error, response) => {
+        // TODO: NOT IMPLEMETNED YET
       })
   }
 }
@@ -63,12 +60,10 @@ export function saveSchedule(schedule) {
     dispatch(saveScheduleStart())
     request
       .post(urls.site(site.id))
-      .set(CSRF_TOKEN_HEADER, getCSRFToken())
+      .use(authorize())
+      .use(authorizeCSRF())
       .send(schedule)
-      .then(response => response.body)
-      .then((response) => {
-        // TODO: NOT IMPLEMENTED YET
-      }, (error) => {
+      .end((error, response) => {
         // TODO: NOT IMPLEMENTED YET
       })
   }
@@ -80,8 +75,8 @@ export function saveSchedule(schedule) {
 // ======
 
 export const DELETE_SCHEDULE_START = 'DELETE_SCHEDULE_START'
-export function deleteScheduleStart() {
-  return { type: DELETE_SCHEDULE_START }
+export function deleteScheduleStart(scheduleId) {
+  return { type: DELETE_SCHEDULE_START, scheduleId }
 }
 
 export const DELETE_SCHEDULE_SUCCESS = 'DELETE_SCHEDULE_SUCCESS'
@@ -90,8 +85,8 @@ export function deleteScheduleSuccess() {
 }
 
 export const DELETE_SCHEDULE_ERROR = 'DELETE_SCHEDULE_ERROR'
-export function deleteScheduleError() {
-  return { type: DELETE_SCHEDULE_ERROR }
+export function deleteScheduleError(schedule) {
+  return { type: DELETE_SCHEDULE_ERROR, scheduleId }
 }
 
 export function deleteSchedule(scheduleId) {
@@ -99,10 +94,9 @@ export function deleteSchedule(scheduleId) {
     dispatch(deleteScheduleStart())
     request
       .del(urls.schedule(scheduleId))
-      .then(response => response.body)
-      .then((response) => {
-        // TODO: NOT IMPLEMENTED YET
-      }, (error) => {
+      .use(authorize())
+      .use(authorizeCSRF())
+      .end((error, response) => {
         // TODO: NOT IMPLEMENTED YET
       })
   }
