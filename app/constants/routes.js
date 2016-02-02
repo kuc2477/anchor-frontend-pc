@@ -44,4 +44,4 @@ export const SIGNUP = {
 }
 
 
-export default { NEWS, SCHEDULES, LOGIN, SIGNUP }
+export default { NEWS, SCHEDULES, LOGIN, LOGOUT, SIGNUP }

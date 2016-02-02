@@ -6,9 +6,9 @@ import {
   LOCAL_STORAGE_SESSION_KEY
 } from '../constants/strings'
 
+import history from '../modules/history'
 import store from '../store'
 import { initUser } from '../actions/auth'
-import router from '../router'
 
 
 // ========================================================================
@@ -56,14 +56,16 @@ export function isAuthenticated() {
 
 // callback function to check auth status on route change. used in `onEnter`
 // of `router.js`.
-export function authRequired(nextState, replaceState, callback) {
+export function authRequired(nextState, replace, callback) {
   if (!isAuthenticated()) {
-    replaceState(null, LOGIN.path)
+    replace(LOGIN.path)
+    callback()
     return
   }
+
   if (!store.getState().auth.get('user')) {
-    store.dispatch(initUser(router, callback))
-  } else {
-    callback()
+    store.dispatch(initUser(callback))
+    return
   }
+  callback()
 }

@@ -4,11 +4,13 @@ import {
   AUTH_START,
   AUTH_SUCCSESS,
   AUTH_ERROR,
+  PREPARE_LOGOUT,
   USER_INIT_SUCCESS,
   USER_INIT_ERROR,
   CSRF_INIT_SUCCESS,
   CSRF_INIT_ERROR
 } from '../actions/auth'
+import { setSessionKey, removeSessionKey } from '../modules/auth'
 
 
 export const initialState = new Immutable.Map({
@@ -29,6 +31,8 @@ export default (state = initialState, action) => {
       return state.set('isAuthenticating', true)
 
     case AUTH_SUCCSESS:
+      // set session key on local storage
+      setSessionKey(action.sessionKey)
       return state.merge({
         user: action.user,
         isAuthenticating: false,
@@ -42,6 +46,10 @@ export default (state = initialState, action) => {
         didAuthFail: true,
         errorMessage: action.reason
       })
+
+    case LOGOUT_DONE:
+      removeSessionKey()
+      return state
 
     case USER_INIT_SUCCESS:
       return state.merge({

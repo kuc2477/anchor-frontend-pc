@@ -16,8 +16,8 @@ export function authStart() {
 }
 
 export const AUTH_SUCCSESS = 'AUTH_SUCCSESS'
-export function authSuccess(user) {
-  return { type: AUTH_SUCCSESS, user }
+export function authSuccess(sessionKey, user) {
+  return { type: AUTH_SUCCSESS, sessionKey, user }
 }
 
 export const AUTH_ERROR = 'AUTH_ERROR'
@@ -38,18 +38,29 @@ export function authenticate(email, password, router, next = '/') {
           return
         }
         const { body, header } = response
-        // on authentication success
-        setSessionKey(parseCookie(header['set-cookie'].pop(), 'session'))
-        //setLiteralCookie(header['set-cookie'].pop())
-        dispatch(authSuccess(body.user))
+        const { user } = body
+        const sessionKey = parseCookie(header['set-cookie'].pop(), 'session')
+        dispatch(authSuccess(sessionKey, user))
         router.push(next)
       })
   }
 }
 
-export const LOGOUT = 'LOGOUT'
-export function logout() {
-  return { type: LOGOUT }
+
+export const LOGOUT_DONE = 'LOGOUT_DONE'
+export function logoutDone() {
+  return { type: LOGOUT_DONE }
+}
+
+export function logout(router) {
+  return (dispatch) => {
+    request
+      .post(urls.logout())
+      .use(authorize())
+      .end(() => {
+        dispatch(logoutDone())
+      })
+  }
 }
 
 
@@ -57,22 +68,22 @@ export function logout() {
 // User information initialization (via token within cookie)
 // =========================================================
 
-const USER_INIT_START = 'USER_INIT_START'
+export const USER_INIT_START = 'USER_INIT_START'
 export function userInitStart () {
   return { type: USER_INIT_START }
 }
 
-const USER_INIT_SUCCESS = 'USER_INIT_SUCCESS'
+export const USER_INIT_SUCCESS = 'USER_INIT_SUCCESS'
 export function userInitSuccess(user) {
   return { type: USER_INIT_SUCCESS, user }
 }
 
-const USER_INIT_ERROR = 'USER_INIT_ERROR'
+export const USER_INIT_ERROR = 'USER_INIT_ERROR'
 export function userInitError(reason = 'Unknown reason') {
   return { type: USER_INIT_ERROR, reason }
 }
 
-export function initUser(router, callback = () => {}) {
+export function initUser(callback = () => {}) {
   return (dispatch) => {
     dispatch(userInitStart())
     request
@@ -100,8 +111,8 @@ export function CSRFInitStart() {
 }
 
 export const CSRF_INIT_SUCCESS = 'CSRF_INIT_SUCCESS'
-export function CSRFInitSuccess() {
-  return { type: CSRF_INIT_SUCCESS }
+export function CSRFInitSuccess(token) {
+  return { type: CSRF_INIT_SUCCESS, token }
 }
 
 export const CSRF_INIT_ERROR = 'CSRF_INIT_ERROR'
@@ -123,7 +134,7 @@ export function initCSRF() {
           dispatch(CSRFInitError())
           return
         }
-        dispatch(CSRFInitSuccess())
+        dispatch(CSRFInitSuccess(token))
       })
   }
 }
