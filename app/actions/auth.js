@@ -1,9 +1,10 @@
 import request from 'superagent-bluebird-promise'
 
 import urls from '../modules/urls'
-import { getCSRFToken, setSessionKey, authorize } from '../modules/auth'
+import { getCSRFToken, authorize } from '../modules/auth'
 import { parseCookie } from '../modules/utils'
 import { CSRF_TOKEN_HEADER } from '../constants/strings'
+import { NEWS, LOGIN } from '../constants/routes'
 
 
 // ==========
@@ -25,7 +26,7 @@ export function authError(reason = 'Wrong email & password combination') {
   return { type: AUTH_ERROR, reason }
 }
 
-export function authenticate(email, password, router, next = '/') {
+export function authenticate(email, password, router, next = NEWS.path) {
   return (dispatch) => {
     dispatch(authStart())
     request
@@ -47,18 +48,16 @@ export function authenticate(email, password, router, next = '/') {
 }
 
 
-export const LOGOUT_DONE = 'LOGOUT_DONE'
-export function logoutDone() {
-  return { type: LOGOUT_DONE }
-}
-
-export function logout(router) {
+export const LOGOUT = 'LOGOUT'
+export function logout(router, next = LOGIN.path) {
   return (dispatch) => {
     request
       .post(urls.logout())
       .use(authorize())
+      .send({})
       .end(() => {
-        dispatch(logoutDone())
+        dispatch({ type: LOGOUT })
+        router.push(next)
       })
   }
 }
@@ -137,23 +136,4 @@ export function initCSRF() {
         dispatch(CSRFInitSuccess(token))
       })
   }
-}
-
-
-export default {
-  // auth
-  authStart,
-  authSuccess,
-  authError,
-  authenticate,
-  // user info
-  userInitStart,
-  userInitSuccess,
-  userInitError,
-  initUser,
-  // csrf
-  CSRFInitStart,
-  CSRFInitSuccess,
-  CSRFInitError,
-  initCSRF
 }

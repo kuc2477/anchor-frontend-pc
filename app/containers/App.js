@@ -29,7 +29,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Nav user={this.props.user} />
+        <Nav user={this.props.user} dispatch={this.props.dispatch} />
         <div style={this.constructor.STYLE}>{this.props.children}</div>
       </div>
     )

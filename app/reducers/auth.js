@@ -4,7 +4,7 @@ import {
   AUTH_START,
   AUTH_SUCCSESS,
   AUTH_ERROR,
-  PREPARE_LOGOUT,
+  LOGOUT,
   USER_INIT_SUCCESS,
   USER_INIT_ERROR,
   CSRF_INIT_SUCCESS,
@@ -47,9 +47,9 @@ export default (state = initialState, action) => {
         errorMessage: action.reason
       })
 
-    case LOGOUT_DONE:
+    case LOGOUT:
       removeSessionKey()
-      return state
+      return initialState
 
     case USER_INIT_SUCCESS:
       return state.merge({

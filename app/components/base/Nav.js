@@ -5,12 +5,22 @@ import { AppBar, Tabs, Tab } from 'material-ui'
 
 import { UserPropType } from '../../constants/types.js'
 import { NEWS, SCHEDULES, LOGOUT } from '../../constants/routes.js'
+import { logout } from '../../actions/auth'
 
 
 export default class Nav extends React.Component {
+  static ROUTES = [
+    [ NEWS , SCHEDULES , LOGOUT ]
+  ];
+
+  static APP_BAR_STYLE = { position: 'fixed' };
+  static TAB_ITEM_STYLE = { marginRight: 120 };
+
   static propTypes = {
     user: UserPropType,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    // need dispatcher to dispatch logout action
+    dispatch: PropTypes.func.isRequired
   };
 
   static contextTypes = {
@@ -20,13 +30,6 @@ export default class Nav extends React.Component {
   static defaultProps = {
     title: 'Anchor'
   };
-
-  static ROUTES = [
-    [ NEWS , SCHEDULES , LOGOUT ]
-  ];
-
-  static APP_BAR_STYLE = { position: 'fixed' };
-  static TAB_ITEM_STYLE = { marginRight: 120 };
 
   constructor(props) {
     super(props)
@@ -40,6 +43,14 @@ export default class Nav extends React.Component {
   }
 
   _onTabActive(tab) {
+    // run logout action if activated tab is logout tab
+    if (tab.props.label === LOGOUT.label) {
+      const { dispatch } = this.props
+      dispatch(logout(this.context.router))
+      return
+    }
+
+    // otherwise navigate to related route
     this.context.router.push(tab.props.path)
     this.setState({ tabIndex: this._getSelectedIndex() })
   }
@@ -58,7 +69,9 @@ export default class Nav extends React.Component {
   _getSelectedIndex() {
     const router = this.context.router
     const routes = this._getTabRoutes()
-    return _.findIndex(routes, route => router.isActive(route.path))
+    return _.findIndex(routes, (route) => {
+      return route.path && router.isActive(route.path)
+    })
   }
 
 

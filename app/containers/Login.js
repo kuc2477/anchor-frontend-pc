@@ -130,7 +130,6 @@ class Login extends React.Component {
     if (!this.validateBeforeLogin()) {
       return
     }
-    debugger
     const { router } = this.context
     const { email, password } = this.state
     const { dispatch } = this.props

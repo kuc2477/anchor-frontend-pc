@@ -8,7 +8,6 @@ import {
 
 
 export function parseCookie(cookies, name) {
-  debugger
   const value = '; ' + cookies
   const parts = value.split('; ' + name + '=')
   if (parts.length === 2) {

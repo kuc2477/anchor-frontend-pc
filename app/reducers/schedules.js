@@ -12,6 +12,7 @@ import {
   DELETE_SCHEDULE_SUCCESS,
   DELETE_SCHEDULE_ERROR
 } from '../actions/schedules'
+import { LOGOUT } from '../actions/auth'
 
 
 export const initialState = new Immutable.Map({
@@ -78,6 +79,9 @@ export default (state = initialState, action) => {
 
     case DELETE_SCHEDULE_ERROR:
       return state
+
+    case LOGOUT:
+      return initialState
 
     default:
       return state
