@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'React'
+import React, { PropTypes } from 'react'
 
 
 export default class BrotherSiteField extends React.Component {

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'React'
+import React, { PropTypes } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 
 import BrotherSiteField from './BrotherSiteField'
