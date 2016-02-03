@@ -36,6 +36,7 @@ export default (state = initialState, action) => {
       return state.merge({
         user: action.user,
         isAuthenticating: false,
+        didUserInitFail: false,
         didAuthFail: false,
         errorMessage: null
       })

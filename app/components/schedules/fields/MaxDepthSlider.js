@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
-import Slider from 'material-ui/lib/slider'
 
+import BaseSlider from '../../base/BaseSlider'
 import {
   MAX_DEPTH_DEFAULT,
   MAX_DEPTH_RANGE_MIN,
@@ -11,15 +11,13 @@ import {
 export default class MaxDepthSlider extends React.Component {
   render() {
     return (
-      <div>
-        Maximum depth
-        <Slider
-          step={1}
-          max={MAX_DEPTH_RANGE_MAX}
-          min={MAX_DEPTH_RANGE_MIN}
-          defaultValue={MAX_DEPTH_DEFAULT}
-        />
-      </div>
+      <BaseSlider
+        step={1}
+        description="Maximum depth"
+        max={MAX_DEPTH_RANGE_MAX}
+        min={MAX_DEPTH_RANGE_MIN}
+        defaultValue={MAX_DEPTH_DEFAULT}
+      />
     )
   }
 }

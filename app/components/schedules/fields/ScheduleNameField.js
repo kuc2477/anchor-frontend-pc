@@ -8,7 +8,7 @@ export default class ScheduleNameField extends React.Component {
   };
 
   static STYLE = {
-    marginTop: -15
+    marginTop: -10
   };
 
   render() {

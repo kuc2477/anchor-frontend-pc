@@ -20,8 +20,6 @@ import { initUser } from '../actions/auth'
 // superagent middlewares
 export function authorize() {
   return request => request.set('Cookie', `session=${getSessionKey()}`)
-
-
 }
 export function authorizeCSRF() {
   return request => request.set(CSRF_TOKEN_KEY, getCSRFToken())
@@ -62,9 +60,9 @@ export function authRequired(nextState, replace, callback) {
     callback()
     return
   }
-
+  // Initialize user first if not initialized yet.
   if (!store.getState().auth.get('user')) {
-    store.dispatch(initUser(callback))
+    store.dispatch(initUser(replace, callback))
     return
   }
   callback()

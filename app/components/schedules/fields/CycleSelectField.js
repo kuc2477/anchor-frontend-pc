@@ -19,7 +19,7 @@ export default class CycleSelectField extends React.Component {
   };
 
   static STYLE = {
-    marginTop: -20,
+    marginTop: -10,
     marginBottom: 10
   };
 

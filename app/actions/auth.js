@@ -1,6 +1,7 @@
 import request from 'superagent-bluebird-promise'
 
 import urls from '../modules/urls'
+import history from '../modules/history'
 import { getCSRFToken, authorize } from '../modules/auth'
 import { parseCookie } from '../modules/utils'
 import { CSRF_TOKEN_HEADER } from '../constants/strings'
@@ -82,15 +83,24 @@ export function userInitError(reason = 'Unknown reason') {
   return { type: USER_INIT_ERROR, reason }
 }
 
-export function initUser(callback = () => {}) {
+export function initUser(replace, callback) {
   return (dispatch) => {
     dispatch(userInitStart())
     request
       .get(urls.userinfo())
       .use(authorize())
       .end((error, response) => {
+        // There's 2 possible reason of failing user initialization.
+        //
+        // 1. Session key in local storage has been expired on server side.
+        // 2. Internal server error
+        //
+        // We redirect to login page if failed due to session expiration and
+        // redirect to error page otherwise.
         if (error) {
           dispatch(userInitError())
+          replace(LOGIN.path)
+          callback()
           return
         }
         dispatch(userInitSuccess(response.body.user))
