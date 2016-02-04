@@ -6,14 +6,13 @@ import Card from 'material-ui/lib/card/card'
 import CardTitle from 'material-ui/lib/card/card-title'
 
 import MessageBox, { ERROR } from '../components/base/MessageBox'
-
 import LoginForm from '../components/login/LoginForm'
 import LoginButton from '../components/login/LoginButton'
 import SignupLinkButton from '../components/login/SignupLinkButton'
 import FBLoginButton from '../components/login/FBLoginButton'
 import GoogleLoginButton from '../components/login/GoogleLoginButton'
-
 import { authenticate } from '../actions/auth'
+import { SIGNUP } from '../constants/routes'
 
 
 class Login extends React.Component {
@@ -136,6 +135,12 @@ class Login extends React.Component {
     dispatch(authenticate(email, password, router))
   }
 
+  // route to signup page
+  goToSignup() {
+    const { router } = this.context
+    router.push(SIGNUP.path)
+  }
+
   render() {
     const { isAuthenticating, didAuthFail, errorMessage } = this.props
     const { emailError, passwordError } = this.state
@@ -179,6 +184,7 @@ class Login extends React.Component {
         <div className="row center-md" style={this.constructor.BTN_ROW_STYLE}>
           <SignupLinkButton className="col-md-3"
             style={this.constructor.BTN_STYLE}
+            onClick={::this.goToSignup}
           />
         </div>
 

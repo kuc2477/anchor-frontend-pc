@@ -32,9 +32,6 @@ class Schedules extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-md-4 col-sm-6">
-          <DashBoard schedule={schedule} />
-        </div>
         <div className="col-md-8 col-sm-6">
           <ScheduleList
             schedules={schedules}
@@ -42,6 +39,9 @@ class Schedules extends React.Component {
             sitesById={sitesById}
             load={::this.load}
           />
+        </div>
+        <div className="col-md-4 col-sm-6">
+          <DashBoard schedule={schedule} />
         </div>
       </div>
     )

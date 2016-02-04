@@ -35,12 +35,12 @@ export function authenticate(email, password, router, next = NEWS.path) {
       .set(CSRF_TOKEN_HEADER, getCSRFToken())
       .send({ email, password })
       .end((error, response) => {
+        const { body, header } = response
+        const { user, reason } = body
         if (error) {
-          dispatch(authError())
+          dispatch(authError(reason || undefined))
           return
         }
-        const { body, header } = response
-        const { user } = body
         const sessionKey = parseCookie(header['set-cookie'].pop(), 'session')
         dispatch(authSuccess(sessionKey, user))
         router.push(next)
