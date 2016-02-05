@@ -3,6 +3,7 @@ import request from 'superagent-bluebird-promise'
 import urls from '../modules/urls'
 import { authorizeCSRF } from '../modules/auth'
 import { LOGIN } from '../constants/routes'
+import { toast, clearToast } from '../modules/utils'
 
 
 export const SIGNUP_START = 'SIGNUP_START'
@@ -25,6 +26,7 @@ export function signup(
   password, passwordValidation,
   router, next = LOGIN.path) {
   return (dispatch) => {
+    dispatch(signupStart())
     request
       .post(urls.signup()).type('form')
       .use(authorizeCSRF())
@@ -42,7 +44,7 @@ export function signup(
         dispatch(signupSuccess(email))
         toast(`Confirmation mail has been sent to ${email}`, {
           action: 'OK',
-          duration: 5000,
+          duration: null,
           callback: clearToast
         })
         // route to next path

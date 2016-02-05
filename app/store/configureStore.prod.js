@@ -11,7 +11,6 @@ const enhancers = [
   applyMiddleware(
     thunkMiddleware,
     apiMiddleware,
-    createLogger()
   ),
 ]
 
