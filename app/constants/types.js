@@ -1,6 +1,18 @@
 import { PropTypes } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 
+// ==================
+// Extended proptypes
+// ==================
+
+export const ValueLinkPropType = PropTypes.shape({
+  value: PropTypes.string.isRequired,
+  requestChange: PropTypes.func.isRequired
+})
+
+// ================
+// Scheme proptypes
+// ================
 
 export const UserPropType = ImmutablePropTypes.contains({
   id: PropTypes.number,
@@ -33,6 +45,7 @@ export const SchedulePropType = ImmutablePropTypes.contains({
 
 
 export default {
+  ValueLinkPropType,
   UserPropType,
   NewsPropType,
   SitePropType,

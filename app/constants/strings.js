@@ -1,4 +1,3 @@
-export const CSRF_TOKEN_KEY = 'csrf-token'
 export const CSRF_TOKEN_HEADER = 'X-CSRFToken'
 export const FLOW_CLASS = 'flowtype'
 

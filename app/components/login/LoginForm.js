@@ -1,20 +1,16 @@
 import React, { PropTypes } from 'react'
 import TextField from 'material-ui/lib/text-field'
 
+import { ValueLinkPropType } from '../../constants/types'
 
 
 export default class LoginForm extends React.Component {
   static propTypes = {
     emailError: PropTypes.string,
-    emailValueLink: PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      requestChange: PropTypes.func.isRequired
-    }),
+    emailValueLink: ValueLinkPropType,
+
     passwordError: PropTypes.string,
-    passwordValueLink: PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      requestChange: PropTypes.func.isRequired
-    })
+    passwordValueLink: ValueLinkPropType
   };
 
   static EMAIL_FLOATING_LABEL = 'Email';
@@ -28,11 +24,10 @@ export default class LoginForm extends React.Component {
   };
 
   render() {
-    const { emailError, passwordError } = this.props
-    const { value: email, requestChange: onEmailChange } =
-      this.props.emailValueLink
-    const { value: password, requestChange: onPasswordChange } =
-      this.props.passwordValueLink
+    const {
+      emailError, emailValueLink,
+      passwordError, passwordValueLink,
+    } = this.props
 
     return (
       <div>
@@ -41,8 +36,8 @@ export default class LoginForm extends React.Component {
           hintText={this.constructor.EMAIL_HINT}
           floatingLabelText={this.constructor.EMAIL_FLOATING_LABEL}
           errorText={emailError}
-          value={email}
-          onChange={onEmailChange}
+          value={emailValueLink.value}
+          onChange={emailValueLink.requestChange}
         />
 
         <br/>
@@ -53,8 +48,8 @@ export default class LoginForm extends React.Component {
           hintText={this.constructor.PASSWORD_HINT}
           style={this.constructor.TEXT_FIELD_STYLE}
           errorText={passwordError}
-          value={password}
-          onChange={onPasswordChange}
+          value={passwordValueLink.value}
+          onChange={passwordValueLink.requestChange}
         />
       </div>
     )

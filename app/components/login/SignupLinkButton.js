@@ -1,26 +1,5 @@
-import React, { PropTypes } from 'react'
-import FlatButton from 'material-ui/lib/flat-button'
+import SignupButton from '../signup/SignupButton'
 
-
-export default class SignupLinkButton extends React.Component {
-  static propTypes = {
-    onClick: PropTypes.func
-  };
-
+export default class SignupLinkButton extends SignupButton {
   static LABEL = 'Signup to Anchor';
-
-  render() {
-    return (
-      <div>
-        <FlatButton
-          secondary={true}
-          linkButton={true}
-          label={this.constructor.LABEL}
-          labelPosition="after"
-          onClick={this.props.onClick}>
-          <i className="fa fa-lg fa-anchor"></i>
-        </FlatButton>
-      </div>
-    )
-  }
 }

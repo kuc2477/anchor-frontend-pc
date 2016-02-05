@@ -6,6 +6,7 @@ export const app = () => {
 
 export const login = () => `${app()}/login`
 export const logout = () => `${app()}/logout`
+export const signup = () => `${app()}/signup`
 export const csrf = () => `${app()}/csrf`
 export const userinfo = () => `${app()}/userinfo`
 
@@ -20,7 +21,7 @@ export const schedule = (id) => `${app()}/schedules/${id}`
 
 
 export default {
-  app, login, logout, csrf, userinfo,
+  app, login, logout, signup, csrf, userinfo,
   news, newsItem,
   sites, site,
   schedules, schedule

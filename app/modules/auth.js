@@ -1,6 +1,5 @@
 import { LOGIN } from '../constants/routes'
 import {
-  CSRF_TOKEN_KEY,
   CSRF_TOKEN_HEADER,
   LOCAL_STORAGE_CSRF_KEY,
   LOCAL_STORAGE_SESSION_KEY
@@ -22,7 +21,7 @@ export function authorize() {
   return request => request.set('Cookie', `session=${getSessionKey()}`)
 }
 export function authorizeCSRF() {
-  return request => request.set(CSRF_TOKEN_KEY, getCSRFToken())
+  return request => request.set(CSRF_TOKEN_HEADER, getCSRFToken())
 }
 
 // csrf

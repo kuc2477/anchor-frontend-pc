@@ -20,6 +20,9 @@ export const initialState = new Immutable.Map({
   didAuthFail: null,
   didUserInitFail: false,
   errorMessage: null,
+  // confirmation
+  emailToResendConfirmation: null,
+  didNotConfirmed: false,
   // csrf
   CSRFInitialized: false,
   didCSRFInitFail: false

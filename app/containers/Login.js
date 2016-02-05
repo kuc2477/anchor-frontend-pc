@@ -9,17 +9,11 @@ import MessageBox, { ERROR } from '../components/base/MessageBox'
 import LoginForm from '../components/login/LoginForm'
 import LoginButton from '../components/login/LoginButton'
 import SignupLinkButton from '../components/login/SignupLinkButton'
-import FBLoginButton from '../components/login/FBLoginButton'
-import GoogleLoginButton from '../components/login/GoogleLoginButton'
 import { authenticate } from '../actions/auth'
 import { SIGNUP } from '../constants/routes'
 
 
 class Login extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  };
-
   static TITLE = 'Subscribe and get your favorite readables curated';
   static SUBTITLE = 'Get most crispy readables from your favorite sites';
 
@@ -58,6 +52,10 @@ class Login extends React.Component {
     }
   };
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
   constructor(props) {
     super(props)
     // initial form state
@@ -69,38 +67,19 @@ class Login extends React.Component {
     }
   }
 
-  _onEmailChange(e) {
-    const email = e.target.value
-    const v = this._validate({ email })
-
-    this.setState({
-      email,
-      emailError: v && v.email ? v.email[0] : ''
-    })
-  }
-
-  _getEmailValueLink() {
-    return {
-      value: this.state.email,
-      requestChange: ::this._onEmailChange
+  // Returns a value link from the state of given name to associated form
+  // field.
+  _getValueLink(name) {
+    const value = this.state[name]
+    const requestChange = (e) => {
+      const changedValue = e.target.value
+      const v = this._validate({ [name]: changedValue })
+      this.setState({
+        [name]: changedValue,
+        [`${name}Error`]: v && v[name] ? v[name][0] : ''
+      })
     }
-  }
-
-  _onPasswordChange(e) {
-    const password = e.target.value
-    const v = this._validate({ password })
-
-    this.setState({
-      password,
-      passwordError: v && v.password ? v.password[0] : ''
-    })
-  }
-
-  _getPasswordValueLink() {
-    return {
-      value: this.state.password,
-      requestChange: ::this._onPasswordChange
-    }
+    return { value, requestChange }
   }
 
   // Validates form on input value changes. Note that this function has
@@ -143,9 +122,12 @@ class Login extends React.Component {
 
   render() {
     const { isAuthenticating, didAuthFail, errorMessage } = this.props
-    const { emailError, passwordError } = this.state
-    const emailValueLink = this._getEmailValueLink()
-    const passwordValueLink = this._getPasswordValueLink()
+    const formProps = {
+      emailError: this.state.emailError,
+      emailValueLink: this._getValueLink('email'),
+      passwordError: this.state.passwordError,
+      passwordValueLink: this._getValueLink('password')
+    }
 
     return (
       <div style={this.constructor.STYLE}>
@@ -158,12 +140,7 @@ class Login extends React.Component {
         </div>
 
         <div className="row center-md" style={this.constructor.FORM_ROW_STYLE}>
-          <LoginForm className="col-md-3"
-            emailError={emailError}
-            emailValueLink={emailValueLink}
-            passwordError={passwordError}
-            passwordValueLink={passwordValueLink}
-          />
+          <LoginForm className="col-md-3" {...formProps} />
         </div>
 
         {

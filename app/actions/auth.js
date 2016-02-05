@@ -1,16 +1,14 @@
 import request from 'superagent-bluebird-promise'
 
 import urls from '../modules/urls'
-import history from '../modules/history'
-import { getCSRFToken, authorize } from '../modules/auth'
+import { getCSRFToken, authorize, authorizeCSRF } from '../modules/auth'
 import { parseCookie } from '../modules/utils'
-import { CSRF_TOKEN_HEADER } from '../constants/strings'
 import { NEWS, LOGIN } from '../constants/routes'
 
 
-// ==========
-// Basic auth
-// ==========
+// ===============
+// Authentications
+// ===============
 
 export const AUTH_START = 'AUTH_START'
 export function authStart() {
@@ -32,7 +30,7 @@ export function authenticate(email, password, router, next = NEWS.path) {
     dispatch(authStart())
     request
       .post(urls.login()).type('form')
-      .set(CSRF_TOKEN_HEADER, getCSRFToken())
+      .use(authorizeCSRF())
       .send({ email, password })
       .end((error, response) => {
         const { body, header } = response
@@ -47,7 +45,6 @@ export function authenticate(email, password, router, next = NEWS.path) {
       })
   }
 }
-
 
 export const LOGOUT = 'LOGOUT'
 export function logout(router, next = LOGIN.path) {
@@ -110,9 +107,9 @@ export function initUser(replace, callback) {
 }
 
 
-// ==========
-// CSRF setup
-// ==========
+// ====
+// CSRF
+// ====
 
 export const CSRF_INIT_START = 'CSRF_INIT_START'
 export function CSRFInitStart() {
