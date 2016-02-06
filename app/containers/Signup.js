@@ -2,17 +2,44 @@ import validate from 'validate.js'
 
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import Card from 'material-ui/lib/card/card'
 import CardTitle from 'material-ui/lib/card/card-title'
 
 import MessageBox, { ERROR } from '../components/base/MessageBox'
+import SignupButton from '../components/signup/SignupButton.js'
 import SignupForm from '../components/signup/SignupForm'
-import SignupButton from  '../components/signup/SignupButton'
 
 import { signup } from '../actions/signup'
 
 
 class Signup extends React.Component {
+  static propTypes = {
+    dispatch: PropTypes.object,
+    isRegistering: PropTypes.bool,
+    didSignupFail: PropTypes.bool,
+    errorMessage: PropTypes.string
+  };
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
+  constructor(props) {
+    super(props)
+    // initial form state
+    this.state = {
+      email: '',
+      emailError: '',
+      firstname: '',
+      firstnameError: '',
+      lastname: '',
+      lastnameError: '',
+      password: '',
+      passwordError: '',
+      passwordValidation: '',
+      passwordValidationError: '',
+    }
+  }
+
   static STYLE = {
     marginTop: 40
   };
@@ -83,27 +110,6 @@ class Signup extends React.Component {
     }
   };
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  };
-
-  constructor(props) {
-    super(props)
-    // initial form state
-    this.state = {
-      email: '',
-      emailError: '',
-      firstname: '',
-      firstnameError: '',
-      lastname: '',
-      lastnameError: '',
-      password: '',
-      passwordError: '',
-      passwordValidation: '',
-      passwordValidationError: '',
-    }
-  }
-
   // Returns a value link from the state of given name to associated form
   // field.
   _getValueLink(name) {
@@ -126,19 +132,26 @@ class Signup extends React.Component {
     const constraint = this.constructor.FORM_CONSTRAINT
     const result = validate(
       Object.assign({}, this.state, values), constraint, {
-      fullMessages: false
-    })
+        fullMessages: false
+      })
     return result
   }
 
   // Validates form before login.
   validateBeforeLogin() {
+    const {
+      email,
+      firstname,
+      lastname,
+      password,
+      passwordValidation
+    } = this.state
     let {
-      email, emailError,
-      firstname, firstnameError,
-      lastname, lastnameError,
-      password, passwordError,
-      passwordValidation, passwordValidationError
+      emailError,
+      firstnameError,
+      lastnameError,
+      passwordError,
+      passwordValidationError
     } = this.state
 
     // set empty input error message if any of inputs are empty
@@ -184,6 +197,7 @@ class Signup extends React.Component {
       email, firstname, lastname,
       password, passwordValidation, router
     ]
+
     // dispatch the signup action
     dispatch(signup(...args))
   }
@@ -226,7 +240,8 @@ class Signup extends React.Component {
         <div className="row center-md" style={this.constructor.BTN_ROW_STYLE}>
           <SignupButton className="col-md-3"
             isRegistering={isRegistering}
-            onClick={::this.register} />
+            onClick={::this.register}
+          />
         </div>
       </div>
     )

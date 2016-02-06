@@ -1,3 +1,4 @@
+/* eslint strict: 0 */
 'use strict'
 
 const electron = require('electron')
@@ -24,7 +25,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('ready', () => {
-  let mainWindow = new BrowserWindow({ width: 1072, height: 700 })
+  let mainWindow = new BrowserWindow({ width: 1072, height: 600 })
 
   // open browser and load index page
   mainWindow.loadURL(
@@ -43,7 +44,7 @@ app.on('ready', () => {
     mainWindow.openDevTools()
   }
 
-  // set menu on window 
+  // set menu on window
   const template = []
   const menu = Menu.buildFromTemplate(template)
   mainWindow.setMenu(menu)

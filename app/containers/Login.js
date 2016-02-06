@@ -2,7 +2,6 @@ import validate from 'validate.js'
 
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import Card from 'material-ui/lib/card/card'
 import CardTitle from 'material-ui/lib/card/card-title'
 
 import MessageBox, { ERROR } from '../components/base/MessageBox'
@@ -14,42 +13,11 @@ import { SIGNUP } from '../constants/routes'
 
 
 class Login extends React.Component {
-  static TITLE = 'Subscribe and get your favorite readables curated';
-  static SUBTITLE = 'Get most crispy readables from your favorite sites';
-
-  static STYLE = {
-    marginTop: 40
-  };
-
-  static TITLE_ROW_STYLE = {
-    marginBottom: 30
-  };
-
-  static FORM_ROW_STYLE = {
-    marginBottom: 20
-  };
-
-  static ERROR_ROW_STYLE = {
-    marginBottom: 30
-  };
-
-  static BTN_ROW_STYLE = {
-    marginTop: 10
-  };
-
-  static BTN_STYLE = {
-    margin: 10,
-    padding: 10
-  };
-
-  static FORM_CONSTRAINT = {
-    email: { email: true },
-    password: {
-      length: {
-        minimum: 6,
-        message: 'is too short'
-      }
-    }
+  static propTypes = {
+    dispatch: PropTypes.object,
+    isAuthenticating: PropTypes.bool,
+    didAuthFail: PropTypes.bool,
+    errorMessage: PropTypes.string
   };
 
   static contextTypes = {
@@ -66,6 +34,43 @@ class Login extends React.Component {
       passwordError: ''
     }
   }
+    static TITLE = 'Subscribe and get your favorite readables curated';
+    static SUBTITLE = 'Get most crispy readables from your favorite sites';
+
+    static STYLE = {
+      marginTop: 40
+    };
+
+    static TITLE_ROW_STYLE = {
+      marginBottom: 30
+    };
+
+    static FORM_ROW_STYLE = {
+      marginBottom: 20
+    };
+
+    static ERROR_ROW_STYLE = {
+      marginBottom: 30
+    };
+
+    static BTN_ROW_STYLE = {
+      marginTop: 10
+    };
+
+    static BTN_STYLE = {
+      margin: 10,
+      padding: 10
+    };
+
+    static FORM_CONSTRAINT = {
+      email: { email: true },
+      password: {
+        length: {
+          minimum: 6,
+          message: 'is too short'
+        }
+      }
+    };
 
   // Returns a value link from the state of given name to associated form
   // field.
@@ -92,7 +97,8 @@ class Login extends React.Component {
 
   // Validates form before login.
   validateBeforeLogin() {
-    let { email, emailError, password, passwordError } = this.state
+    const { email, password } = this.state
+    let { emailError, passwordError } = this.state
 
     // set empty input error message if any of inputs are empty
     emailError = !email ? 'Email should not be empty' : emailError

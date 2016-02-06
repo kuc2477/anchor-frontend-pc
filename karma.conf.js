@@ -26,7 +26,7 @@ module.exports = (config) => {
       'tests.webpack.js': ['webpack', 'sourcemap'],
     },
 
-    // test specific webpack configuration 
+    // test specific webpack configuration
     webpack: {
       module: require('./webpack.config.base').module,
       devtool: 'inline-source-map'
@@ -58,7 +58,7 @@ module.exports = (config) => {
 
 
     // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || 
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR ||
     // config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
