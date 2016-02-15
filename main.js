@@ -47,5 +47,5 @@ app.on('ready', () => {
   // set menu on window
   const template = []
   const menu = Menu.buildFromTemplate(template)
-  mainWindow.setMenu(menu)
+  mainWindow.setMenu(template.length ? menu : null)
 })

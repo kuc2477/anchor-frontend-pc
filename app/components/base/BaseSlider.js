@@ -27,12 +27,16 @@ export default class BaseSlider extends React.Component {
 
   _onDragStart = (f) => (arg) => {
     this.setState({ isActive: true })
-    f(arg)
+    if (f) {
+      f(arg)
+    }
   };
 
   _onDragStop = (f) => (arg) => {
     this.setState({ isActive: false })
-    f(arg)
+    if (f) {
+      f(arg)
+    }
   };
 
   render() {

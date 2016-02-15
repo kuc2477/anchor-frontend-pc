@@ -4,19 +4,21 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import CardTitle from 'material-ui/lib/card/card-title'
 
-import MessageBox, { ERROR } from '../components/base/MessageBox'
+import MessageBox, { INFO, ERROR } from '../components/base/MessageBox'
 import LoginForm from '../components/login/LoginForm'
 import LoginButton from '../components/login/LoginButton'
 import SignupLinkButton from '../components/login/SignupLinkButton'
-import { authenticate } from '../actions/auth'
+import { authenticate, resendConfirmationMail } from '../actions/auth'
 import { SIGNUP } from '../constants/routes'
 
 
 class Login extends React.Component {
   static propTypes = {
-    dispatch: PropTypes.object,
+    dispatch: PropTypes.func,
     isAuthenticating: PropTypes.bool,
     didAuthFail: PropTypes.bool,
+    didNotConfirmed: PropTypes.bool,
+    emailToResend: PropTypes.string,
     errorMessage: PropTypes.string
   };
 
@@ -46,11 +48,16 @@ class Login extends React.Component {
     };
 
     static FORM_ROW_STYLE = {
-      marginBottom: 20
+      marginBottom: 30
     };
 
     static ERROR_ROW_STYLE = {
       marginBottom: 30
+    };
+
+    static ERROR_SUB_ROW_STYLE = {
+      marginTop: -45,
+      marginBottom: 0
     };
 
     static BTN_ROW_STYLE = {
@@ -120,6 +127,14 @@ class Login extends React.Component {
     dispatch(authenticate(email, password, router))
   }
 
+  // resend confirmation mail if email to resend exists in store.
+  resend() {
+    const { dispatch, emailToResend } = this.props
+    if (emailToResend) {
+      dispatch(resendConfirmationMail(emailToResend))
+    }
+  }
+
   // route to signup page
   goToSignup() {
     const { router } = this.context
@@ -127,7 +142,12 @@ class Login extends React.Component {
   }
 
   render() {
-    const { isAuthenticating, didAuthFail, errorMessage } = this.props
+    const {
+      isAuthenticating,
+      didAuthFail,
+      didNotConfirmed,
+      errorMessage
+    } = this.props
     const formProps = {
       emailError: this.state.emailError,
       emailValueLink: this._getValueLink('email'),
@@ -156,6 +176,18 @@ class Login extends React.Component {
           </div> : null
         }
 
+        {
+          didNotConfirmed ?
+            <div className="row center-md" style={this.constructor.ERROR_SUB_ROW_STYLE}>
+              <MessageBox className="col-md"
+                message="[ Resend confirmation mail ]"
+                type={ERROR}
+                size={12}
+                onClick={::this.resend}
+              />
+            </div> : null
+        }
+
         <div className="row center-md" style={this.constructor.BTN_ROW_STYLE}>
           <LoginButton className="col-md-3"
             style={this.constructor.BTN_STYLE}
@@ -179,5 +211,7 @@ class Login extends React.Component {
 export default connect(app => ({
   isAuthenticating: app.auth.get('isAuthenticating'),
   didAuthFail: app.auth.get('didAuthFail'),
-  errorMessage: app.auth.get('errorMessage')
+  didNotConfirmed: app.auth.get('didNotConfirmed'),
+  emailToResend: app.auth.get('emailToResend'),
+  errorMessage: app.auth.get('errorMessage'),
 }))(Login)

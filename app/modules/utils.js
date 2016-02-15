@@ -22,8 +22,8 @@ export function toast(message, options) {
   // merge option with defaults
   const defaults = {
     duration: 3000,
-    action: null,
-    callback: null
+    action: 'OK',
+    callback: clearToast
   }
   const merged = Object.assign(defaults, options)
   const { duration, action, callback } = merged

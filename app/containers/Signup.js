@@ -13,7 +13,7 @@ import { signup } from '../actions/signup'
 
 class Signup extends React.Component {
   static propTypes = {
-    dispatch: PropTypes.object,
+    dispatch: PropTypes.func,
     isRegistering: PropTypes.bool,
     didSignupFail: PropTypes.bool,
     errorMessage: PropTypes.string

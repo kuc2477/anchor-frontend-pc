@@ -17,11 +17,11 @@ export const initialState = new Immutable.Map({
   // user, auth
   user: null,
   isAuthenticating: false,
-  didAuthFail: null,
+  didAuthFail: false,
   didUserInitFail: false,
   errorMessage: null,
   // confirmation
-  emailToResendConfirmation: null,
+  emailToResend: null,
   didNotConfirmed: false,
   // csrf
   CSRFInitialized: false,
@@ -37,18 +37,24 @@ export default (state = initialState, action) => {
       // set session key on local storage
       setSessionKey(action.sessionKey)
       return state.merge({
+        // set user and clear auth errors
         user: action.user,
         isAuthenticating: false,
-        didUserInitFail: false,
         didAuthFail: false,
-        errorMessage: null
+        didUserInitFail: false,
+        errorMessage: null,
+        // clear confirmation errors
+        emailToResend: null,
+        didNotConfirmed: false
       })
 
     case AUTH_ERROR:
       return state.merge({
         isAuthenticating: false,
         didAuthFail: true,
-        errorMessage: action.reason
+        errorMessage: action.reason,
+        emailToResend: action.email,
+        didNotConfirmed: !!action.email
       })
 
     case LOGOUT:

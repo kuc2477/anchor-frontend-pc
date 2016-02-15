@@ -36,16 +36,14 @@ export function signup(
         const { body } = response
         const { email, reason } = body
         if (error) {
-          dispatch(signupError(reason || undefined))
+          dispatch(signupError(reason))
           return
         }
         // dispatch signup sucess and notify the user that confirmation
         // mail has been sent to his email.
         dispatch(signupSuccess(email))
         toast(`Confirmation mail has been sent to ${email}`, {
-          action: 'OK',
           duration: null,
-          callback: clearToast
         })
         // route to next path
         router.push(next)

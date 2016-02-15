@@ -2,7 +2,7 @@ import request from 'superagent-bluebird-promise'
 
 import urls from '../modules/urls'
 import { getCSRFToken, authorize, authorizeCSRF } from '../modules/auth'
-import { parseCookie } from '../modules/utils'
+import { parseCookie, toast, clearToast } from '../modules/utils'
 import { NEWS, LOGIN } from '../constants/routes'
 
 
@@ -21,27 +21,32 @@ export function authSuccess(sessionKey, user) {
 }
 
 export const AUTH_ERROR = 'AUTH_ERROR'
-export function authError(reason = 'Wrong email & password combination') {
-  return { type: AUTH_ERROR, reason }
+export function authError(reason = 'Wrong email & password combination',
+                          email = null) {
+  return { type: AUTH_ERROR, reason, email }
 }
 
 export function authenticate(email, password, router, next = NEWS.path) {
   return (dispatch) => {
     dispatch(authStart())
     request
-      .post(urls.login()).type('form')
+      .post(urls.login())
+      .type('form')
       .use(authorizeCSRF())
       .send({ email, password })
       .end((error, response) => {
         const { body, header } = response
-        const { user, reason } = body
+        const { user, reason, email } = body
         if (error) {
-          dispatch(authError(reason || undefined))
+          // we consider the user is unconfirmed if the server's response
+          // contains user's email (implicating that the confirmation did not
+          // passed yet).
+          dispatch(authError(reason, email))
           return
         }
         const sessionKey = parseCookie(header['set-cookie'].pop(), 'session')
         dispatch(authSuccess(sessionKey, user))
-        router.push(next)
+        router.replace(next)
       })
   }
 }
@@ -55,7 +60,24 @@ export function logout(router, next = LOGIN.path) {
       .send({})
       .end(() => {
         dispatch({ type: LOGOUT })
-        router.push(next)
+        router.replace(next)
+      })
+  }
+}
+
+export const RESEND_CONFIRMATION_MAIL = 'RESEND_CONFIRMATION_MAIL'
+export function resendConfirmationMail(email) {
+  return (dispatch) => {
+    request
+      .post(urls.resend())
+      .type('form')
+      .use(authorizeCSRF())
+      .send({ email })
+      .end(() => {
+        dispatch({ type: RESEND_CONFIRMATION_MAIL, email })
+        toast(`Confirmation mail has been sent to ${email}`, {
+          duration: null,
+        })
       })
   }
 }

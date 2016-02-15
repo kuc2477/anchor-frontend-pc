@@ -11,11 +11,14 @@ export const ERROR = 'ERROR'
 export default class MessageBox extends React.Component {
   static propTypes = {
     message: PropTypes.string,
-    type: PropTypes.oneOf([INFO, ERROR])
+    type: PropTypes.oneOf([INFO, ERROR]),
+    size: PropTypes.number,
+    onClick: PropTypes.func,
   };
 
   static defaultProps = {
-    type: INFO
+    type: INFO,
+    size: 14,
   };
 
   getColor() {
@@ -31,14 +34,21 @@ export default class MessageBox extends React.Component {
     }
   }
 
+  getStyle() {
+    const style = this.props.style || {}
+    const { size } = this.props
+    return Object.assign({}, style, {fontSize: size})
+  }
+
   render() {
+    const { message, type, size, onClick, ...rest} = this.props
     return (
-      <div>
-        <CardTitle
-          subtitleColor={this.getColor()}
-          subtitle={this.props.message}
-        />
-      </div>
+      <CardTitle className={onClick ? 'clickable': null} onClick={onClick}>
+        subtitle={this.props.message}
+        subtitleColor={this.getColor()}
+        subtitleStyle={this.getStyle()}
+        {...rest}
+      />
     )
   }
 }

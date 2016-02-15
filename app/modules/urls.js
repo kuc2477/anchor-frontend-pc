@@ -9,6 +9,7 @@ export const logout = () => `${app()}/logout`
 export const signup = () => `${app()}/signup`
 export const csrf = () => `${app()}/csrf`
 export const userinfo = () => `${app()}/userinfo`
+export const resend = () => `${app()}/resend`
 
 export const news = (page = 0) => `${app()}/news?page=${page}`
 export const sites = (page = 0) => `${app()}/sites?page=${page}`
@@ -21,7 +22,7 @@ export const schedule = (id) => `${app()}/schedules/${id}`
 
 
 export default {
-  app, login, logout, signup, csrf, userinfo,
+  app, login, logout, signup, csrf, userinfo, resend,
   news, newsItem,
   sites, site,
   schedules, schedule
