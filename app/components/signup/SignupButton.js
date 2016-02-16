@@ -21,15 +21,13 @@ export default class SignupButton extends React.Component {
       <i className='fa fa-lg fa-anchor'></i>
 
     return (
-      <div>
-        <FlatButton
-          secondary={true}
-          label={this.constructor.LABEL}
-          labelPosition="after"
-          onClick={this.props.onClick}>
-          {statusIcon}
-        </FlatButton>
-      </div>
+      <FlatButton
+        secondary={true}
+        label={this.constructor.LABEL}
+        labelPosition="after"
+        onClick={this.props.onClick}>
+        {statusIcon}
+      </FlatButton>
     )
   }
 }

@@ -23,10 +23,14 @@ class Signup extends React.Component {
     router: PropTypes.object.isRequired
   };
 
+  // Signup step states
+  static STEP_USERINFO = 'STEP_USERINFO';
+  static STEP_PASSWORD = 'STEP_PASSWORD';
+
   constructor(props) {
     super(props)
-    // initial form state
     this.state = {
+      // initial form state
       email: '',
       emailError: '',
       firstname: '',
@@ -37,6 +41,8 @@ class Signup extends React.Component {
       passwordError: '',
       passwordValidation: '',
       passwordValidationError: '',
+      // signup step state
+      step: this.constructor.STATE_USERINFO
     }
   }
 
@@ -127,7 +133,7 @@ class Signup extends React.Component {
   }
 
   // Validates form on input value changes. Note that this function has
-  // nothing to do with `validateBeforeLogin`.
+  // nothing to do with `validateBeforeSignup`.
   _validate(values) {
     const constraint = this.constructor.FORM_CONSTRAINT
     const result = validate(
@@ -137,8 +143,20 @@ class Signup extends React.Component {
     return result
   }
 
+  proceed() {
+    if (this.state.step === this.constructor.STEP_USERINFO) {
+      this.setState({ step: this.constructor.STEP_PASSWORD })
+    }
+  }
+
+  back() {
+    if (this.state.step === this.constructor.STEP_PASSWORD) {
+      this.setState({ step: this.constructor.STEP_USERINFO })
+    }
+  }
+
   // Validates form before login.
-  validateBeforeLogin() {
+  validateBeforeSignup() {
     const {
       email,
       firstname,
@@ -178,7 +196,7 @@ class Signup extends React.Component {
   }
 
   register() {
-    if (!this.validateBeforeLogin()) {
+    if (!this.validateBeforeSignup()) {
       return
     }
     // unpack current form state

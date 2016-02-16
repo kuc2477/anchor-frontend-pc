@@ -1,16 +1,13 @@
 import React, { PropTypes } from 'react'
 import TextField from 'material-ui/lib/text-field'
 
+import ProceedButton from './ProceedButton'
 import { ValueLinkPropType } from '../../constants/types'
 
 
-export default class SignupForm extends React.Component {
+export default class UserinfoSignupForm extends React.Component {
   static propTypes = {
-    onProceedButtonClick: PropTypes.func,
-    onSignupButtonClick: PropTypes.func,
-
-    isRegistering: PropTypes.bool,
-
+    onProceedButtonClick: PropTypes,func
 
     emailError: PropTypes.string,
     emailValueLink: ValueLinkPropType,
@@ -20,12 +17,6 @@ export default class SignupForm extends React.Component {
 
     lastnameError: PropTypes.string,
     lastnameValueLink: ValueLinkPropType,
-
-    passwordError: PropTypes.string,
-    passwordValueLink: ValueLinkPropType,
-
-    passwordValidationError: PropTypes.string,
-    passwordValidationValueLink: ValueLinkPropType
   };
 
   static EMAIL_FLOATING_LABEL = 'Email';
@@ -37,23 +28,16 @@ export default class SignupForm extends React.Component {
   static LASTNAME_FLOATING_LABEL = 'Lastname';
   static LASTNAME_HINT = 'Lastname';
 
-  static PASSWORD_FLOATING_LABEL = 'Password';
-  static PASSWORD_HINT = 'Password';
-
-  static PASSWORD_CHECK_FLOATING_LABEL = 'Password validation';
-  static PASSWORD_CHECK_HINT = 'Password validation';
-
   static TEXT_FIELD_STYLE = {
     marginTop: -15
   };
 
   render() {
     const {
+      onProceedButtonClick,
       emailError, emailValueLink,
       firstnameError, firstnameValueLink,
-      lastnameError, lastnameValueLink,
-      passwordError, passwordValueLink,
-      passwordValidationError, passwordValidationValueLink
+      lastnameError, lastnameValueLink
     } = this.props
 
     return (
@@ -88,6 +72,8 @@ export default class SignupForm extends React.Component {
           value={lastnameValueLink.value}
           onChange={lastnameValueLink.requestChange}
         />
+
+        <ProceedButton onProceedButtonClick={onProceedButtonClick} />
       </div>
     )
   }

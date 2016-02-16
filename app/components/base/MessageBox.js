@@ -43,7 +43,7 @@ export default class MessageBox extends React.Component {
   render() {
     const { message, type, size, onClick, ...rest} = this.props
     return (
-      <CardTitle className={onClick ? 'clickable': null} onClick={onClick}>
+      <CardTitle className={onClick ? 'clickable': null} onClick={onClick}
         subtitle={this.props.message}
         subtitleColor={this.getColor()}
         subtitleStyle={this.getStyle()}
