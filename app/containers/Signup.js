@@ -8,7 +8,9 @@ import MessageBox, { ERROR } from '../components/base/MessageBox'
 import SignupButton from '../components/signup/SignupButton.js'
 import SignupForm from '../components/signup/SignupForm'
 
-import { signup } from '../actions/signup'
+import { signup, clearSignupState } from '../actions/signup'
+
+import { SIGNUP_STEP_USER, SIGNUP_STEP_PASSWORD } from '../constants/strings'
 
 
 class Signup extends React.Component {
@@ -22,10 +24,6 @@ class Signup extends React.Component {
   static contextTypes = {
     router: PropTypes.object.isRequired
   };
-
-  // Signup step states
-  static STEP_USERINFO = 'STEP_USERINFO';
-  static STEP_PASSWORD = 'STEP_PASSWORD';
 
   constructor(props) {
     super(props)
@@ -42,8 +40,17 @@ class Signup extends React.Component {
       passwordValidation: '',
       passwordValidationError: '',
       // signup step state
-      step: this.constructor.STATE_USERINFO
+      step: SIGNUP_STEP_USER
     }
+  }
+
+  componentDidMount() {
+    this.context.router.setRouteLeaveHook(
+      this.props.route, ::this.routerWillLeave)
+  }
+
+  routerWillLeave(nextLocation) {
+    this.props.dispatch(clearSignupState())
   }
 
   static STYLE = {
@@ -51,24 +58,15 @@ class Signup extends React.Component {
   };
 
   static TITLE_ROW_STYLE = {
-    marginBottom: 20
+    marginBottom: 30
   };
 
   static FORM_ROW_STYLE = {
-    marginBottom: 20
+    marginBottom: 30
   };
 
   static ERROR_ROW_STYLE = {
-    marginBottom: 20
-  };
-
-  static BTN_ROW_STYLE = {
-    marginTop: 10
-  };
-
-  static BTN_STYLE = {
-    margin: 10,
-    padding: 10
+    marginBottom: 30
   };
 
   static TITLE = 'Signup and get your site readables personalized';
@@ -133,7 +131,7 @@ class Signup extends React.Component {
   }
 
   // Validates form on input value changes. Note that this function has
-  // nothing to do with `validateBeforeSignup`.
+  // nothing to do with `validateBeforeProceed` or `validateBeforeSignup`.
   _validate(values) {
     const constraint = this.constructor.FORM_CONSTRAINT
     const result = validate(
@@ -143,56 +141,43 @@ class Signup extends React.Component {
     return result
   }
 
-  proceed() {
-    if (this.state.step === this.constructor.STEP_USERINFO) {
-      this.setState({ step: this.constructor.STEP_PASSWORD })
-    }
-  }
+  validateBeforeProceed() {
+    const { email, firstname, lastname } = this.state
+    let { emailError, firstnameError, lastnameError } = this.state
 
-  back() {
-    if (this.state.step === this.constructor.STEP_PASSWORD) {
-      this.setState({ step: this.constructor.STEP_USERINFO })
-    }
-  }
-
-  // Validates form before login.
-  validateBeforeSignup() {
-    const {
-      email,
-      firstname,
-      lastname,
-      password,
-      passwordValidation
-    } = this.state
-    let {
-      emailError,
-      firstnameError,
-      lastnameError,
-      passwordError,
-      passwordValidationError
-    } = this.state
-
-    // set empty input error message if any of inputs are empty
     emailError = !email ? 'Email should not be empty' : emailError
     firstnameError = !firstname ? 'firstname should not be empty' : firstnameError
     lastnameError = !lastname ? 'lastname should not be empty' : lastnameError
+
+    // update error states and return validation result
+    this.setState({ emailError, firstnameError, lastnameError })
+    return !emailError && !firstnameError && !lastnameError;
+  }
+
+  validateBeforeSignup() {
+    const { password, passwordValidation } = this.state
+    let { passwordError, passwordValidationError } = this.state
+
     passwordError = !password ? 'Password should not be empty' : passwordError
     passwordValidationError = !passwordValidation ?
       'Password validation should not be empty' :
         passwordValidationError
 
-    // update error states
-    this.setState({
-      emailError,
-      firstnameError,
-      lastnameError,
-      passwordError,
-      passwordValidationError
-    })
+    // update error states and return validation result
+    this.setState({ passwordError, passwordValidationError })
+    return !passwordError & !passwordValidationError
+  }
 
-    // return false if the form contains any error
-    return !emailError && !firstnameError && !lastnameError &&
-      !passwordError & !passwordValidationError
+  proceed() {
+    if (this.state.step === SIGNUP_STEP_USER && this.validateBeforeProceed()) {
+      this.setState({ step: SIGNUP_STEP_PASSWORD })
+    }
+  }
+
+  back() {
+    if (this.state.step === SIGNUP_STEP_PASSWORD) {
+      this.setState({ step: SIGNUP_STEP_USER })
+    }
   }
 
   register() {
@@ -222,18 +207,18 @@ class Signup extends React.Component {
 
   render() {
     const { isRegistering, didSignupFail, errorMessage } = this.props
-    const formProps = {
-      emailError: this.state.emailError,
+    const formProps = Object.assign({}, this.state, {
+      isRegistering,
+      back: ::this.back,
+      proceed: ::this.proceed,
+      register: ::this.register,
+      // value links
       emailValueLink: this._getValueLink('email'),
-      firstnameError: this.state.firstnameError,
       firstnameValueLink: this._getValueLink('firstname'),
-      lastnameError: this.state.lastnameError,
       lastnameValueLink: this._getValueLink('lastname'),
-      passwordError: this.state.passwordError,
       passwordValueLink: this._getValueLink('password'),
-      passwordValidationError: this.state.passwordValidationError,
       passwordValidationValueLink: this._getValueLink('passwordValidation')
-    }
+    })
 
     return (
       <div style={this.constructor.STYLE}>
@@ -254,13 +239,6 @@ class Signup extends React.Component {
             <MessageBox className="col-md" message={errorMessage} type={ERROR} />
           </div> : null
         }
-
-        <div className="row center-md" style={this.constructor.BTN_ROW_STYLE}>
-          <SignupButton className="col-md-3"
-            isRegistering={isRegistering}
-            onClick={::this.register}
-          />
-        </div>
       </div>
     )
   }

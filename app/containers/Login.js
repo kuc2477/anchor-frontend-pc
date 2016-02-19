@@ -65,8 +65,7 @@ class Login extends React.Component {
     };
 
     static BTN_STYLE = {
-      margin: 10,
-      padding: 10
+      padding: 0
     };
 
     static FORM_CONSTRAINT = {

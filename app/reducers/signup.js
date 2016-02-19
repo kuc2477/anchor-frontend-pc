@@ -3,7 +3,8 @@ import Immutable from 'immutable'
 import {
   SIGNUP_START,
   SIGNUP_SUCCESS,
-  SIGNUP_ERROR
+  SIGNUP_ERROR,
+  CLEAR_SIGNUP_STATE
 } from '../actions/signup'
 
 
@@ -31,6 +32,9 @@ export default(state = initialState, action) => {
         didSignupFail: true,
         errorMessage: action.reason
       })
+
+    case CLEAR_SIGNUP_STATE:
+      return initialState
 
     default:
       return state

@@ -5,9 +5,9 @@ import ProceedButton from './ProceedButton'
 import { ValueLinkPropType } from '../../constants/types'
 
 
-export default class UserinfoSignupForm extends React.Component {
+export default class SignupUserForm extends React.Component {
   static propTypes = {
-    onProceedButtonClick: PropTypes,func
+    proceed: PropTypes.func,
 
     emailError: PropTypes.string,
     emailValueLink: ValueLinkPropType,
@@ -28,13 +28,17 @@ export default class UserinfoSignupForm extends React.Component {
   static LASTNAME_FLOATING_LABEL = 'Lastname';
   static LASTNAME_HINT = 'Lastname';
 
+  static BTN_STYLE = {
+    marginTop: 20,
+  };
+
   static TEXT_FIELD_STYLE = {
     marginTop: -15
   };
 
   render() {
     const {
-      onProceedButtonClick,
+      proceed,
       emailError, emailValueLink,
       firstnameError, firstnameValueLink,
       lastnameError, lastnameValueLink
@@ -73,7 +77,12 @@ export default class UserinfoSignupForm extends React.Component {
           onChange={lastnameValueLink.requestChange}
         />
 
-        <ProceedButton onProceedButtonClick={onProceedButtonClick} />
+        <br/>
+
+        <ProceedButton
+          style={this.constructor.BTN_STYLE}
+          onClick={proceed}
+        />
       </div>
     )
   }

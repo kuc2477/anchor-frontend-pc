@@ -1,16 +1,24 @@
 import React, { PropTypes } from 'react'
 import TextField from 'material-ui/lib/text-field'
 
+import SignupUserForm from './SignupUserForm'
+import SignupPasswordForm from './SignupPasswordForm'
+
+import {
+  SIGNUP_STEP_USER,
+  SIGNUP_STEP_PASSWORD
+} from '../../constants/strings'
 import { ValueLinkPropType } from '../../constants/types'
 
 
 export default class SignupForm extends React.Component {
   static propTypes = {
-    onProceedButtonClick: PropTypes.func,
-    onSignupButtonClick: PropTypes.func,
-
+    step: PropTypes.string,
     isRegistering: PropTypes.bool,
 
+    proceed: PropTypes.func,
+    back: PropTypes.func,
+    register: PropTypes.func,
 
     emailError: PropTypes.string,
     emailValueLink: ValueLinkPropType,
@@ -28,27 +36,9 @@ export default class SignupForm extends React.Component {
     passwordValidationValueLink: ValueLinkPropType
   };
 
-  static EMAIL_FLOATING_LABEL = 'Email';
-  static EMAIL_HINT = 'Email';
-
-  static FIRSTNAME_FLOATING_LABEL = 'Firstname';
-  static FIRSTNAME_HINT = 'Firstname';
-
-  static LASTNAME_FLOATING_LABEL = 'Lastname';
-  static LASTNAME_HINT = 'Lastname';
-
-  static PASSWORD_FLOATING_LABEL = 'Password';
-  static PASSWORD_HINT = 'Password';
-
-  static PASSWORD_CHECK_FLOATING_LABEL = 'Password validation';
-  static PASSWORD_CHECK_HINT = 'Password validation';
-
-  static TEXT_FIELD_STYLE = {
-    marginTop: -15
-  };
-
   render() {
     const {
+      step, isRegistering, proceed, back, register,
       emailError, emailValueLink,
       firstnameError, firstnameValueLink,
       lastnameError, lastnameValueLink,
@@ -56,39 +46,26 @@ export default class SignupForm extends React.Component {
       passwordValidationError, passwordValidationValueLink
     } = this.props
 
-    return (
-      <div>
-        <TextField
-          style={this.constructor.TEXT_FIELD_STYLE}
-          hintText={this.constructor.EMAIL_HINT}
-          floatingLabelText={this.constructor.EMAIL_FLOATING_LABEL}
-          errorText={emailError}
-          value={emailValueLink.value}
-          onChange={emailValueLink.requestChange}
-        />
+    const userFormProps = {
+      proceed, emailError, emailValueLink,
+      firstnameError, firstnameValueLink,
+      lastnameError, lastnameValueLink
+    }
 
-        <br/>
+    const passwordFormProps = {
+      isRegistering, back, register,
+      email: emailValueLink.value,
+      firstname: firstnameValueLink.value,
+      lastname: lastnameValueLink.value,
+      passwordError, passwordValueLink,
+      passwordValidationError, passwordValidationValueLink
+    }
 
-        <TextField
-          style={this.constructor.TEXT_FIELD_STYLE}
-          hintText={this.constructor.FIRSTNAME_HINT}
-          floatingLabelText={this.constructor.FIRSTNAME_FLOATING_LABEL}
-          errorText={firstnameError}
-          value={firstnameValueLink.value}
-          onChange={firstnameValueLink.requestChange}
-        />
+    const form =
+      step === SIGNUP_STEP_USER ?  <SignupUserForm {...userFormProps} /> :
+      step === SIGNUP_STEP_PASSWORD ? <SignupPasswordForm {...passwordFormProps} /> :
+        (() => { throw 'INVALID SIGNUP STEP' })()
 
-        <br/>
-
-        <TextField
-          style={this.constructor.TEXT_FIELD_STYLE}
-          hintText={this.constructor.LASTNAME_HINT}
-          floatingLabelText={this.constructor.LASTNAME_FLOATING_LABEL}
-          errorText={lastnameError}
-          value={lastnameValueLink.value}
-          onChange={lastnameValueLink.requestChange}
-        />
-      </div>
-    )
+    return form
   }
 }

@@ -21,6 +21,11 @@ export function signupError(reason = 'Signup failed due to unknown error') {
   return { type: SIGNUP_ERROR, reason }
 }
 
+export const CLEAR_SIGNUP_STATE = 'CLEAR_SIGNUP_STATE'
+export function clearSignupState() {
+  return { type: CLEAR_SIGNUP_STATE  }
+}
+
 export function signup(
   email, firstname, lastname,
   password, passwordValidation,

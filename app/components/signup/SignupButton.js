@@ -4,7 +4,6 @@ import FlatButton from 'material-ui/lib/flat-button'
 
 export default class SignupButton extends React.Component {
   static propTypes = {
-    onClick: PropTypes.func,
     isRegistering: PropTypes.bool.isRequired
   };
 
@@ -15,7 +14,7 @@ export default class SignupButton extends React.Component {
   static LABEL = 'Signup to Anchor';
 
   render() {
-    const { isRegistering } = this.props
+    const { isRegistering, ...restProps } = this.props
     const statusIcon = isRegistering ?
       <i className='fa fa-lg fa-spinner fa-spin'></i> :
       <i className='fa fa-lg fa-anchor'></i>
@@ -25,7 +24,8 @@ export default class SignupButton extends React.Component {
         secondary={true}
         label={this.constructor.LABEL}
         labelPosition="after"
-        onClick={this.props.onClick}>
+        {...restProps}
+      >
         {statusIcon}
       </FlatButton>
     )
