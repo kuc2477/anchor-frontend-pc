@@ -66,7 +66,7 @@ class Signup extends React.Component {
   };
 
   static ERROR_ROW_STYLE = {
-    marginBottom: 30
+    marginBottom: 0
   };
 
   static TITLE = 'Signup and get your site readables personalized';

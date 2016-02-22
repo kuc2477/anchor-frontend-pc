@@ -5,7 +5,6 @@ import CardTitle from 'material-ui/lib/card/card-title'
 import SignupButton from './SignupButton'
 import { ValueLinkPropType } from '../../constants/types'
 import { INACTIVE } from '../../constants/colors'
-import keyboard from '../../modules/keyboard'
 
 
 export default class SignupPasswordForm extends React.Component {
@@ -42,21 +41,6 @@ export default class SignupPasswordForm extends React.Component {
   static TEXT_FIELD_STYLE = {
     marginTop: -15
   };
-
-  componentDidMount() {
-    const backspaceHandler = () => {
-      if (document.activeElement.tagName.toLowerCase() !== 'input') {
-        this.props.back()
-      }
-    }
-    keyboard.bindTemp('backspace', backspaceHandler)
-    keyboard.bindTemp('alt + left', backspaceHandler)
-  }
-
-  componentWillUnmount() {
-    keyboard.rewindTemp('backspace')
-    keyboard.rewindTemp('alt + left')
-  }
 
   render() {
     const {

@@ -11,10 +11,8 @@ export default class SignupUserForm extends React.Component {
 
     emailError: PropTypes.string,
     emailValueLink: ValueLinkPropType,
-
     firstnameError: PropTypes.string,
     firstnameValueLink: ValueLinkPropType,
-
     lastnameError: PropTypes.string,
     lastnameValueLink: ValueLinkPropType,
   };
