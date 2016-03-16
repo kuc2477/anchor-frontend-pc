@@ -7,6 +7,7 @@ import { SitePropType, SchedulePropType } from '../constants/types'
 
 import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
+import { fetchSchedules } from '../actions/schedules'
 
 
 class Schedules extends React.Component {
@@ -23,7 +24,8 @@ class Schedules extends React.Component {
   };
 
   load() {
-    // TODO: NOT IMPLEMENTED YET
+    const { dispatch, urlToFetch } = this.props
+    dispatch(fetchSchedules(urlToFetch))
   }
 
   render() {
@@ -32,7 +34,7 @@ class Schedules extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-md-8 col-sm-6">
+        <div className="col-md-6 col-sm-6">
           <ScheduleList
             schedules={schedules}
             schedulesById={schedulesById}
@@ -40,7 +42,7 @@ class Schedules extends React.Component {
             load={::this.load}
           />
         </div>
-        <div className="col-md-4 col-sm-6">
+        <div className="col-md-6 col-sm-6">
           <DashBoard schedule={schedule} />
         </div>
       </div>

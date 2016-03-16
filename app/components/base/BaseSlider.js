@@ -6,7 +6,7 @@ import colors from '../../constants/colors'
 
 
 export default class BaseSlider extends React.Component {
-  static LABEL_STYLE = {
+  static INACTIVE_LABEL_STYLE = {
     color: colors.INACTIVE
   };
 
@@ -22,7 +22,7 @@ export default class BaseSlider extends React.Component {
   _getLabelStyle() {
     return this.state.isActive ?
       this.constructor.ACTIVE_LABEL_STYLE :
-      this.constructor.LABEL_STYLE
+      this.constructor.INACTIVE_LABEL_STYLE
   }
 
   _onDragStart = (f) => (arg) => {

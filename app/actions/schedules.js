@@ -1,5 +1,6 @@
 import request from 'superagent-bluebird-promise'
 
+import { CALL_API, Schemas } from '../middlewares/api'
 import { CSRF_TOKEN_HEADER } from '../constants/strings'
 import { authorize, authorizeCSRF  } from '../modules/auth'
 import urls from '../modules/urls'
@@ -10,28 +11,19 @@ import urls from '../modules/urls'
 // =====
 
 export const FETCH_SCHEDULES_START = 'FETCH_SCHEDULES_START'
-export function fetchSchedulesStart() {
-  return { type: FETCH_SCHEDULES_START }
-}
-
 export const FETCH_SCHEDULES_SUCCESS = 'FETCH_SCHEDULES_SUCCESS'
-export function fetchSchedulesSuccess(schedules, sites) {
-  return { type: FETCH_SCHEDULES_SUCCESS, schedules, sites }
-}
-
 export const FETCH_SCHEDULES_ERROR = 'FETCH_SCHEDULES_ERROR'
-export function fetchSchedulesError() {
-  return { type: fetchSchedulesError }
-}
-
-export function fetchSchedules(pageNumber) {
-  return (dispatch) => {
-    dispatch(fetchSchedulesStart())
-    request
-      .get(urls.schedules(pageNumber))
-      .end((error, response) => {
-        // TODO: NOT IMPLEMETNED YET
-      })
+export function fetchSchedules(url) {
+  return {
+    [CALL_API]: {
+      types: [
+        FETCH_SCHEDULES_START,
+        FETCH_SCHEDULES_SUCCESS,
+        FETCH_SCHEDULES_ERROR
+      ],
+      endpoint: url,
+      schema: Schemas.SCHEDULES
+    }
   }
 }
 

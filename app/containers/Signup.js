@@ -62,7 +62,7 @@ class Signup extends React.Component {
   };
 
   static FORM_ROW_STYLE = {
-    marginBottom: 30
+    marginBottom: 5
   };
 
   static ERROR_ROW_STYLE = {
