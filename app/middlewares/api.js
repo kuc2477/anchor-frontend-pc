@@ -77,10 +77,7 @@ export default store => next => action => {
   next(actionWith({ type: requestType }))
 
   return callAPI(endpoint, schema).then(
-    response => next(actionWith({
-      response,
-      type: successType
-    })),
+    response => next(actionWith({ ...response, type: successType })),
     error => next(actionWith({
       type: failureType,
       error: error ? error.message : 'something bad happened'

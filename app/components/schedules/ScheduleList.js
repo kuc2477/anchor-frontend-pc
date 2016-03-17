@@ -1,16 +1,13 @@
 import React, { PropTypes } from 'react'
 import Infinite from 'react-infinite'
-import Immutable from 'immutable'
-import ImmutablePropTypes from 'react-immutable-proptypes'
-
 import ScheduleItem from './ScheduleItem'
 import { SchedulePropType, SitePropType } from '../../constants/types'
 
 
 export default class ScheduleList extends React.Component {
   static propTypes = {
-    schedules: ImmutablePropTypes.listOf(PropTypes.number).isRequired,
-    schedulesById: PropTypes.instanceOf(Immutable.Map).isRequired,
+    schedules: PropTypes.arrayOf(PropTypes.number).isRequired,
+    schedulesById: PropTypes.objectOf(PropTypes.object).isRequired,
     sitesById: SitePropType,
     load: PropTypes.func.isRequired
   };
@@ -21,7 +18,7 @@ export default class ScheduleList extends React.Component {
   _getScheduleNodes() {
     return this.props.schedules
       .map(id => this.props.schedulesById[id])
-      .map(schedule => <ScheduleItem {...schedule} />)
+      .map(schedule => <ScheduleItem key={schedule.id} schedule={schedule}/>)
   }
 
   render() {

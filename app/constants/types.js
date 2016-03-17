@@ -1,5 +1,4 @@
 import { PropTypes } from 'react'
-import ImmutablePropTypes from 'react-immutable-proptypes'
 
 // ==================
 // Extended proptypes
@@ -14,12 +13,12 @@ export const ValueLinkPropType = PropTypes.shape({
 // Scheme proptypes
 // ================
 
-export const UserPropType = ImmutablePropTypes.contains({
+export const UserPropType = PropTypes.shape({
   id: PropTypes.number,
   username: PropTypes.string
 })
 
-export const NewsPropType = ImmutablePropTypes.contains({
+export const NewsPropType = PropTypes.shape({
   id: PropTypes.number,
   site: PropTypes.number,
   src: PropTypes.number,
@@ -29,18 +28,18 @@ export const NewsPropType = ImmutablePropTypes.contains({
   image: PropTypes.string
 })
 
-export const SitePropType = ImmutablePropTypes.contains({
+export const SitePropType = PropTypes.shape({
   id: PropTypes.number,
   url: PropTypes.string
 })
 
-export const SchedulePropType = ImmutablePropTypes.contains({
+export const SchedulePropType = PropTypes.shape({
   id: PropTypes.number,
   site: PropTypes.number,
   cycle: PropTypes.number,
   maxDepth: PropTypes.number,
   maxDistance: PropTypes.number,
-  brothers: ImmutablePropTypes.listOf(PropTypes.string)
+  brothers: PropTypes.arrayOf(PropTypes.string)
 })
 
 
