@@ -21,6 +21,7 @@ class App extends React.Component {
     toastAction: PropTypes.string,
     toastCallback: PropTypes.func,
     children: PropTypes.node,
+    dispatch: PropTypes.func
   };
 
   static childContextTypes = {
@@ -31,7 +32,7 @@ class App extends React.Component {
     paddingTop: 64,
     paddingLeft: 15,
     paddingRight: 15,
-    paddingBottom: 15
+    paddingBottom: 15,
   };
 
   closeToast() {

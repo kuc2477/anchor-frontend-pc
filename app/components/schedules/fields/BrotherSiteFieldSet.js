@@ -6,15 +6,6 @@ import colors from '../../../constants/colors'
 
 
 export default class BrotherSiteFieldSet extends React.Component {
-  static INACTIVE_LABEL_STYLE = {
-    color: colors.INACTIVE,
-    fontSize: 14
-  };
-
-  static ACTIVE_LABEL_STYLE = {
-    color: colors.SECONDARY
-  };
-
   static propTypes = {
     brothers: ImmutablePropTypes.listOf(PropTypes.string).isRequired
   };
@@ -23,6 +14,15 @@ export default class BrotherSiteFieldSet extends React.Component {
     super(props)
     this.state = { isActive: false }
   }
+
+  static INACTIVE_LABEL_STYLE = {
+    color: colors.INACTIVE,
+    fontSize: 14
+  };
+
+  static ACTIVE_LABEL_STYLE = {
+    color: colors.SECONDARY
+  };
 
   _getBrotherSiteFieldNodes() {
     return this.props.brothers.map(url => <BrotherSiteField url={url} />)

@@ -28,11 +28,6 @@ export const NewsPropType = PropTypes.shape({
   image: PropTypes.string
 })
 
-export const SitePropType = PropTypes.shape({
-  id: PropTypes.number,
-  url: PropTypes.string
-})
-
 export const SchedulePropType = PropTypes.shape({
   id: PropTypes.number,
   site: PropTypes.number,
@@ -47,6 +42,5 @@ export default {
   ValueLinkPropType,
   UserPropType,
   NewsPropType,
-  SitePropType,
   SchedulePropType
 }

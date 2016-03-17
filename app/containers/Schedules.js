@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { SitePropType, SchedulePropType } from '../constants/types'
+import { SchedulePropType } from '../constants/types'
 
 import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
 import { fetchSchedules } from '../actions/schedules'
+import { SCHEDULE_LIST, SCHEDULE_DASHBOARD } from '../constants/strings.js'
 
 
 class Schedules extends React.Component {
@@ -17,8 +18,23 @@ class Schedules extends React.Component {
     schedulesById: PropTypes.objectOf(SchedulePropType),
     isFetching: PropTypes.bool,
     didFetchFail: PropTypes.bool,
-    urlToFetch: PropTypes.string
+    urlToFetch: PropTypes.string,
+    dispatch: PropTypes.func
   };
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      activeSection: SCHEDULE_LIST
+    }
+  }
+
+  setSectionActive(section) {
+    if (section === this.state.activeSection) {
+      return
+    }
+    this.setState({ activeSection: section })
+  }
 
   load() {
     const { dispatch, urlToFetch } = this.props
@@ -26,21 +42,26 @@ class Schedules extends React.Component {
   }
 
   render() {
-    const { schedules, scheduleId, schedulesById, sitesById } = this.props
+    const { schedules, scheduleId, schedulesById } = this.props
     const schedule = scheduleId ? schedulesById.get(scheduleId) : null
 
     return (
       <div className="row">
         <div className="col-md-6 col-sm-6">
           <ScheduleList
+            isActive={this.state.activeSection === SCHEDULE_LIST}
             schedules={schedules}
             schedulesById={schedulesById}
-            sitesById={sitesById}
             load={::this.load}
+            setSectionActive={::this.setSectionActive}
           />
         </div>
         <div className="col-md-6 col-sm-6">
-          <DashBoard schedule={schedule} />
+          <DashBoard
+            isActive={this.state.activeSection === SCHEDULE_DASHBOARD}
+            schedule={schedule}
+            setSectionActive={::this.setSectionActive}
+          />
         </div>
       </div>
     )
