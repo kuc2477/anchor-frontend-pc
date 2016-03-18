@@ -54,9 +54,6 @@ config.plugins.push(
   new webpack.DefinePlugin({
     __DEV__: false,
     'global.GENTLY': false,
-    'process.env': {
-      NODE_ENV: JSON.stringify('production') 
-    }
   }),
   new webpack.optimize.UglifyJsPlugin({
     compressor: {

@@ -18,11 +18,6 @@ export default class CycleSelectField extends React.Component {
     value: PropTypes.number
   };
 
-  static STYLE = {
-    marginTop: -10,
-    marginBottom: 10
-  };
-
   _getCycleMenuItemNodes() {
     return _.zip(CYCLE_OPTIONS, CYCLE_OPTION_TEXTS).map((zipped) => {
       const [cycle, text] = zipped
@@ -31,10 +26,11 @@ export default class CycleSelectField extends React.Component {
 
 
   render() {
+    const { style } = this.props
     const cycleMenuItemNodes = this._getCycleMenuItemNodes()
 
     return (
-      <div style={this.constructor.STYLE}>
+      <div style={style}>
         <SelectField
           floatingLabelText="News arrival cycle"
           {...this.props}

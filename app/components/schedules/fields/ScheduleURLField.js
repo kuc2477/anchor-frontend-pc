@@ -7,19 +7,16 @@ export default class ScheduleURLField extends React.Component {
     url: PropTypes.string
   };
 
-  static STYLE = {
-    marginTop: -10
-  };
-
   render() {
+    const { style } = this.props
+
     return (
-      <div>
-        <TextField
-          floatingLabelText="Site url"
-          defaultValue={this.props.url}
-          style={this.constructor.STYLE}
-        />
-      </div>
+      <TextField
+        style={style}
+        floatingLabelText="Site url"
+        defaultValue={this.props.url}
+        style={this.constructor.STYLE}
+      />
     )
   }
 }

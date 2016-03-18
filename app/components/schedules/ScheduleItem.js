@@ -1,4 +1,5 @@
 import React from 'react'
+import Paper from 'material-ui/lib/paper'
 import ListItem from 'material-ui/lib/lists/list-item'
 import LinearProgress from 'material-ui/lib/linear-progress'
 import { SchedulePropType } from '../../constants/types'
@@ -23,6 +24,7 @@ export default class ScheduleItem extends React.Component {
   };
 
   render() {
+    const { STYLE, LIST_ITEM_STYLE } = this.constructor
     const progress = (
       <LinearProgress
         style={this.constructor.PROGRESS_STYLE}
@@ -34,16 +36,16 @@ export default class ScheduleItem extends React.Component {
     const expandButton = <i className="material-icons">expand_more</i>
 
     return (
-      <div style={this.constructor.STYLE}>
+      <Paper style={STYLE}>
         <ListItem
-          disabled
-          style={this.constructor.LIST_ITEM_STYLE}
+          initiallyOpen
+          style={LIST_ITEM_STYLE}
           primaryText={this.props.schedule.name}
           secondaryText={this.props.schedule.url}
           rightToggle={expandButton}
+          nestedItems={[progressItem]}
         />
-        {progressItem}
-      </div>
+      </Paper>
     )
   }
 }

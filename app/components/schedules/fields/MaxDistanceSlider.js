@@ -8,15 +8,25 @@ import {
 } from '../../../constants/numbers'
 
 export default class MaxDistanceSlider extends React.Component {
+  static SLIDER_STYLE = {
+    width: '73%'
+  };
+
   render() {
+    const { SLIDER_STYLE } = this.constructor
+    const { style } = this.props
+
     return (
-      <BaseSlider
-        step={1}
-        description="Maximum distance"
-        max={MAX_DIST_RANGE_MAX}
-        min={MAX_DIST_RANGE_MIN}
-        defaultValue={MAX_DIST_DEFALT}
-      />
+      <div style={style}>
+        <BaseSlider
+          step={1}
+          style={SLIDER_STYLE}
+          description="Maximum distance"
+          max={MAX_DIST_RANGE_MAX}
+          min={MAX_DIST_RANGE_MIN}
+          defaultValue={MAX_DIST_DEFALT}
+        />
+      </div>
     )
   }
 }

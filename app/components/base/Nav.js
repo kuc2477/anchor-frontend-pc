@@ -3,8 +3,9 @@ import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import { AppBar, Tabs, Tab } from 'material-ui'
 
-import { UserPropType } from '../../constants/types.js'
-import { NEWS, SCHEDULES, LOGOUT } from '../../constants/routes.js'
+import { INDICATOR } from '../../constants/colors'
+import { UserPropType } from '../../constants/types'
+import { NEWS, SCHEDULES, LOGOUT } from '../../constants/routes'
 import { logout } from '../../actions/auth'
 
 
@@ -14,6 +15,7 @@ export default class Nav extends React.Component {
   ];
 
   static APP_BAR_STYLE = { position: 'fixed' };
+  static TAB_INK_STYLE = { color: INDICATOR };
   static TAB_ITEM_STYLE = { marginRight: 120 };
 
   static propTypes = {
@@ -92,6 +94,7 @@ export default class Nav extends React.Component {
       <Tabs
         value={JSON.stringify(this.state.tabIndex)}
         tabItemContainerStyle={this.constructor.TAB_ITEM_STYLE}
+        inkBarStyle={this.constructor.TAB_INK_STYLE}
       >
         {tabItems}
       </Tabs>

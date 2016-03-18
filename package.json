@@ -22,15 +22,19 @@
     "start": {
       "command": "electron ./",
       "env": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "WINDOW_WIDTH": 1072,
+        "WINDOW_HEIGHT": 600
       }
     },
     "start-hot": {
       "command": "electron ./",
       "env": {
         "HOT": true,
+        "DEV_SERVER_PORT": 5000,
         "NODE_ENV": "development",
-        "DEV_SERVER_PORT": 5000
+        "WINDOW_WIDTH": 1072,
+        "WINDOW_HEIGHT": 600
       }
     },
     "hot-server": {

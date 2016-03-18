@@ -6,12 +6,21 @@ import colors from '../../constants/colors'
 
 
 export default class BaseSlider extends React.Component {
+  static STYLE = {
+    marginTop: 20,
+    marginBottom: 20
+  };
+
   static INACTIVE_LABEL_STYLE = {
-    color: colors.INACTIVE
+    color: colors.INACTIVE,
+    fontSize: 13,
+    userSelect: 'none'
   };
 
   static ACTIVE_LABEL_STYLE = {
-    color: colors.SECONDARY
+    color: colors.SECONDARY,
+    fontSize: 14,
+    userSelect: 'none'
   };
 
   constructor(props) {
@@ -41,19 +50,26 @@ export default class BaseSlider extends React.Component {
 
   render() {
     const labelStyle = this._getLabelStyle()
+    const { STYLE } = this.constructor
     const {
       description,
       onDragStart: onDragStartProp,
-      onDragStop: onDragStopProp, ...rest
+      onDragStop: onDragStopProp, style, ...rest
     } = this.props
 
     const onDragStart = this._onDragStart(onDragStartProp)
     const onDragStop = this._onDragStop(onDragStopProp)
+    const mergedStyle = Object.assign({}, STYLE, style)
 
     return (
       <div>
         <small><div style={labelStyle}>{description}</div></small>
-        <Slider onDragStart={onDragStart} onDragStop={onDragStop} {...rest} />
+        <Slider
+          style={mergedStyle}
+          onDragStart={onDragStart}
+          onDragStop={onDragStop}
+          {...rest}
+        />
       </div>
     )
   }

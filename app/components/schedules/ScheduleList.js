@@ -4,28 +4,37 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
 import ScheduleItem from './ScheduleItem'
+import { INDICATOR, PRIMARY } from '../../constants/colors'
 import { SchedulePropType } from '../../constants/types'
 import { SCHEDULE_LIST } from '../../constants/strings'
+import { WINDOW_WIDTH } from '../../constants/numbers'
 
 
 export default class ScheduleList extends React.Component {
   static propTypes = {
     isActive: PropTypes.bool,
+    schedule: PropTypes.number,
     schedules: PropTypes.arrayOf(PropTypes.number).isRequired,
     schedulesById: PropTypes.objectOf(SchedulePropType).isRequired,
     load: PropTypes.func.isRequired,
-    setSectionActive: PropTypes.func.isRequired
+    setSectionActive: PropTypes.func.isRequired,
+    addSchedule: PropTypes.func.isRequired,
+    deleteSchedule: PropTypes.func.isRequired,
   };
 
   static STYLE = {
     position: 'relative',
-    height: 430
+    height: 430,
+    padding: 20,
   };
+
   static FAB_STYLE = {
-    position: 'absolute',
-    right: 0,
-    bottom: 0
+    position: 'fixed',
+    right: (WINDOW_WIDTH / 2) + 20,
+    bottom: 30,
+    color: PRIMARY,
   };
+
   static SCHEDULE_LIST_HEIGHT = 800;
   static SCHEDULE_ITEM_HEIGHT = 100;
   static LOAD_EDGE_OFFSET = 50;
@@ -49,26 +58,31 @@ export default class ScheduleList extends React.Component {
   }
 
   render() {
+    const {
+      STYLE, FAB_STYLE,
+      SCHEDULE_LIST_HEIGHT, SCHEDULE_ITEM_HEIGHT, LOAD_EDGE_OFFSET
+    } = this.constructor
+    const { load, addSchedule, deleteSchedule } = this.props
     const scheduleNodes = this._getScheduleNodes()
 
     return (
       <div
-        style={this.constructor.STYLE}
+        style={this._getStyle()}
         onMouseEnter={::this._setActive}
       >
         <Infinite
-          containerHeight={this.constructor.SCHEDULE_LIST_HEIGHT}
           useWindowAsScrollContainer
-          elementHeight={this.constructor.SCHEDULE_ITEM_HEIGHT}
-          infiniteLoadBeginEdgeOffset={this.constructor.LOAD_EDGE_OFFSET}
-          onInfiniteLoad={this.props.load}
+          containerHeight={SCHEDULE_LIST_HEIGHT}
+          elementHeight={SCHEDULE_ITEM_HEIGHT}
+          infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
+          onInfiniteLoad={load}
         >
           {scheduleNodes}
         </Infinite>
 
         <FloatingActionButton
-          mini secondary
-          style={this.constructor.FAB_STYLE}
+          mini backgroundColor={FAB_STYLE.color} style={FAB_STYLE}
+          onClick={addSchedule}
         >
           <ContentAdd />
         </FloatingActionButton>

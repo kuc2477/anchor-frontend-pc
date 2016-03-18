@@ -25,7 +25,9 @@ app.on('window-all-closed', () => {
 })
 
 app.on('ready', () => {
-  let mainWindow = new BrowserWindow({ width: 1072, height: 600 })
+  let mainWindow = new BrowserWindow({
+    width: 1072, height: 600, resizable: false
+  })
 
   // open browser and load index page
   mainWindow.loadURL(

@@ -34,7 +34,9 @@ export const SchedulePropType = PropTypes.shape({
   cycle: PropTypes.number,
   maxDepth: PropTypes.number,
   maxDistance: PropTypes.number,
-  brothers: PropTypes.arrayOf(PropTypes.string)
+  brothers: PropTypes.arrayOf(PropTypes.string),
+  isActive: PropTypes.bool,
+  isUpdating: PropTypes.bool,
 })
 
 

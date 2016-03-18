@@ -16,13 +16,11 @@ import { LOGOUT } from '../actions/auth'
 
 
 export const initialState = new Immutable.Map({
-  // schedule
-  scheduleId : null,
-  isSaving: false,
-  didSaveFail: false,
-  // schedules
+  schedule : null,
   schedules: new Immutable.List(),
   schedulesById: new Immutable.Map(),
+  isSaving: false,
+  didSaveFail: false,
   isFetching: false,
   didFetchFail: false,
   urlToFetch: urls.schedules()
@@ -35,6 +33,9 @@ export default (state = initialState, action) => {
 
     case FETCH_SCHEDULES_SUCCESS:
       return state.merge({
+        schedule:
+          !state.get('schedules').count() && action.result.length ?
+          action.result[0] : state.get('schedule'),
         schedules: state.get('schedules').push(...action.result),
         schedulesById: state.get('schedulesById').merge(
           action.entities.schedule),

@@ -57,11 +57,6 @@ config.plugins.push(
   new webpack.DefinePlugin({
     __DEV__: true,
     'global.GENTLY': false,
-    'process.env': { 
-      HOT: true,
-      DEV_SERVER_PORT: 5000,
-      NODE_ENV: JSON.stringify('development') 
-    }
   })
 )
 

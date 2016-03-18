@@ -7,19 +7,19 @@ export default class ScheduleNameField extends React.Component {
     name: PropTypes.string
   };
 
-  static STYLE = {
-    marginTop: -10
+  static INPUT_STYLE = {
+    fontSize: 13
   };
 
   render() {
+    const { style } = this.props
     return (
-      <div>
-        <TextField
-          floatingLabelText="Site name"
-          defaultValue={this.props.name}
-          style={this.constructor.STYLE}
-        />
-      </div>
+      <TextField
+        style={style}
+        floatingLabelText="Site name"
+        defaultValue={this.props.name}
+        inputStyle={this.constructor.INPUT_STYLE}
+      />
     )
   }
 }

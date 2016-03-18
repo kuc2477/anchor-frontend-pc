@@ -1,3 +1,6 @@
+export const WINDOW_WIDTH = process.env.WINDOW_WIDTH
+export const WINDOW_HEIGHT = process.env.WINDOW_HEIGHT
+
 export const MAX_DEPTH_RANGE_MIN = 0
 export const MAX_DEPTH_RANGE_MAX = 5
 export const MAX_DEPTH_DEFAULT = 2
