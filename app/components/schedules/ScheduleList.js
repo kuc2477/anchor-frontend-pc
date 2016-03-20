@@ -4,7 +4,7 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
 import ScheduleItem from './ScheduleItem'
-import { INDICATOR, PRIMARY } from '../../constants/colors'
+import { SECONDARY } from '../../constants/colors'
 import { SchedulePropType } from '../../constants/types'
 import { SCHEDULE_LIST } from '../../constants/strings'
 import { WINDOW_WIDTH } from '../../constants/numbers'
@@ -23,16 +23,17 @@ export default class ScheduleList extends React.Component {
   };
 
   static STYLE = {
-    position: 'relative',
-    height: 430,
+    height: 350,
+    width: WINDOW_WIDTH * 0.5 - 60,
+    marginRight: 20,
     padding: 20,
   };
 
   static FAB_STYLE = {
     position: 'fixed',
-    right: (WINDOW_WIDTH / 2) + 20,
-    bottom: 30,
-    color: PRIMARY,
+    right: WINDOW_WIDTH / 2 + 30,
+    bottom: 40,
+    color: SECONDARY,
   };
 
   static SCHEDULE_LIST_HEIGHT = 800;
@@ -59,10 +60,10 @@ export default class ScheduleList extends React.Component {
 
   render() {
     const {
-      STYLE, FAB_STYLE,
+      FAB_STYLE,
       SCHEDULE_LIST_HEIGHT, SCHEDULE_ITEM_HEIGHT, LOAD_EDGE_OFFSET
     } = this.constructor
-    const { load, addSchedule, deleteSchedule } = this.props
+    const { load, addSchedule } = this.props
     const scheduleNodes = this._getScheduleNodes()
 
     return (
@@ -81,7 +82,8 @@ export default class ScheduleList extends React.Component {
         </Infinite>
 
         <FloatingActionButton
-          mini backgroundColor={FAB_STYLE.color} style={FAB_STYLE}
+          mini backgroundColor={FAB_STYLE.color}
+          style={FAB_STYLE}
           onClick={addSchedule}
         >
           <ContentAdd />

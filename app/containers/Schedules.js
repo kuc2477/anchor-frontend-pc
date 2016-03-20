@@ -8,6 +8,8 @@ import ScheduleList from '../components/schedules/ScheduleList'
 import { fetchSchedules } from '../actions/schedules'
 import { SCHEDULE_LIST, SCHEDULE_DASHBOARD } from '../constants/strings.js'
 
+import '../styles/modules/no-scrollbar.scss'
+
 
 class Schedules extends React.Component {
   static propTypes = {

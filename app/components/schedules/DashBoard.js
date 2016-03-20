@@ -10,6 +10,7 @@ import BrotherSiteFieldSet from './fields/BrotherSiteFieldSet'
 
 import { SchedulePropType } from '../../constants/types'
 import { SCHEDULE_DASHBOARD } from '../../constants/strings'
+import { WINDOW_WIDTH } from '../../constants/numbers'
 
 
 export default class DashBoard extends React.Component {
@@ -26,10 +27,10 @@ export default class DashBoard extends React.Component {
   };
 
   static STYLE = {
-    position: 'fixed',
-    margin: 20,
+    width: WINDOW_WIDTH * 0.5 - 50,
+    marginTop: 20,
     paddingTop: -20,
-    paddingLeft: 30,
+    paddingLeft: 40,
     zDepth: 1
   };
 
@@ -62,7 +63,6 @@ export default class DashBoard extends React.Component {
   _getStyle() {
     const { isActive } = this.props
     const base = this.constructor.STYLE
-
     return Object.assign({}, base, {
       position: isActive ? 'relative' : 'fixed'
     })

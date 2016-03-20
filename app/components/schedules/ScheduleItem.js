@@ -25,16 +25,14 @@ export default class ScheduleItem extends React.Component {
 
   render() {
     const { STYLE, LIST_ITEM_STYLE } = this.constructor
+
     const progress = (
       <LinearProgress
         style={this.constructor.PROGRESS_STYLE}
         mode="indeterminate"
       />
     )
-
     const progressItem = <ListItem disabled leftAvatar={progress} />
-    const expandButton = <i className="material-icons">expand_more</i>
-
     return (
       <Paper style={STYLE}>
         <ListItem
@@ -42,7 +40,7 @@ export default class ScheduleItem extends React.Component {
           style={LIST_ITEM_STYLE}
           primaryText={this.props.schedule.name}
           secondaryText={this.props.schedule.url}
-          rightToggle={expandButton}
+          primaryTogglesNestedList
           nestedItems={[progressItem]}
         />
       </Paper>
