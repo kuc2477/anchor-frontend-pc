@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import { PropTypes } from 'react'
+import { CYCLE_OPTIONS } from './arrays'
 
 // ==================
 // Extended proptypes
@@ -14,35 +16,62 @@ export const ValueLinkPropType = PropTypes.shape({
 // ================
 
 export const UserPropType = PropTypes.shape({
-  id: PropTypes.number,
-  username: PropTypes.string
+  id: PropTypes.number.isRequired,
+  firstname: PropTypes.string.isRequired,
+  lastname: PropTypes.string.isRequired
 })
 
 export const NewsPropType = PropTypes.shape({
-  id: PropTypes.number,
-  site: PropTypes.number,
-  src: PropTypes.number,
-  url: PropTypes.string,
-  title: PropTypes.string,
-  description: PropTypes.string,
-  image: PropTypes.string
+  id: PropTypes.number.isRequired,
+  owner: PropTypes.number.isRequired,
+  src: PropTypes.number.isRequired,
+  url: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired
 })
 
 export const SchedulePropType = PropTypes.shape({
-  id: PropTypes.number,
-  site: PropTypes.number,
-  cycle: PropTypes.number,
+  id: PropTypes.number.isRequired,
+  url: PropTypes.string.isRequired,
+  cycle: PropTypes.number.isRequired,
   maxDepth: PropTypes.number,
   maxDistance: PropTypes.number,
-  brothers: PropTypes.arrayOf(PropTypes.string),
-  isActive: PropTypes.bool,
-  isUpdating: PropTypes.bool,
+  brothers: PropTypes.arrayOf(PropTypes.oneOfType(
+    [PropTypes.string, PropTypes.number]
+  )),
+  isActive: PropTypes.bool.isRequired,
+  isUpdating: PropTypes.bool.isRequired,
+})
+
+
+// ==============================
+// Client side instance creators
+// ==============================
+
+const CLIENT_INSTANCE_PREFIX = 'unsaved-'
+export const isClientInstance =
+  instance => instance.contains(CLIENT_INSTANCE_PREFIX)
+
+export const createSchedule = () => ({
+  id: _.uniqueId(CLIENT_INSTANCE_PREFIX),
+  url: '',
+  cycle: CYCLE_OPTIONS[0],
+  maxDepth: null,
+  maxDistance: null,
+  brothers: [],
+  isActive: false,
+  isUpdating: false,
 })
 
 
 export default {
+  // types
   ValueLinkPropType,
   UserPropType,
   NewsPropType,
-  SchedulePropType
+  SchedulePropType,
+  // client side creators
+  isClientInstance,
+  createSchedule
 }

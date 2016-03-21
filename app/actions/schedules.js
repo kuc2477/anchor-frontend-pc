@@ -2,6 +2,7 @@ import request from 'superagent-bluebird-promise'
 
 import { CALL_API, Schemas } from '../middlewares/api'
 import { CSRF_TOKEN_HEADER } from '../constants/strings'
+import { createSchedule } from '../constants/types'
 import { authorize, authorizeCSRF  } from '../modules/auth'
 import urls from '../modules/urls'
 
@@ -74,3 +75,14 @@ export const deleteSchedule = scheduleId => dispatch => {
     // TODO: NOT IMPLEMENTED YET
   })
 }
+
+
+// ===
+// Add
+// ===
+
+export const ADD_SCHEDULE = 'ADD_SCHEDULE'
+export const addSchedule = () => ({
+  type: ADD_SCHEDULE,
+  schedule: createSchedule()
+})

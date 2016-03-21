@@ -16,6 +16,10 @@ export default class BrotherSiteFieldSet extends React.Component {
     this.state = { isActive: false }
   }
 
+  static STYLE = {
+    minHeight: 500
+  };
+
   static TITLE_STYLE = {
     marginLeft: 0
   };

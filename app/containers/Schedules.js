@@ -2,10 +2,9 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import { SchedulePropType } from '../constants/types'
-
 import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
-import { fetchSchedules } from '../actions/schedules'
+import { addSchedule, fetchSchedules } from '../actions/schedules'
 import { SCHEDULE_LIST, SCHEDULE_DASHBOARD } from '../constants/strings.js'
 
 import '../styles/modules/no-scrollbar.scss'
@@ -46,7 +45,8 @@ class Schedules extends React.Component {
   }
 
   addSchedule() {
-    // TODO: NOT IMPLEMENTED YET
+    const { dispatch } = this.props
+    dispatch(addSchedule())
   }
 
   saveSchedule(schedule) {

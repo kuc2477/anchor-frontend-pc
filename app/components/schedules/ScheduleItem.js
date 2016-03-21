@@ -1,5 +1,14 @@
 import React from 'react'
+
 import Paper from 'material-ui/lib/paper'
+import Colors from 'material-ui/lib/styles/colors'
+
+import Delete from 'material-ui/lib/svg-icons/action/delete'
+import IconButton from 'material-ui/lib/icon-button'
+import IconMenu from 'material-ui/lib/menus/icon-menu'
+import MenuItem from 'material-ui/lib/menus/menu-item'
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
+
 import ListItem from 'material-ui/lib/lists/list-item'
 import LinearProgress from 'material-ui/lib/linear-progress'
 import { SchedulePropType } from '../../constants/types'
@@ -23,26 +32,59 @@ export default class ScheduleItem extends React.Component {
   static PROGRESS_ITEM_STYLE = {
   };
 
-  render() {
-    const { STYLE, LIST_ITEM_STYLE } = this.constructor
+  _getStyle() {
+    const { style } = this.props
+    const { STYLE: base } = this.constructor
+    return Object.assign({}, base, style)
+  }
 
-    const progress = (
-      <LinearProgress
-        style={this.constructor.PROGRESS_STYLE}
-        mode="indeterminate"
-      />
+  _getProgressItem() {
+    const { PROGRESS_STYLE } = this.constructor
+    const progressBar = (
+      <LinearProgress style={PROGRESS_STYLE} mode="indeterminate" />
     )
-    const progressItem = <ListItem disabled leftAvatar={progress} />
     return (
-      <Paper style={STYLE}>
+      <ListItem>
+        {progressBar}
+      </ListItem>
+    )
+
+  }
+
+  _getActionButton() {
+    return (
+      <IconButton touch tooltip="more" tooltipPosition="bottom-right" >
+        <MoreVertIcon color={Colors.grey400} />
+      </IconButton>
+    )
+  }
+
+  _getActionButtonMenu() {
+    return (
+      <IconMenu iconButtonElement={this._getActionButton()}>
+        <MenuItem>
+          <div className="row middle-md">
+              <Delete style={{width: 20, height: 20, marginLeft: 10}} />
+              <div style={{paddingLeft: 5}}>Delete</div>
+          </div>
+        </MenuItem>
+      </IconMenu>
+    )
+  }
+
+  render() {
+    const { LIST_ITEM_STYLE } = this.constructor
+    return (
+      <Paper style={this._getStyle()}>
         <ListItem
-          initiallyOpen
           style={LIST_ITEM_STYLE}
-          primaryText={this.props.schedule.name}
-          secondaryText={this.props.schedule.url}
           primaryTogglesNestedList
-          nestedItems={[progressItem]}
+          primaryText={this.props.schedule.name || 'Default'}
+          secondaryText={this.props.schedule.url || ''}
+          nestedItems={[this._getProgressItem()]}
+          rightIconButton={this._getActionButtonMenu()}
         />
+
       </Paper>
     )
   }

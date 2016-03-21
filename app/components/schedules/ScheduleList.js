@@ -36,6 +36,10 @@ export default class ScheduleList extends React.Component {
     color: SECONDARY,
   };
 
+  static LIST_ITEM_STYLE = {
+    marginBottom: 10,
+  };
+
   static SCHEDULE_LIST_HEIGHT = 800;
   static SCHEDULE_ITEM_HEIGHT = 100;
   static LOAD_EDGE_OFFSET = 50;
@@ -46,16 +50,23 @@ export default class ScheduleList extends React.Component {
 
   _getStyle() {
     const { isActive } = this.props
-    const base = this.constructor.STYLE
+    const { STYLE: base } = this.constructor
     return Object.assign({}, base, {
       position: isActive ? 'relative' : 'fixed'
     })
   }
 
   _getScheduleNodes() {
+    const { LIST_ITEM_STYLE } = this.constructor
     return this.props.schedules
       .map(id => this.props.schedulesById[id])
-      .map(schedule => <ScheduleItem key={schedule.id} schedule={schedule}/>)
+      .map(schedule => (
+        <ScheduleItem
+          style={LIST_ITEM_STYLE}
+          key={schedule.id}
+          schedule={schedule}
+        />
+      ))
   }
 
   render() {

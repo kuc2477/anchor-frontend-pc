@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Immutable from 'immutable'
 
 import urls from '../modules/urls'
@@ -10,7 +11,8 @@ import {
   SAVE_SCHEDULE_ERROR,
   DELETE_SCHEDULE_START,
   DELETE_SCHEDULE_SUCCESS,
-  DELETE_SCHEDULE_ERROR
+  DELETE_SCHEDULE_ERROR,
+  ADD_SCHEDULE
 } from '../actions/schedules'
 import { LOGOUT } from '../actions/auth'
 
@@ -32,16 +34,16 @@ export default (state = initialState, action) => {
       return state.set('isFetching', true)
 
     case FETCH_SCHEDULES_SUCCESS:
+      const { result, entities, link } = action
       return state.merge({
         schedule:
-          !state.get('schedules').count() && action.result.length ?
-          action.result[0] : state.get('schedule'),
-        schedules: state.get('schedules').push(...action.result),
-        schedulesById: state.get('schedulesById').merge(
-          action.entities.schedule),
+          !state.get('schedules').count() && result.length ?
+            result[0] : state.get('schedule'),
+        schedules: state.get('schedules').push(...result),
+        schedulesById: state.get('schedulesById').merge(entities.schedule),
         isFetching: false,
         didFetchFail: false,
-        urlToFetch: action.link
+        urlToFetch: link
       })
 
     case FETCH_SCHEDULES_ERROR:
@@ -75,6 +77,16 @@ export default (state = initialState, action) => {
     case DELETE_SCHEDULE_SUCCESS:
     case DELETE_SCHEDULE_ERROR:
       return state
+
+  case ADD_SCHEDULE:
+      const { schedule } = action
+      return state.merge({
+        schedule: schedule.id,
+        schedules: state.get('schedules').push(schedule.id),
+        schedulesById: state.get('schedulesById').merge({
+          [schedule.id]: schedule
+        })
+      })
 
     case LOGOUT:
       return initialState
