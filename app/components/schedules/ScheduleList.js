@@ -12,14 +12,18 @@ import { WINDOW_WIDTH } from '../../constants/numbers'
 
 export default class ScheduleList extends React.Component {
   static propTypes = {
+    // component activeness
     isActive: PropTypes.bool,
+    // schedules
     schedule: PropTypes.number,
     schedules: PropTypes.arrayOf(PropTypes.number).isRequired,
     schedulesById: PropTypes.objectOf(SchedulePropType).isRequired,
     load: PropTypes.func.isRequired,
-    setSectionActive: PropTypes.func.isRequired,
+    // schedule entry manipulation
     addSchedule: PropTypes.func.isRequired,
+    removeSchedule: PropTypes.func.isRequired,
     deleteSchedule: PropTypes.func.isRequired,
+    setScheduleSelected: PropTypes.func.isRequired,
   };
 
   static STYLE = {
@@ -44,44 +48,42 @@ export default class ScheduleList extends React.Component {
   static SCHEDULE_ITEM_HEIGHT = 100;
   static LOAD_EDGE_OFFSET = 50;
 
-  _setActive() {
-    this.props.setSectionActive(SCHEDULE_LIST)
-  }
-
-  _getStyle() {
-    const { isActive } = this.props
-    const { STYLE: base } = this.constructor
-    return Object.assign({}, base, {
-      position: isActive ? 'relative' : 'fixed'
-    })
-  }
-
   _getScheduleNodes() {
     const { LIST_ITEM_STYLE } = this.constructor
+    const {
+      schedule: selected,
+      removeSchedule,
+      setScheduleSelected
+    } = this.props
+
+    const selectItem = scheduleId => () => {
+      setScheduleSelected(scheduleId)
+    }
+
     return this.props.schedules
       .map(id => this.props.schedulesById[id])
       .map(schedule => (
         <ScheduleItem
           style={LIST_ITEM_STYLE}
           key={schedule.id}
+          selected={schedule.id === selected}
           schedule={schedule}
+          removeSchedule={removeSchedule}
+          onClick={selectItem(schedule.id)}
         />
       ))
   }
 
   render() {
     const {
-      FAB_STYLE,
-      SCHEDULE_LIST_HEIGHT, SCHEDULE_ITEM_HEIGHT, LOAD_EDGE_OFFSET
+      STYLE, FAB_STYLE, LOAD_EDGE_OFFSET,
+      SCHEDULE_LIST_HEIGHT, SCHEDULE_ITEM_HEIGHT,
     } = this.constructor
     const { load, addSchedule } = this.props
     const scheduleNodes = this._getScheduleNodes()
 
     return (
-      <div
-        style={this._getStyle()}
-        onMouseEnter={::this._setActive}
-      >
+      <div style={STYLE}>
         <Infinite
           useWindowAsScrollContainer
           containerHeight={SCHEDULE_LIST_HEIGHT}

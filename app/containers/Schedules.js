@@ -4,8 +4,14 @@ import { connect } from 'react-redux'
 import { SchedulePropType } from '../constants/types'
 import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
-import { addSchedule, fetchSchedules } from '../actions/schedules'
-import { SCHEDULE_LIST, SCHEDULE_DASHBOARD } from '../constants/strings.js'
+import {
+  addSchedule,
+  removeSchedule,
+  fetchSchedules,
+  saveSchedule,
+  deleteSchedule,
+  selectSchedule,
+} from '../actions/schedules'
 
 import '../styles/modules/no-scrollbar.scss'
 
@@ -23,20 +29,6 @@ class Schedules extends React.Component {
     dispatch: PropTypes.func
   };
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      activeSection: SCHEDULE_LIST
-    }
-  }
-
-  setSectionActive(section) {
-    if (section === this.state.activeSection) {
-      return
-    }
-    this.setState({ activeSection: section })
-  }
-
   load() {
     const { dispatch, urlToFetch } = this.props
     if (urlToFetch) {
@@ -49,12 +41,22 @@ class Schedules extends React.Component {
     dispatch(addSchedule())
   }
 
+  removeSchedule(scheduleId) {
+    const { dispatch } = this.props
+    dispatch(removeSchedule(scheduleId))
+  }
+
   saveSchedule(schedule) {
     // TODO: NOT IMPLEMENTED YET
   }
 
-  deleteSchedule(schedule) {
+  deleteSchedule(scheduleId) {
     // TODO: NOT IMPLEMENTED YET
+  }
+
+  setScheduleSelected(scheduleId) {
+    const { dispatch } = this.props
+    dispatch(selectSchedule(scheduleId))
   }
 
   render() {
@@ -64,23 +66,20 @@ class Schedules extends React.Component {
       <div className="row">
         <div className="col-md-6 col-sm-6">
           <ScheduleList
-            isActive={this.state.activeSection === SCHEDULE_LIST}
             schedule={schedule}
             schedules={schedules}
             schedulesById={schedulesById}
             load={::this.load}
-            setSectionActive={::this.setSectionActive}
             addSchedule={::this.addSchedule}
             deleteSchedule={::this.deleteSchedule}
+            removeSchedule={::this.removeSchedule}
+            setScheduleSelected={::this.setScheduleSelected}
           />
         </div>
         <div className="col-md-6 col-sm-6">
           <DashBoard
-            isActive={this.state.activeSection === SCHEDULE_DASHBOARD}
-            schedule={schedulesById[schedule]}
-            setSectionActive={::this.setSectionActive}
+            schedule={schedulesById[schedule] || null}
             saveSchedule={::this.saveSchedule}
-            deleteSchedule={::this.deleteSchedule}
           />
         </div>
       </div>

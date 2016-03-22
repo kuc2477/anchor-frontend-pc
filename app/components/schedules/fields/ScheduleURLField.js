@@ -14,7 +14,7 @@ export default class ScheduleURLField extends React.Component {
       <TextField
         style={style}
         floatingLabelText="Site url"
-        defaultValue={this.props.url}
+        value={this.props.url}
         style={this.constructor.STYLE}
       />
     )

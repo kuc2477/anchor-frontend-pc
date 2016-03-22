@@ -49,12 +49,20 @@ export const SchedulePropType = PropTypes.shape({
 // Client side instance creators
 // ==============================
 
-const CLIENT_INSTANCE_PREFIX = 'unsaved-'
-export const isClientInstance =
-  instance => instance.contains(CLIENT_INSTANCE_PREFIX)
+const UNSAVED_PREFIX = 'unsaved-'
+export const unsaved = (instance) => {
+  if (typeof instance === 'number') {
+    return false
+  }
+  const error = 'Argument\'s type should be one of number, string or object'
+  return typeof instance === 'string' ? instance.includes(UNSAVED_PREFIX) :
+    typeof instance === 'object' ? instance.id.includes(UNSAVED_PREFIX) :
+      (()=>{ throw new Error(error) })()
+}
+
 
 export const createSchedule = () => ({
-  id: _.uniqueId(CLIENT_INSTANCE_PREFIX),
+  id: _.uniqueId(UNSAVED_PREFIX),
   url: '',
   cycle: CYCLE_OPTIONS[0],
   maxDepth: null,
@@ -72,6 +80,6 @@ export default {
   NewsPropType,
   SchedulePropType,
   // client side creators
-  isClientInstance,
+  unsaved,
   createSchedule
 }

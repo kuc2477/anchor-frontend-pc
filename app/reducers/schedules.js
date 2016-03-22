@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import Immutable from 'immutable'
 
+import { unsaved } from '../constants/types'
 import urls from '../modules/urls'
 import {
   FETCH_SCHEDULES_START,
@@ -12,7 +13,9 @@ import {
   DELETE_SCHEDULE_START,
   DELETE_SCHEDULE_SUCCESS,
   DELETE_SCHEDULE_ERROR,
-  ADD_SCHEDULE
+  ADD_SCHEDULE,
+  REMOVE_SCHEDULE,
+  SELECT_SCHEDULE
 } from '../actions/schedules'
 import { LOGOUT } from '../actions/auth'
 
@@ -30,17 +33,53 @@ export const initialState = new Immutable.Map({
 
 export default (state = initialState, action) => {
   switch(action.type) {
+    // =====================
+    // Add / Remove / Select
+    // =====================
+
+    case ADD_SCHEDULE:
+      var { schedule } = action
+
+      // just activate existing unsaved schedule if already exists
+      if (!state.get('schedules').filter(id => unsaved(id)).isEmpty()) {
+        return state.merge({ schedule: schedule.id })
+      }
+
+      // otherwise add new schedule and activate it
+      return state.merge({
+        schedule: schedule.id,
+        schedules: state.get('schedules').push(schedule.id),
+        schedulesById: state.get('schedulesById').merge({
+          [schedule.id]: schedule
+        })
+      })
+
+    case REMOVE_SCHEDULE:
+      const { scheduleId: toRemove } = action
+      var schedules = state.get('schedules').filter(id => id !== toRemove)
+      var schedulesById = state.get('schedulesById').delete(toRemove)
+      var schedule = schedules.last()
+      return state.merge({ schedule, schedules, schedulesById })
+
+    case SELECT_SCHEDULE:
+      const { scheduleId: toSelect } = action
+      return state.merge({ schedule: toSelect })
+
+    // =====
+    // Fetch
+    // =====
+
     case FETCH_SCHEDULES_START:
       return state.set('isFetching', true)
 
     case FETCH_SCHEDULES_SUCCESS:
       const { result, entities, link } = action
+      var schedules = state.get('schedules').push(...result)
+      var schedulesById = state.get('schedulesById').merge(entities.schedule)
+      var schedule = !state.get('schedules').count() && result.length ?
+        result[0] : state.get('schedule')
       return state.merge({
-        schedule:
-          !state.get('schedules').count() && result.length ?
-            result[0] : state.get('schedule'),
-        schedules: state.get('schedules').push(...result),
-        schedulesById: state.get('schedulesById').merge(entities.schedule),
+        schedule, schedules, schedulesById,
         isFetching: false,
         didFetchFail: false,
         urlToFetch: link
@@ -51,6 +90,11 @@ export default (state = initialState, action) => {
         isFetching: false,
         didFetchFail: true,
       })
+
+
+    // ====
+    // Save
+    // ====
 
     case SAVE_SCHEDULE_START:
       return state.set('isSaving', true)
@@ -73,20 +117,21 @@ export default (state = initialState, action) => {
         didSaveFail: true
       })
 
+
+    // ======
+    // Delete
+    // ======
+
     case DELETE_SCHEDULE_START:
     case DELETE_SCHEDULE_SUCCESS:
     case DELETE_SCHEDULE_ERROR:
+      // TODO: NOT IMPLEMENTED YET
       return state
 
-  case ADD_SCHEDULE:
-      const { schedule } = action
-      return state.merge({
-        schedule: schedule.id,
-        schedules: state.get('schedules').push(schedule.id),
-        schedulesById: state.get('schedulesById').merge({
-          [schedule.id]: schedule
-        })
-      })
+
+    // ===
+    // Etc
+    // ===
 
     case LOGOUT:
       return initialState

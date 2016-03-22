@@ -7,6 +7,28 @@ import { authorize, authorizeCSRF  } from '../modules/auth'
 import urls from '../modules/urls'
 
 
+// ==========================
+// Add / Remove / Activation
+// ==========================
+
+export const ADD_SCHEDULE = 'ADD_SCHEDULE'
+export const addSchedule = () => ({
+  type: ADD_SCHEDULE,
+  schedule: createSchedule()
+})
+
+export const REMOVE_SCHEDULE = 'REMOVE_SCHEDULE'
+export const removeSchedule = scheduleId => ({
+  type: REMOVE_SCHEDULE, scheduleId
+})
+
+
+export const SELECT_SCHEDULE = 'SET_SCHEDULE_SELECTED'
+export const selectSchedule = scheduleId => ({
+  type: SELECT_SCHEDULE, scheduleId
+})
+
+
 // =====
 // Fetch
 // =====
@@ -75,14 +97,3 @@ export const deleteSchedule = scheduleId => dispatch => {
     // TODO: NOT IMPLEMENTED YET
   })
 }
-
-
-// ===
-// Add
-// ===
-
-export const ADD_SCHEDULE = 'ADD_SCHEDULE'
-export const addSchedule = () => ({
-  type: ADD_SCHEDULE,
-  schedule: createSchedule()
-})

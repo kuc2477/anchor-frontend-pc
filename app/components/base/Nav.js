@@ -103,7 +103,8 @@ export default class Nav extends React.Component {
     const icon = (
       <i
         style={{margin: 8, color: 'white'}}
-        className="fa fa-2x fa-anchor">
+        className="fa fa-2x fa-anchor"
+      >
       </i>
     )
 

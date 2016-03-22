@@ -17,7 +17,7 @@ export default class ScheduleNameField extends React.Component {
       <TextField
         style={style}
         floatingLabelText="Site name"
-        defaultValue={this.props.name}
+        value={this.props.name}
         inputStyle={this.constructor.INPUT_STYLE}
       />
     )
