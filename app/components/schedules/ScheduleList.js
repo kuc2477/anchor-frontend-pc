@@ -35,7 +35,7 @@ export default class ScheduleList extends React.Component {
 
   static FAB_STYLE = {
     position: 'fixed',
-    right: WINDOW_WIDTH / 2 + 30,
+    right: WINDOW_WIDTH / 2,
     bottom: 40,
     color: SECONDARY,
   };

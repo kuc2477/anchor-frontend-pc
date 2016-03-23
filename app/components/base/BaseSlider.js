@@ -7,8 +7,8 @@ import colors from '../../constants/colors'
 
 export default class BaseSlider extends React.Component {
   static STYLE = {
-    marginTop: 20,
-    marginBottom: 20
+    marginTop: 15,
+    marginBottom: 15
   };
 
   static INACTIVE_LABEL_STYLE = {
@@ -19,7 +19,7 @@ export default class BaseSlider extends React.Component {
 
   static ACTIVE_LABEL_STYLE = {
     color: colors.SECONDARY,
-    fontSize: 14,
+    fontSize: 13,
     userSelect: 'none'
   };
 

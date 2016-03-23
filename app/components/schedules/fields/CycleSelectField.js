@@ -26,18 +26,17 @@ export default class CycleSelectField extends React.Component {
 
 
   render() {
-    const { style } = this.props
+    const { style, ...rest } = this.props
     const cycleMenuItemNodes = this._getCycleMenuItemNodes()
 
     return (
-      <div style={style}>
         <SelectField
           floatingLabelText="News arrival cycle"
-          {...this.props}
+          style={style}
+          {...rest}
         >
           {cycleMenuItemNodes}
         </SelectField>
-      </div>
     )
   }
 }

@@ -1,8 +1,12 @@
 import _ from 'lodash'
 import Immutable from 'immutable'
 
-import { unsaved } from '../constants/types'
 import urls from '../modules/urls'
+import { unsaved } from '../constants/types'
+import {
+  DASH_BOARD_GENERAL_SETTINGS,
+  DASH_BOARD_ADVANCED_SETTINGS,
+} from '../constants/strings'
 import {
   FETCH_SCHEDULES_START,
   FETCH_SCHEDULES_SUCCESS,
@@ -15,7 +19,8 @@ import {
   DELETE_SCHEDULE_ERROR,
   ADD_SCHEDULE,
   REMOVE_SCHEDULE,
-  SELECT_SCHEDULE
+  SELECT_SCHEDULE,
+  SET_DASH_BOARD,
 } from '../actions/schedules'
 import { LOGOUT } from '../actions/auth'
 
@@ -28,14 +33,15 @@ export const initialState = new Immutable.Map({
   didSaveFail: false,
   isFetching: false,
   didFetchFail: false,
-  urlToFetch: urls.schedules()
+  urlToFetch: urls.schedules(),
+  board: DASH_BOARD_GENERAL_SETTINGS
 })
 
 export default (state = initialState, action) => {
   switch(action.type) {
-    // =====================
-    // Add / Remove / Select
-    // =====================
+    // ======================================
+    // Add / Remove / Activation / Dash board
+    // ======================================
 
     case ADD_SCHEDULE:
       var { schedule } = action
@@ -64,6 +70,12 @@ export default (state = initialState, action) => {
     case SELECT_SCHEDULE:
       const { scheduleId: toSelect } = action
       return state.merge({ schedule: toSelect })
+
+
+    case SET_DASH_BOARD:
+      const { board } = action
+      return state.merge({ board })
+
 
     // =====
     // Fetch
@@ -129,9 +141,9 @@ export default (state = initialState, action) => {
       return state
 
 
-    // ===
-    // Etc
-    // ===
+    // =========
+    // Auxiliary
+    // =========
 
     case LOGOUT:
       return initialState

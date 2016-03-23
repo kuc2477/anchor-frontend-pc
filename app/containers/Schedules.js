@@ -1,6 +1,10 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import {
+  DASH_BOARD_GENERAL_SETTINGS,
+  DASH_BOARD_ADVANCED_SETTINGS,
+} from '../constants/strings'
 import { SchedulePropType } from '../constants/types'
 import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
@@ -11,6 +15,7 @@ import {
   saveSchedule,
   deleteSchedule,
   selectSchedule,
+  setDashBoard,
 } from '../actions/schedules'
 
 import '../styles/modules/no-scrollbar.scss'
@@ -26,6 +31,10 @@ class Schedules extends React.Component {
     isFetching: PropTypes.bool,
     didFetchFail: PropTypes.bool,
     urlToFetch: PropTypes.string,
+    board: PropTypes.oneOf([
+      DASH_BOARD_GENERAL_SETTINGS,
+      DASH_BOARD_ADVANCED_SETTINGS,
+    ]),
     dispatch: PropTypes.func
   };
 
@@ -59,13 +68,19 @@ class Schedules extends React.Component {
     dispatch(selectSchedule(scheduleId))
   }
 
+  setBoard(board) {
+    const { dispatch } = this.props
+    dispatch(setDashBoard(board))
+  }
+
   render() {
-    const { schedule, schedules, schedulesById } = this.props
+    const { schedule, schedules, schedulesById, board } = this.props
 
     return (
       <div className="row">
-        <div className="col-md-6 col-sm-6">
+        <div className="col-md-6">
           <ScheduleList
+            board={board}
             schedule={schedule}
             schedules={schedules}
             schedulesById={schedulesById}
@@ -76,10 +91,12 @@ class Schedules extends React.Component {
             setScheduleSelected={::this.setScheduleSelected}
           />
         </div>
-        <div className="col-md-6 col-sm-6">
+        <div className="col-md-6">
           <DashBoard
+            board={board}
             schedule={schedulesById[schedule] || null}
             saveSchedule={::this.saveSchedule}
+            setBoard={::this.setBoard}
           />
         </div>
       </div>
@@ -97,4 +114,5 @@ export default connect(app => ({
   isFetching: app.schedules.get('isFetching'),
   didFetchFail: app.schedules.get('didFetchFail'),
   urlToFetch: app.schedules.get('urlToFetch'),
+  board: app.schedules.get('board'),
 }))(Schedules)

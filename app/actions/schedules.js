@@ -7,9 +7,9 @@ import { authorize, authorizeCSRF  } from '../modules/auth'
 import urls from '../modules/urls'
 
 
-// ==========================
-// Add / Remove / Activation
-// ==========================
+// =====================================
+// Add / Remove / Activation / Dashboard
+// =====================================
 
 export const ADD_SCHEDULE = 'ADD_SCHEDULE'
 export const addSchedule = () => ({
@@ -23,9 +23,14 @@ export const removeSchedule = scheduleId => ({
 })
 
 
-export const SELECT_SCHEDULE = 'SET_SCHEDULE_SELECTED'
+export const SELECT_SCHEDULE = 'SELECT_SCHEDULE'
 export const selectSchedule = scheduleId => ({
   type: SELECT_SCHEDULE, scheduleId
+})
+
+export const SET_DASH_BOARD = 'SET_DASH_BOARD'
+export const setDashBoard = board => ({
+  type: SET_DASH_BOARD, board
 })
 
 
