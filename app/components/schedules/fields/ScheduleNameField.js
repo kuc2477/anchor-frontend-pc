@@ -8,7 +8,7 @@ export default class ScheduleNameField extends React.Component {
   };
 
   static INPUT_STYLE = {
-    fontSize: 13,
+    fontSize: 14,
   };
 
   render() {
