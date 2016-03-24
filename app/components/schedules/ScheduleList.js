@@ -1,11 +1,14 @@
+import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import Infinite from 'react-infinite'
+
+import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance'
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
-import { SchedulePropType } from '../../constants/types'
+import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
 import { SCHEDULE_LIST } from '../../constants/strings'
 import { WINDOW_WIDTH } from '../../constants/numbers'
 
@@ -15,6 +18,7 @@ export default class ScheduleList extends React.Component {
     // component activeness
     isActive: PropTypes.bool,
     // schedules
+    editing: SchedulePropType.isRequired,
     schedule: PropTypes.number,
     schedules: PropTypes.arrayOf(PropTypes.number).isRequired,
     schedulesById: PropTypes.objectOf(SchedulePropType).isRequired,
@@ -23,7 +27,7 @@ export default class ScheduleList extends React.Component {
     addSchedule: PropTypes.func.isRequired,
     removeSchedule: PropTypes.func.isRequired,
     deleteSchedule: PropTypes.func.isRequired,
-    setScheduleSelected: PropTypes.func.isRequired,
+    selectSchedule: PropTypes.func.isRequired,
   };
 
   static STYLE = {
@@ -51,13 +55,14 @@ export default class ScheduleList extends React.Component {
   _getScheduleNodes() {
     const { LIST_ITEM_STYLE } = this.constructor
     const {
+      editing,
       schedule: selected,
       removeSchedule,
-      setScheduleSelected
+      selectSchedule
     } = this.props
 
-    const selectItem = scheduleId => () => {
-      setScheduleSelected(scheduleId)
+    const select = scheduleId => () => {
+      selectSchedule(scheduleId)
     }
 
     return this.props.schedules
@@ -66,12 +71,22 @@ export default class ScheduleList extends React.Component {
         <ScheduleItem
           style={LIST_ITEM_STYLE}
           key={schedule.id}
+          value={schedule.id}
           selected={schedule.id === selected}
-          schedule={schedule}
+          schedule={schedule.id === selected ? editing : schedule}
           removeSchedule={removeSchedule}
-          onClick={selectItem(schedule.id)}
+          onClick={select(schedule.id)}
         />
       ))
+  }
+
+  _getSelectedValueLink() {
+    const { schedule, schedules, selectSchedule, dispatch } = this.props
+    const value = _.findIndex(schedules, s => s == schedule)
+    const requestChange = index => {
+      dispatch(selectSchedule(schedules[index]))
+    }
+    return { value, requestChange }
   }
 
   render() {
@@ -90,6 +105,7 @@ export default class ScheduleList extends React.Component {
           elementHeight={SCHEDULE_ITEM_HEIGHT}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}
+          vlink={::this._getSelectedValueLink()}
         >
           {scheduleNodes}
         </Infinite>

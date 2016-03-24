@@ -19,8 +19,9 @@ import {
   DELETE_SCHEDULE_ERROR,
   ADD_SCHEDULE,
   REMOVE_SCHEDULE,
+  UPDATE_SCHEDULE,
   SELECT_SCHEDULE,
-  SET_DASH_BOARD,
+  SET_BOARD,
 } from '../actions/schedules'
 import { LOGOUT } from '../actions/auth'
 
@@ -39,9 +40,9 @@ export const initialState = new Immutable.Map({
 
 export default (state = initialState, action) => {
   switch(action.type) {
-    // ======================================
-    // Add / Remove / Activation / Dash board
-    // ======================================
+    // ==================================
+    // Client level schedule manipulation
+    // ==================================
 
     case ADD_SCHEDULE:
       var { schedule } = action
@@ -67,12 +68,19 @@ export default (state = initialState, action) => {
       var schedule = schedules.last()
       return state.merge({ schedule, schedules, schedulesById })
 
+    case UPDATE_SCHEDULE:
+      var schedulesById = state.get('schedulesById')
+      var { scheduleId, schedule } = action
+
+      const updated = schedulesById.merge({ [scheduleId]: schedule })
+      return state.merge({ schedulesById: updated })
+
     case SELECT_SCHEDULE:
       const { scheduleId: toSelect } = action
       return state.merge({ schedule: toSelect })
 
 
-    case SET_DASH_BOARD:
+    case SET_BOARD:
       const { board } = action
       return state.merge({ board })
 

@@ -130,13 +130,13 @@ export default class DashBoardTitle extends React.Component {
 
   render() {
     const { TITLE_ROW_STYLE } = this.constructor
-    const { board } = this.props
+    const { board, setBoard } = this.props
     const title = this._getTitle()
 
     return (
       <div style={TITLE_ROW_STYLE} className={TITLE_ROW_STYLE.className}>
         {title}
-        <BoardMenuIconButton board={board} />
+        <BoardMenuIconButton board={board} setBoard={setBoard} />
       </div>
     )
   }

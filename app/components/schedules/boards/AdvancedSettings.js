@@ -3,13 +3,13 @@ import Colors from 'material-ui/lib/styles/colors'
 import { ActionFlightTakeoff } from 'material-ui/lib/svg-icons'
 
 import Title from '../../base/Title'
-import { SchedulePropType } from '../../../constants/types'
+import { ValueLinkPropType } from '../../../constants/types'
 import BrotherSiteFieldSet from '../fields/BrotherSiteFieldSet'
 
 
 export default class AdvancedSettings extends React.Component {
   static propTypes = {
-    schedule: SchedulePropType
+    brothersValueLink: ValueLinkPropType.isRequired,
   };
 
   static BROTHER_FIELD_STYLE = {
@@ -17,10 +17,9 @@ export default class AdvancedSettings extends React.Component {
   };
 
   render() {
+    const { brothersValueLink } = this.props
     return (
-      <div>
-        <BrotherSiteFieldSet brothers={this.props.schedule.brothers} />
-      </div>
+      <BrotherSiteFieldSet valueLink={brothersValueLink} />
     )
   }
 }

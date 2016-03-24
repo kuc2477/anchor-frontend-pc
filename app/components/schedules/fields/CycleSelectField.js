@@ -8,31 +8,38 @@ import {
   CYCLE_OPTIONS,
   CYCLE_OPTION_TEXTS
 } from '../../../constants/arrays'
+import { ValueLinkPropType } from '../../../constants/types'
 
 
 export default class CycleSelectField extends React.Component {
   static propTypes = {
-    onBlur: PropTypes.func,
-    onChange: PropTypes.func,
-    onFocus: PropTypes.func,
-    value: PropTypes.number
+    vlink: ValueLinkPropType.isRequired
   };
 
-  _getCycleMenuItemNodes() {
-    return _.zip(CYCLE_OPTIONS, CYCLE_OPTION_TEXTS).map((zipped) => {
+  _getMenuItemNodes() {
+    return _.zip(CYCLE_OPTIONS, CYCLE_OPTION_TEXTS).map(zipped => {
       const [cycle, text] = zipped
-      return <MenuItem key={cycle} value={cycle} primaryText={text} /> })
+      return <MenuItem key={cycle} value={cycle} primaryText={text} />
+    })
+  }
+
+  _handleChange(event, index, value) {
+    const { requestChange } = this.props.vlink
+    requestChange(null, value)
   }
 
 
   render() {
     const { style, ...rest } = this.props
-    const cycleMenuItemNodes = this._getCycleMenuItemNodes()
+    const { value } = this.props.vlink
+    const cycleMenuItemNodes = this._getMenuItemNodes()
 
     return (
         <SelectField
           floatingLabelText="News arrival cycle"
+          value={value}
           style={style}
+          onChange={::this._handleChange}
           {...rest}
         >
           {cycleMenuItemNodes}

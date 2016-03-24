@@ -7,19 +7,24 @@ import { authorize, authorizeCSRF  } from '../modules/auth'
 import urls from '../modules/urls'
 
 
-// =====================================
-// Add / Remove / Activation / Dashboard
-// =====================================
+// ===================================
+// Client level schedule manipulation
+// ===================================
 
 export const ADD_SCHEDULE = 'ADD_SCHEDULE'
-export const addSchedule = () => ({
+export const addSchedule = (schedule) => ({
   type: ADD_SCHEDULE,
-  schedule: createSchedule()
+  schedule: createSchedule(schedule)
 })
 
 export const REMOVE_SCHEDULE = 'REMOVE_SCHEDULE'
 export const removeSchedule = scheduleId => ({
   type: REMOVE_SCHEDULE, scheduleId
+})
+
+export const UPDATE_SCHEDULE = 'UPDATE_SCHEDULE'
+export const updateSchedule = (scheduleId, schedule) => ({
+  type: UPDATE_SCHEDULE, scheduleId, schedule
 })
 
 
@@ -28,9 +33,9 @@ export const selectSchedule = scheduleId => ({
   type: SELECT_SCHEDULE, scheduleId
 })
 
-export const SET_DASH_BOARD = 'SET_DASH_BOARD'
-export const setDashBoard = board => ({
-  type: SET_DASH_BOARD, board
+export const SET_BOARD = 'SET_BOARD'
+export const setBoard = board => ({
+  type: SET_BOARD, board
 })
 
 

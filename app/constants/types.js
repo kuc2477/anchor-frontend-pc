@@ -7,7 +7,11 @@ import { CYCLE_OPTIONS } from './arrays'
 // ==================
 
 export const ValueLinkPropType = PropTypes.shape({
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.object,
+  ]).isRequired,
   requestChange: PropTypes.func.isRequired
 })
 
@@ -61,16 +65,16 @@ export const unsaved = (instance) => {
 }
 
 
-export const createSchedule = () => ({
+export const createSchedule = schedule => _.clone(schedule) || {
   id: _.uniqueId(UNSAVED_PREFIX),
   url: '',
-  cycle: CYCLE_OPTIONS[0],
+  cycle: null,
   maxDepth: null,
   maxDistance: null,
   brothers: [],
   isActive: false,
   isUpdating: false,
-})
+}
 
 
 export default {

@@ -5,17 +5,18 @@ import {
   DASH_BOARD_GENERAL_SETTINGS,
   DASH_BOARD_ADVANCED_SETTINGS,
 } from '../constants/strings'
-import { SchedulePropType } from '../constants/types'
+import { SchedulePropType, createSchedule } from '../constants/types'
 import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
 import {
   addSchedule,
   removeSchedule,
+  updateSchedule,
   fetchSchedules,
   saveSchedule,
   deleteSchedule,
   selectSchedule,
-  setDashBoard,
+  setBoard,
 } from '../actions/schedules'
 
 import '../styles/modules/no-scrollbar.scss'
@@ -38,6 +39,54 @@ class Schedules extends React.Component {
     dispatch: PropTypes.func
   };
 
+  componentWillMount() {
+    this.syncEditing()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { schedule: currentSchedule } = this.props
+    const { schedule: nextSchedule } = nextProps
+    if (currentSchedule !== nextSchedule) {
+      this.syncEditing(nextProps)
+    }
+  }
+
+  // ==================================
+  // Client level schedule manipulation
+  // ==================================
+
+  add(schedule) {
+    const { dispatch } = this.props
+    dispatch(addSchedule(schedule))
+  }
+
+  remove(scheduleId) {
+    const { dispatch } = this.props
+    dispatch(removeSchedule(scheduleId))
+  }
+
+  update(scheduleId, schedule) {
+    const { dispatch } = this.props
+    dispatch(updateSchedule(scheduleId, schedule))
+  }
+
+  // manage currently selected schedule's state within container
+  // rather than using redux action dispatches. directly using redux
+  // store causes performance issue.
+  syncEditing(props) {
+    const { schedule, schedulesById } = props || this.props
+    this.setState({ editing: schedulesById[schedule] || createSchedule() })
+  }
+
+  linkValue(name, value) {
+    const updated = Object.assign({}, this.state.editing, {[name]: value})
+    this.setState({ editing: updated })
+  }
+
+  // ==========================================
+  // Server level schedule fetch / manipulation
+  // ==========================================
+
   load() {
     const { dispatch, urlToFetch } = this.props
     if (urlToFetch) {
@@ -45,35 +94,32 @@ class Schedules extends React.Component {
     }
   }
 
-  addSchedule() {
-    const { dispatch } = this.props
-    dispatch(addSchedule())
-  }
-
-  removeSchedule(scheduleId) {
-    const { dispatch } = this.props
-    dispatch(removeSchedule(scheduleId))
-  }
-
-  saveSchedule(schedule) {
+  save(scheduleId) {
+    debugger
     // TODO: NOT IMPLEMENTED YET
   }
 
-  deleteSchedule(scheduleId) {
+  del(scheduleId) {
+    debugger
     // TODO: NOT IMPLEMENTED YET
   }
 
-  setScheduleSelected(scheduleId) {
+  // =========
+  // Auxiliary
+  // =========
+
+  select(scheduleId) {
     const { dispatch } = this.props
     dispatch(selectSchedule(scheduleId))
   }
 
   setBoard(board) {
     const { dispatch } = this.props
-    dispatch(setDashBoard(board))
+    dispatch(setBoard(board))
   }
 
   render() {
+    const { editing } = this.state
     const { schedule, schedules, schedulesById, board } = this.props
 
     return (
@@ -81,22 +127,26 @@ class Schedules extends React.Component {
         <div className="col-md-6">
           <ScheduleList
             board={board}
+            editing={editing}
             schedule={schedule}
             schedules={schedules}
             schedulesById={schedulesById}
             load={::this.load}
-            addSchedule={::this.addSchedule}
-            deleteSchedule={::this.deleteSchedule}
-            removeSchedule={::this.removeSchedule}
-            setScheduleSelected={::this.setScheduleSelected}
+            addSchedule={::this.add}
+            deleteSchedule={::this.del}
+            removeSchedule={::this.remove}
+            selectSchedule={::this.select}
           />
         </div>
         <div className="col-md-6">
           <DashBoard
             board={board}
+            editing={editing}
             schedule={schedulesById[schedule] || null}
-            saveSchedule={::this.saveSchedule}
+            updateSchedule={::this.update}
+            saveSchedule={::this.save}
             setBoard={::this.setBoard}
+            linkValue={::this.linkValue}
           />
         </div>
       </div>

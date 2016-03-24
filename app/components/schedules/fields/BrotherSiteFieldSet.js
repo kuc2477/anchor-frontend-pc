@@ -3,12 +3,13 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
 import BrotherSiteField from './BrotherSiteField'
+import { ValueLinkPropType } from '../../../constants/types'
 import colors from '../../../constants/colors'
 
 
 export default class BrotherSiteFieldSet extends React.Component {
   static propTypes = {
-    brothers: ImmutablePropTypes.listOf(PropTypes.string).isRequired
+    valueLink: ValueLinkPropType.isRequired
   };
 
   constructor(props) {
@@ -40,7 +41,8 @@ export default class BrotherSiteFieldSet extends React.Component {
   };
 
   _getBrotherSiteFieldNodes() {
-    return this.props.brothers.map(url => <BrotherSiteField url={url} />)
+    const { value: brothers } = this.props.valueLink
+    return brothers.map(url => <BrotherSiteField url={url} />)
   }
 
   _getLabelStyle() {

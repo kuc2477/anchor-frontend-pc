@@ -1,6 +1,6 @@
 export const app = () => {
   return process.env.NODE_ENV === 'production' ?
-  'PRODUCTION_BACKEND_NOT_IMPLEMENTED' :
+    `http://localhost:${process.env.DEV_SERVER_PORT}`:
     `http://localhost:${process.env.DEV_SERVER_PORT}`
 }
 

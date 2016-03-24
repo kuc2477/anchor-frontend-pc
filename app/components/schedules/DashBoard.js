@@ -18,13 +18,17 @@ import { SCHEDULE_DASH_BOARDS } from '../../constants/arrays'
 
 export default class DashBoard extends React.Component {
   static propTypes = {
-    schedule: SchedulePropType,
-    saveSchedule: PropTypes.func.isRequired,
+    editing: SchedulePropType.isRequired,
+    schedule: SchedulePropType.isRequired,
     board: PropTypes.oneOf([
       DASH_BOARD_GENERAL_SETTINGS,
       DASH_BOARD_ADVANCED_SETTINGS,
     ]).isRequired,
-    setBoard: PropTypes.func.isRequired
+    // schedule entry / board manipulation
+    updateSchedule: PropTypes.func.isRequired,
+    saveSchedule: PropTypes.func.isRequired,
+    setBoard: PropTypes.func.isRequired,
+    linkValue: PropTypes.func.isRequired,
   };
 
   // root element style
@@ -59,14 +63,56 @@ export default class DashBoard extends React.Component {
     }
   }
 
+  _getValueLink(name) {
+    const { editing, updateSchedule, linkValue } = this.props
+    const value = editing[name]
+    const requestChange = (event, changedValue) => {
+      changedValue = changedValue || event.target.value
+      linkValue(name, changedValue)
+    }
+    return { value, requestChange }
+  }
+
+  updateEditing() {
+    const { schedule, editing, updateSchedule } = this.props
+    updateSchedule(schedule.id, editing)
+  }
+
+  saveEditing() {
+    const { schedule, saveSchedule } = this.props
+    saveSchedule(schedule.id)
+  }
+
+
   render() {
     const { STYLE, SLIDE_STYLE } = this.constructor
     const SLIDE_CONTAINER_STYLE = this._getContainerStyle()
-    const schedule = this.props.schedule || createSchedule()
-    const { board, setBoard } = this.props
+    const { schedule, board, setBoard } = this.props
+
+    const settingsProps = {
+      nameValueLink: this._getValueLink('name'),
+      urlValueLink: this._getValueLink('url'),
+      cycleValueLink: this._getValueLink('cycle'),
+      maxDepthValueLink: this._getValueLink('maxDepth'),
+      maxDistValueLink: this._getValueLink('maxDist'),
+      brothersValueLink: this._getValueLink('brothers')
+    }
+
+    const generalSettingsProps = _.pick(settingsProps, [
+      'nameValueLink', 'urlValueLink', 'cycleValueLink',
+      'maxDepthValueLink', 'maxDistValueLink'
+    ])
+
+    const advancedSettingsProps = _.pick(settingsProps, [
+      'brothersValueLink'
+    ])
 
     return (
-      <Paper zDepth={STYLE.zDepth} style={STYLE}>
+      <Paper
+        zDepth={STYLE.zDepth}
+        style={STYLE}
+        onMouseLeave={::this.updateEditing}
+      >
         <DashBoardTitle board={board} setBoard={setBoard} />
         <SwipeableViews
           disabled
@@ -74,8 +120,8 @@ export default class DashBoard extends React.Component {
           style={SLIDE_CONTAINER_STYLE}
           slideStyle={SLIDE_STYLE}
         >
-          <GeneralSettings schedule={schedule} />
-          <AdvancedSettings schedule={schedule} />
+          <GeneralSettings {...generalSettingsProps} />
+          <AdvancedSettings {...advancedSettingsProps} />
         </SwipeableViews>
       </Paper>
     )
