@@ -1,12 +1,8 @@
-import _ from 'lodash'
 import Immutable from 'immutable'
 
 import urls from '../modules/urls'
 import { unsaved } from '../constants/types'
-import {
-  DASH_BOARD_GENERAL_SETTINGS,
-  DASH_BOARD_ADVANCED_SETTINGS,
-} from '../constants/strings'
+import { DASH_BOARD_GENERAL_SETTINGS } from '../constants/strings'
 import {
   FETCH_SCHEDULES_START,
   FETCH_SCHEDULES_SUCCESS,
@@ -27,7 +23,7 @@ import { LOGOUT } from '../actions/auth'
 
 
 export const initialState = new Immutable.Map({
-  schedule : null,
+  schedule: null,
   schedules: new Immutable.List(),
   schedulesById: new Immutable.Map(),
   isSaving: false,
@@ -39,124 +35,133 @@ export const initialState = new Immutable.Map({
 })
 
 export default (state = initialState, action) => {
-  switch(action.type) {
-    // ==================================
-    // Client level schedule manipulation
-    // ==================================
+  switch (action.type) {
+    // client level schedule manipulation
+    case ADD_SCHEDULE: return reduceAddSchedule(state, action)
+    case REMOVE_SCHEDULE: return reduceRemoveSchedule(state, action)
+    case UPDATE_SCHEDULE: return reduceUpdateSchedule(state, action)
+    case SELECT_SCHEDULE: return reduceSelectSchedule(state, action)
+    case SET_BOARD: return reduceSetBoard(state, action)
 
-    case ADD_SCHEDULE:
-      var { schedule } = action
+    // fetch
+    case FETCH_SCHEDULES_START: return reduceFetchStart(state, action)
+    case FETCH_SCHEDULES_SUCCESS: return reduceFetchSuccess(state, action)
+    case FETCH_SCHEDULES_ERROR: return reduceFetchError(state, action)
 
-      // just activate existing unsaved schedule if already exists
-      if (!state.get('schedules').filter(id => unsaved(id)).isEmpty()) {
-        return state.merge({ schedule: schedule.id })
-      }
+    // save
+    case SAVE_SCHEDULE_START: return reduceSaveStart(state, action)
+    case SAVE_SCHEDULE_SUCCESS: return reduceSaveSuccess(state, action)
+    case SAVE_SCHEDULE_ERROR: return reduceSaveError(state, action)
 
-      // otherwise add new schedule and activate it
-      return state.merge({
-        schedule: schedule.id,
-        schedules: state.get('schedules').push(schedule.id),
-        schedulesById: state.get('schedulesById').merge({
-          [schedule.id]: schedule
-        })
-      })
-
-    case REMOVE_SCHEDULE:
-      const { scheduleId: toRemove } = action
-      var schedules = state.get('schedules').filter(id => id !== toRemove)
-      var schedulesById = state.get('schedulesById').delete(toRemove)
-      var schedule = schedules.last()
-      return state.merge({ schedule, schedules, schedulesById })
-
-    case UPDATE_SCHEDULE:
-      var schedulesById = state.get('schedulesById')
-      var { scheduleId, schedule } = action
-
-      const updated = schedulesById.merge({ [scheduleId]: schedule })
-      return state.merge({ schedulesById: updated })
-
-    case SELECT_SCHEDULE:
-      const { scheduleId: toSelect } = action
-      return state.merge({ schedule: toSelect })
-
-
-    case SET_BOARD:
-      const { board } = action
-      return state.merge({ board })
-
-
-    // =====
-    // Fetch
-    // =====
-
-    case FETCH_SCHEDULES_START:
-      return state.set('isFetching', true)
-
-    case FETCH_SCHEDULES_SUCCESS:
-      const { result, entities, link } = action
-      var schedules = state.get('schedules').push(...result)
-      var schedulesById = state.get('schedulesById').merge(entities.schedule)
-      var schedule = !state.get('schedules').count() && result.length ?
-        result[0] : state.get('schedule')
-      return state.merge({
-        schedule, schedules, schedulesById,
-        isFetching: false,
-        didFetchFail: false,
-        urlToFetch: link
-      })
-
-    case FETCH_SCHEDULES_ERROR:
-      return state.merge({
-        isFetching: false,
-        didFetchFail: true,
-      })
-
-
-    // ====
-    // Save
-    // ====
-
-    case SAVE_SCHEDULE_START:
-      return state.set('isSaving', true)
-
-    case SAVE_SCHEDULE_SUCCESS:
-      const saved = action.schedule
-      const index = state.get('schedules').findIndex(
-        schedule => schedule.id === saved.id
-      )
-      return state.merge({
-        isSaving: false,
-        didSaveFail: false,
-        schedules: state.get('schedules').set(index, saved),
-        schedulesById: state.get('schedulesById').set(saved.id, saved),
-      })
-
-    case SAVE_SCHEDULE_ERROR:
-      return state.merge({
-        isSaving: false,
-        didSaveFail: true
-      })
-
-
-    // ======
-    // Delete
-    // ======
-
+    // delete
     case DELETE_SCHEDULE_START:
     case DELETE_SCHEDULE_SUCCESS:
     case DELETE_SCHEDULE_ERROR:
       // TODO: NOT IMPLEMENTED YET
       return state
 
-
-    // =========
-    // Auxiliary
-    // =========
-
-    case LOGOUT:
-      return initialState
-
-    default:
-      return state
+    // auxiliary
+    case LOGOUT: return initialState
+    default: return state
   }
+}
+
+
+// =========================
+// Client level manipulation
+// =========================
+
+function reduceAddSchedule(state, action) {
+  const { schedule } = action
+  const existingUnsaved = state.get('schedules').find(s => unsaved(s))
+
+  // just activate existing unsaved schedule if already exists
+  if (existingUnsaved) {
+    return state.merge({ schedule: existingUnsaved })
+  }
+  // otherwise add new schedule and activate it
+  return state.merge({
+    schedule: schedule.id,
+    schedules: state.get('schedules').push(schedule.id),
+    schedulesById: state.get('schedulesById').merge({
+      [schedule.id]: schedule
+    })
+  })
+}
+
+function reduceRemoveSchedule(state, action) {
+  const { scheduleId: toRemove } = action
+  const schedules = state.get('schedules').filter(id => id !== toRemove)
+  const schedulesById = state.get('schedulesById').delete(toRemove)
+  const schedule = schedules.last()
+  return state.merge({ schedule, schedules, schedulesById })
+}
+
+function reduceUpdateSchedule(state, action) {
+  const schedulesById = state.get('schedulesById')
+  const { scheduleId, schedule } = action
+  const updated = schedulesById.merge({ [scheduleId]: schedule })
+  return state.merge({ schedulesById: updated })
+}
+
+function reduceSelectSchedule(state, action) {
+  const { scheduleId: toSelect } = action
+  return state.merge({ schedule: toSelect })
+}
+
+function reduceSetBoard(state, action) {
+  return state.merge({ board: action.board })
+}
+
+// =====
+// Fetch
+// =====
+
+function reduceFetchStart(state) {
+  return state.set('isFetching', true)
+}
+
+function reduceFetchSuccess(state, action) {
+  const { result, entities, link } = action
+  const schedules = state.get('schedules').push(...result).toOrderedSet().toList()
+  const schedulesById = state.get('schedulesById').merge(entities.schedule)
+  const schedule = !state.get('schedules').count() && result.length ?
+    result[0] : state.get('schedule')
+
+  return state.merge({
+    schedule, schedules, schedulesById,
+    isFetching: false,
+    didFetchFail: false,
+    urlToFetch: link
+  })
+}
+
+function reduceFetchError(state) {
+  return state.merge({ isFetching: false, didFetchFail: true })
+}
+
+
+// ====
+// Save
+// ====
+
+function reduceSaveStart(state) {
+  return state.set('isSaving', true)
+}
+
+function reduceSaveSuccess(state, action) {
+  const saved = action.schedule
+  const index = state.get('schedules').findIndex(
+    schedule => schedule.id === saved.id
+  )
+  return state.merge({
+    isSaving: false,
+    didSaveFail: false,
+    schedules: state.get('schedules').set(index, saved),
+    schedulesById: state.get('schedulesById').set(saved.id, saved),
+  })
+}
+
+function reduceSaveError(state) {
+  return state.merge({ isSaving: false, didSaveFail: true })
 }

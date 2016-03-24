@@ -7,7 +7,7 @@ import SwipeableViews from 'react-swipeable-views'
 import DashBoardTitle from './DashBoardTitle'
 import GeneralSettings from './boards/GeneralSettings'
 import AdvancedSettings from './boards/AdvancedSettings'
-import { SchedulePropType, createSchedule } from '../../constants/types'
+import { SchedulePropType } from '../../constants/types'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
 import {
   DASH_BOARD_GENERAL_SETTINGS,
@@ -18,8 +18,8 @@ import { SCHEDULE_DASH_BOARDS } from '../../constants/arrays'
 
 export default class DashBoard extends React.Component {
   static propTypes = {
-    editing: SchedulePropType.isRequired,
-    schedule: SchedulePropType.isRequired,
+    editing: SchedulePropType,
+    schedule: SchedulePropType,
     board: PropTypes.oneOf([
       DASH_BOARD_GENERAL_SETTINGS,
       DASH_BOARD_ADVANCED_SETTINGS,
@@ -64,22 +64,40 @@ export default class DashBoard extends React.Component {
   }
 
   _getValueLink(name) {
-    const { editing, updateSchedule, linkValue } = this.props
-    const value = editing[name]
+    const { editing, linkValue } = this.props
+
+    // return disconnected value link if we have no editing schedule
+    if (!editing) {
+      return { value: null, requestChange: (e, v) => v }
+    }
+
+    const value = editing[name] || null
     const requestChange = (event, changedValue) => {
-      changedValue = changedValue || event.target.value
-      linkValue(name, changedValue)
+      const eventChangedValue = event && event.target && event.target.value
+      linkValue(name, eventChangedValue || changedValue)
     }
     return { value, requestChange }
   }
 
   updateEditing() {
     const { schedule, editing, updateSchedule } = this.props
+
+    // don't update if we have no editing schedule
+    if (!editing) {
+      return
+    }
+
     updateSchedule(schedule.id, editing)
   }
 
   saveEditing() {
     const { schedule, saveSchedule } = this.props
+
+    // don't save if we have no schedule
+    if (!schedule) {
+      return
+    }
+
     saveSchedule(schedule.id)
   }
 
@@ -87,7 +105,7 @@ export default class DashBoard extends React.Component {
   render() {
     const { STYLE, SLIDE_STYLE } = this.constructor
     const SLIDE_CONTAINER_STYLE = this._getContainerStyle()
-    const { schedule, board, setBoard } = this.props
+    const { board, setBoard } = this.props
 
     const settingsProps = {
       nameValueLink: this._getValueLink('name'),

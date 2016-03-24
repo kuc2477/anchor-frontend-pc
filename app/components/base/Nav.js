@@ -10,14 +10,6 @@ import { logout } from '../../actions/auth'
 
 
 export default class Nav extends React.Component {
-  static ROUTES = [
-    [ NEWS , SCHEDULES , LOGOUT ]
-  ];
-
-  static APP_BAR_STYLE = { position: 'fixed' };
-  static TAB_INK_STYLE = { color: INDICATOR };
-  static TAB_ITEM_STYLE = { marginRight: 120 };
-
   static propTypes = {
     user: UserPropType,
     title: PropTypes.string.isRequired,
@@ -38,11 +30,22 @@ export default class Nav extends React.Component {
     this.state = { tabIndex: 0 }
   }
 
+  componentWillMount() {
+    this.setState({ tabIndex: this._getSelectedIndex() })
+  }
+
   componentWillReceiveProps() {
     if (this.state.tabIndex !== this._getSelectedIndex()) {
       this.setState({ tabIndex: this._getSelectedIndex() })
     }
   }
+
+  static ROUTES = [
+    [NEWS, SCHEDULES, LOGOUT]
+  ];
+  static APP_BAR_STYLE = { position: 'fixed' };
+  static TAB_INK_STYLE = { color: INDICATOR };
+  static TAB_ITEM_STYLE = { marginRight: 120 };
 
   _onTabActive(tab) {
     // run logout action if activated tab is logout tab
@@ -59,21 +62,19 @@ export default class Nav extends React.Component {
 
   _getTabRoutes() {
     const { user } = this.props
-    return _(this.constructor.ROUTES).flatten().filter(route => {
-      return (
-        (!route.onlyVisibleToAnonymous && !route.onlyVisibleToAuthenticated) ||
+    return _(this.constructor.ROUTES).flatten().filter(route => (
+      (!route.onlyVisibleToAnonymous && !route.onlyVisibleToAuthenticated) ||
         (route.onlyVisibleToAuthenticated && user) ||
-        (route.onlyVisibleToAnonymous && !user)
-      )
-    }).value()
+          (route.onlyVisibleToAnonymous && !user)
+    )).value()
   }
 
   _getSelectedIndex() {
     const router = this.context.router
     const routes = this._getTabRoutes()
-    return _.findIndex(routes, (route) => {
-      return route.path && router.isActive(route.path)
-    })
+    return _.findIndex(
+      routes, route => route.path && router.isActive(route.path)
+    )
   }
 
 
@@ -102,7 +103,7 @@ export default class Nav extends React.Component {
 
     const icon = (
       <i
-        style={{margin: 8, color: 'white'}}
+        style={{ margin: 8, color: 'white' }}
         className="fa fa-2x fa-anchor"
       >
       </i>

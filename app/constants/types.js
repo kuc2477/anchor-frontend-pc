@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { PropTypes } from 'react'
-import { CYCLE_OPTIONS } from './arrays'
+
 
 // ==================
 // Extended proptypes
@@ -11,18 +11,19 @@ export const ValueLinkPropType = PropTypes.shape({
     PropTypes.string,
     PropTypes.number,
     PropTypes.object,
-  ]).isRequired,
-  requestChange: PropTypes.func.isRequired
+    PropTypes.array,
+  ]),
+  requestChange: PropTypes.func
 })
+
 
 // ================
 // Scheme proptypes
 // ================
 
 export const UserPropType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  firstname: PropTypes.string.isRequired,
-  lastname: PropTypes.string.isRequired
+  firstname: PropTypes.string,
+  lastname: PropTypes.string,
 })
 
 export const NewsPropType = PropTypes.shape({
@@ -44,8 +45,8 @@ export const SchedulePropType = PropTypes.shape({
   brothers: PropTypes.arrayOf(PropTypes.oneOfType(
     [PropTypes.string, PropTypes.number]
   )),
+  status: PropTypes.string.isRequired,
   isActive: PropTypes.bool.isRequired,
-  isUpdating: PropTypes.bool.isRequired,
 })
 
 
@@ -58,14 +59,17 @@ export const unsaved = (instance) => {
   if (typeof instance === 'number') {
     return false
   }
-  const error = 'Argument\'s type should be one of number, string or object'
-  return typeof instance === 'string' ? instance.includes(UNSAVED_PREFIX) :
-    typeof instance === 'object' ? instance.id.includes(UNSAVED_PREFIX) :
-      (()=>{ throw new Error(error) })()
+  if (typeof instance === 'string') {
+    return instance.includes(UNSAVED_PREFIX)
+  }
+  if (typeof instance === 'object') {
+    return instance.id.includes(UNSAVED_PREFIX)
+  }
+  throw new Error('Argument\'s should be number, string or object')
 }
 
 
-export const createSchedule = schedule => _.clone(schedule) || {
+export const createSchedule = schedule => schedule || {
   id: _.uniqueId(UNSAVED_PREFIX),
   url: '',
   cycle: null,

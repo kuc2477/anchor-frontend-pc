@@ -1,8 +1,5 @@
-import React, { PropTypes } from 'react'
-import Colors from 'material-ui/lib/styles/colors'
-import { ActionFlightTakeoff } from 'material-ui/lib/svg-icons'
+import React from 'react'
 
-import Title from '../../base/Title'
 import { ValueLinkPropType } from '../../../constants/types'
 import BrotherSiteFieldSet from '../fields/BrotherSiteFieldSet'
 

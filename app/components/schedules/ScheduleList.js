@@ -2,14 +2,12 @@ import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import Infinite from 'react-infinite'
 
-import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance'
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
-import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
-import { SCHEDULE_LIST } from '../../constants/strings'
+import { SchedulePropType } from '../../constants/types'
 import { WINDOW_WIDTH } from '../../constants/numbers'
 
 
@@ -18,7 +16,7 @@ export default class ScheduleList extends React.Component {
     // component activeness
     isActive: PropTypes.bool,
     // schedules
-    editing: SchedulePropType.isRequired,
+    editing: SchedulePropType,
     schedule: PropTypes.number,
     schedules: PropTypes.arrayOf(PropTypes.number).isRequired,
     schedulesById: PropTypes.objectOf(SchedulePropType).isRequired,
@@ -81,10 +79,10 @@ export default class ScheduleList extends React.Component {
   }
 
   _getSelectedValueLink() {
-    const { schedule, schedules, selectSchedule, dispatch } = this.props
-    const value = _.findIndex(schedules, s => s == schedule)
+    const { schedule, schedules, selectSchedule } = this.props
+    const value = _.findIndex(schedules, s => s === schedule)
     const requestChange = index => {
-      dispatch(selectSchedule(schedules[index]))
+      selectSchedule(schedules[index])
     }
     return { value, requestChange }
   }
@@ -96,6 +94,9 @@ export default class ScheduleList extends React.Component {
     } = this.constructor
     const { load, addSchedule } = this.props
     const scheduleNodes = this._getScheduleNodes()
+    const onContentAddClick = () => {
+      addSchedule()
+    }
 
     return (
       <div style={STYLE}>
@@ -113,7 +114,7 @@ export default class ScheduleList extends React.Component {
         <FloatingActionButton
           mini backgroundColor={FAB_STYLE.color}
           style={FAB_STYLE}
-          onClick={addSchedule}
+          onClick={onContentAddClick}
         >
           <ContentAdd />
         </FloatingActionButton>

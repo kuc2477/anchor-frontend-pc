@@ -11,7 +11,8 @@ import {
 
 export default class MaxDepthSlider extends React.Component {
   static propTypes = {
-    vlink: ValueLinkPropType.isRequired
+    valueLink: ValueLinkPropType.isRequired,
+    style: PropTypes.object,
   };
 
   static SLIDER_STYLE = {
@@ -21,7 +22,7 @@ export default class MaxDepthSlider extends React.Component {
   render() {
     const { SLIDER_STYLE } = this.constructor
     const { style } = this.props
-    const { value, requestChange } = this.props.vlink
+    const { value, requestChange } = this.props.valueLink
 
     return (
       <div style={style}>
@@ -39,4 +40,3 @@ export default class MaxDepthSlider extends React.Component {
     )
   }
 }
-

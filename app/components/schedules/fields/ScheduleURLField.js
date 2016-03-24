@@ -4,15 +4,15 @@ import { ValueLinkPropType } from '../../../constants/types'
 
 
 export default class ScheduleURLField extends React.Component {
-  static propTypes =  {
+  static propTypes = {
     style: PropTypes.object,
-    vlink: ValueLinkPropType.isRequired,
+    valueLink: ValueLinkPropType.isRequired,
   };
 
 
   render() {
     const { style } = this.props
-    const { value, requestChange } = this.props.vlink
+    const { value, requestChange } = this.props.valueLink
 
     return (
       <TextField

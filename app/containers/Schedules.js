@@ -5,7 +5,7 @@ import {
   DASH_BOARD_GENERAL_SETTINGS,
   DASH_BOARD_ADVANCED_SETTINGS,
 } from '../constants/strings'
-import { SchedulePropType, createSchedule } from '../constants/types'
+import { SchedulePropType } from '../constants/types'
 import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
 import {
@@ -51,41 +51,17 @@ class Schedules extends React.Component {
     }
   }
 
-  // ==================================
-  // Client level schedule manipulation
-  // ==================================
-
-  add(schedule) {
+  setBoard(board) {
     const { dispatch } = this.props
-    dispatch(addSchedule(schedule))
+    dispatch(setBoard(board))
   }
 
-  remove(scheduleId) {
+  select(scheduleId) {
     const { dispatch } = this.props
-    dispatch(removeSchedule(scheduleId))
+    if (scheduleId) {
+      dispatch(selectSchedule(scheduleId))
+    }
   }
-
-  update(scheduleId, schedule) {
-    const { dispatch } = this.props
-    dispatch(updateSchedule(scheduleId, schedule))
-  }
-
-  // manage currently selected schedule's state within container
-  // rather than using redux action dispatches. directly using redux
-  // store causes performance issue.
-  syncEditing(props) {
-    const { schedule, schedulesById } = props || this.props
-    this.setState({ editing: schedulesById[schedule] || createSchedule() })
-  }
-
-  linkValue(name, value) {
-    const updated = Object.assign({}, this.state.editing, {[name]: value})
-    this.setState({ editing: updated })
-  }
-
-  // ==========================================
-  // Server level schedule fetch / manipulation
-  // ==========================================
 
   load() {
     const { dispatch, urlToFetch } = this.props
@@ -95,27 +71,50 @@ class Schedules extends React.Component {
   }
 
   save(scheduleId) {
-    debugger
-    // TODO: NOT IMPLEMENTED YET
+    const { dispatch } = this.props
+    if (scheduleId) {
+      dispatch(saveSchedule(scheduleId))
+    }
   }
 
   del(scheduleId) {
-    debugger
-    // TODO: NOT IMPLEMENTED YET
+    const { dispatch } = this.props
+    if (scheduleId) {
+      dispatch(deleteSchedule(scheduleId))
+    }
   }
 
-  // =========
-  // Auxiliary
-  // =========
-
-  select(scheduleId) {
+  add(schedule) {
     const { dispatch } = this.props
-    dispatch(selectSchedule(scheduleId))
+    dispatch(addSchedule(schedule))
   }
 
-  setBoard(board) {
+  remove(scheduleId) {
     const { dispatch } = this.props
-    dispatch(setBoard(board))
+    if (scheduleId) {
+      dispatch(removeSchedule(scheduleId))
+    }
+  }
+
+  update(scheduleId, schedule) {
+    const { dispatch } = this.props
+    if (scheduleId) {
+      dispatch(updateSchedule(scheduleId, schedule))
+    }
+  }
+
+  // manage currently selected schedule's state within container
+  // rather than using redux action dispatches. directly using redux
+  // store causes performance issue.
+  syncEditing(props) {
+    const { schedule, schedulesById } = props || this.props
+    const editing = schedulesById[schedule]
+    this.setState({ editing })
+  }
+
+  linkValue(name, value) {
+    const updated = Object.assign({}, this.state.editing, { [name]: value })
+    this.setState({ editing: updated })
   }
 
   render() {
@@ -142,7 +141,7 @@ class Schedules extends React.Component {
           <DashBoard
             board={board}
             editing={editing}
-            schedule={schedulesById[schedule] || null}
+            schedule={schedulesById[schedule]}
             updateSchedule={::this.update}
             saveSchedule={::this.save}
             setBoard={::this.setBoard}

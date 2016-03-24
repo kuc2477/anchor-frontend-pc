@@ -16,18 +16,18 @@ export const Schemas = {
   SCHEDULES: arrayOf(scheduleSchema)
 }
 
-// Returns next url from a paginated response if found and returns null 
+// Returns next url from a paginated response if found and returns null
 // otherwise.
 function getNextUrl(response) {
   return response.headers.link
 }
 
-// Fetches an API response and normalizes the result JSON according to schema. 
+// Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested.
 function callAPI(endpoint, schema) {
   return request
     .get(endpoint)
-    .then(response => ({response, payload: response.body}))
+    .then(response => ({ response, payload: response.body }))
     .then(({ response, payload }) => {
       if (!response.ok) {
         return
@@ -73,7 +73,7 @@ export default store => next => action => {
     return finalAction
   }
 
-  const [ requestType, successType, failureType ] = types
+  const [requestType, successType, failureType] = types
   next(actionWith({ type: requestType }))
 
   return callAPI(endpoint, schema).then(

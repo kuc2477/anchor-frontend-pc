@@ -13,7 +13,8 @@ import { ValueLinkPropType } from '../../../constants/types'
 
 export default class CycleSelectField extends React.Component {
   static propTypes = {
-    vlink: ValueLinkPropType.isRequired
+    valueLink: ValueLinkPropType.isRequired,
+    style: PropTypes.object,
   };
 
   _getMenuItemNodes() {
@@ -24,21 +25,21 @@ export default class CycleSelectField extends React.Component {
   }
 
   _handleChange(event, index, value) {
-    const { requestChange } = this.props.vlink
+    const { requestChange } = this.props.valueLink
     requestChange(null, value)
   }
 
 
   render() {
-    const { style, ...rest } = this.props
-    const { value } = this.props.vlink
+    const { style, valueLink, ...rest } = this.props
+    const { value } = valueLink
     const cycleMenuItemNodes = this._getMenuItemNodes()
 
     return (
         <SelectField
           floatingLabelText="News arrival cycle"
-          value={value}
           style={style}
+          value={value}
           onChange={::this._handleChange}
           {...rest}
         >
