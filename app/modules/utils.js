@@ -5,7 +5,8 @@ import {
   FLOW_MIN,
   FLOW_LINE_RATIO,
   FLOW_MIN_WIDTH,
-  FLOW_MAX_WIDTH
+  FLOW_MAX_WIDTH,
+  TOAST_LENGTH_SHORT,
 } from '../constants/numbers'
 
 
@@ -21,7 +22,7 @@ export function parseCookie(cookies, name) {
 export function toast(message, options) {
   // merge option with defaults
   const defaults = {
-    duration: 3000,
+    duration: TOAST_LENGTH_SHORT,
     action: 'OK',
     callback: clearToast
   }

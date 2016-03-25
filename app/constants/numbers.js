@@ -14,3 +14,6 @@ export const FLOW_MIN_WIDTH = '300px'
 export const FLOW_LINE_RATIO = 1.2
 export const FLOW_MIN = 18
 export const FLOW_MAX = 28
+
+export const TOAST_LENGTH_SHORT = 1000
+export const TOAST_LENGTH_LONG = 2500

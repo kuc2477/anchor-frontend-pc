@@ -1,3 +1,4 @@
+import Immutable from 'immutable'
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
@@ -18,6 +19,7 @@ import {
   selectSchedule,
   setBoard,
 } from '../actions/schedules'
+import { toast } from '../modules/utils'
 
 import '../styles/modules/no-scrollbar.scss'
 
@@ -96,10 +98,14 @@ class Schedules extends React.Component {
     }
   }
 
-  update(scheduleId, schedule) {
-    const { dispatch } = this.props
-    if (scheduleId) {
-      dispatch(updateSchedule(scheduleId, schedule))
+  update(scheduleId, edited) {
+    const { dispatch, schedule, schedulesById } = this.props
+    const previous = schedulesById[schedule]
+
+    if (scheduleId &&
+        !Immutable.fromJS(previous).equals(Immutable.fromJS(edited))) {
+      dispatch(updateSchedule(scheduleId, edited))
+      toast(`Successfully updated schedule ${edited.name}`)
     }
   }
 
