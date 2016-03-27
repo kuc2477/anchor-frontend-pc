@@ -1,6 +1,3 @@
-'use strict'
-
-const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpackTargetElectronRenderer = require('webpack-target-electron-renderer')
@@ -29,7 +26,7 @@ config.module.loaders.push({
   loader: ExtractTextPlugin.extract(
     'style-loader',
     'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
-  ) 
+  )
   // module level scss
 }, {
   test: /^((?!\.module).)*\.scss$/,
@@ -45,7 +42,7 @@ config.module.loaders.push({
     'style-loader',
     'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
     'sass-loader'
-  ) 
+  )
 })
 
 // configure plugins

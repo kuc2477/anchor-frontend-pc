@@ -28,7 +28,7 @@ module.exports = (config) => {
 
     // test specific webpack configuration
     webpack: {
-      module: require('./webpack.config.base').module,
+      module: require('./webpack.config.dev').module,
       devtool: 'inline-source-map'
     },
     webpackMiddleware: { noInfo: true },

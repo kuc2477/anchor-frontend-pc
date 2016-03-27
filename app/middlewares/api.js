@@ -30,7 +30,7 @@ function callAPI(endpoint, schema) {
     .then(response => ({ response, payload: response.body }))
     .then(({ response, payload }) => {
       if (!response.ok) {
-        return
+        return Promise.reject()
       }
       const camelized = camelizeKeys(payload)
       const normalized = normalize(camelized, schema)

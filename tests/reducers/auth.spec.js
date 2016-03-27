@@ -29,7 +29,7 @@ describe('auth reducer', () => {
 
   beforeEach(() => {
     sessionKey = 'SESSION KEY'
-    user =  Immutable.Map({
+    user = new Immutable.Map({
       id: 1,
       firstname: 'FIRST_NAME',
       lastname: 'LAST_NAME'
@@ -71,7 +71,7 @@ describe('auth reducer', () => {
     })
 
     it('should not be authenticating', () => {
-      const before = initialState.merge({isAuthenticating: true})
+      const before = initialState.merge({ isAuthenticating: true })
       expect(before.get('isAuthenticating')).toBeTruthy()
       const after = auth(before, authSuccessAction)
       expect(after.get('isAuthenticating')).toBeFalsy()

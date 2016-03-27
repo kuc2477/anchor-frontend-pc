@@ -1,29 +1,29 @@
-export const app = () => {
-  return process.env.NODE_ENV === 'production' ?
-    `http://localhost:${process.env.DEV_SERVER_PORT}`:
-    `http://localhost:${process.env.DEV_SERVER_PORT}`
-}
+export const app = () => process.env.NODE_ENV === 'production' ?
+  `http://localhost:${process.env.DEV_SERVER_PORT}` :
+  `http://localhost:${process.env.DEV_SERVER_PORT}`
+export const api = () => 'api'
 
-export const login = () => `${app()}/login`
-export const logout = () => `${app()}/logout`
-export const signup = () => `${app()}/signup`
-export const csrf = () => `${app()}/csrf`
-export const userinfo = () => `${app()}/userinfo`
-export const resend = () => `${app()}/resend`
+export const login = () => `${app()}/${api()}login`
+export const logout = () => `${app()}/${api()}logout`
+export const signup = () => `${app()}/${api()}/signup`
+export const csrf = () => `${app()}/${api()}/csrf`
+export const userinfo = () => `${app()}/${api()}/userinfo`
+export const resend = () => `${app()}/${api()}/resend`
 
-export const news = (page = 0) => `${app()}/news?page=${page}`
-export const sites = (page = 0) => `${app()}/sites?page=${page}`
-export const schedules = (page = 0) => `${app()}/schedules?page=${page}`
+export const users = id => id ?
+  `${app()}/${api()}/users/${id}` :
+  `${app()}/${api()}/users`
 
-export const user = (id) => `${app()}/users/${id}`
-export const newsItem = (id) => `${app()}/news/${id}`
-export const site = (id) => `${app()}/sites/${id}`
-export const schedule = (id) => `${app()}/schedules/${id}`
+export const news = id => id ?
+  `${app()}/${api()}/news/${id}` :
+  `${app()}/${api()}/news`
+
+export const schedules = id => id ?
+  `${app()}/${api()}/schedules/${id}` :
+  `${app()}/${api()}/schedules`
 
 
 export default {
   app, login, logout, signup, csrf, userinfo, resend,
-  news, newsItem,
-  sites, site,
-  schedules, schedule
+  users, news, schedules,
 }

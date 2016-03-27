@@ -69,7 +69,7 @@ export const unsaved = (instance) => {
 }
 
 
-export const createSchedule = schedule => schedule || {
+export const createSchedule = schedule => _.clone(schedule) || {
   id: _.uniqueId(UNSAVED_PREFIX),
   url: '',
   cycle: null,

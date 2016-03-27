@@ -1,8 +1,8 @@
 import request from 'superagent-bluebird-promise'
 
 import urls from '../modules/urls'
-import { getCSRFToken, authorize, authorizeCSRF } from '../modules/auth'
-import { parseCookie, toast, clearToast } from '../modules/utils'
+import { authorize, authorizeCSRF } from '../modules/auth'
+import { parseCookie, toast } from '../modules/utils'
 import { NEWS, LOGIN } from '../constants/routes'
 
 
@@ -36,12 +36,12 @@ export function authenticate(email, password, router, next = NEWS.path) {
       .send({ email, password })
       .end((error, response) => {
         const { body, header } = response
-        const { user, reason, email } = body
+        const { user, reason, email: emailToResend } = body
         if (error) {
           // we consider the user is unconfirmed if the server's response
           // contains user's email (implicating that the confirmation did not
           // passed yet).
-          dispatch(authError(reason, email))
+          dispatch(authError(reason, emailToResend))
           return
         }
         const sessionKey = parseCookie(header['set-cookie'].pop(), 'session')
@@ -88,7 +88,7 @@ export function resendConfirmationMail(email) {
 // =========================================================
 
 export const USER_INIT_START = 'USER_INIT_START'
-export function userInitStart () {
+export function userInitStart() {
   return { type: USER_INIT_START }
 }
 
@@ -134,24 +134,24 @@ export function initUser(replace, callback) {
 // ====
 
 export const CSRF_INIT_START = 'CSRF_INIT_START'
-export function CSRFInitStart() {
+export function csrfInitStart() {
   return { type: CSRF_INIT_START }
 }
 
 export const CSRF_INIT_SUCCESS = 'CSRF_INIT_SUCCESS'
-export function CSRFInitSuccess(token) {
+export function csrfInitSuccess(token) {
   return { type: CSRF_INIT_SUCCESS, token }
 }
 
 export const CSRF_INIT_ERROR = 'CSRF_INIT_ERROR'
-export function CSRFInitError() {
+export function csrfInitError() {
   return { type: CSRF_INIT_ERROR }
 }
 
 export function initCSRF() {
   return (dispatch) => {
-    // start csrf init
-    dispatch(CSRFInitStart())
+    // stajjjjjrf init
+    dispatch(csrfInitStart())
 
     // TODO: should handle exceptional case where csrf token not set on
     // response cookie.
@@ -159,10 +159,10 @@ export function initCSRF() {
       .get(urls.csrf())
       .end((error, response) => {
         if (error) {
-          dispatch(CSRFInitError())
+          dispatch(csrfInitError())
           return
         }
-        dispatch(CSRFInitSuccess(token))
+        dispatch(csrfInitSuccess(token))
       })
   }
 }

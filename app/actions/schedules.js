@@ -68,16 +68,23 @@ export const SAVE_SCHEDULE_START = 'SAVE_SCHEDULE_START'
 export const SAVE_SCHEDULE_SUCCESS = 'SAVE_SCHEDULE_SUCCESS'
 export const SAVE_SCHEDULE_ERROR = 'SAVE_SCHEDULE_ERROR'
 export const saveScheduleStart = () => ({ type: SAVE_SCHEDULE_START })
-export const saveScheduleSuccess = () => ({ type: SAVE_SCHEDULE_SUCCESS })
+export const saveScheduleSuccess = schedule => ({
+  type: SAVE_SCHEDULE_SUCCESS, schedule
+})
 export const saveScheduleError = () => ({ type: SAVE_SCHEDULE_ERROR })
 export const saveSchedule = schedule => dispatch => {
   dispatch(saveScheduleStart())
-  request.post(urls.site(site.id))
+  request.post(urls.schedules(schedule.id))
   .use(authorize())
   .use(authorizeCSRF())
   .send(schedule)
   .end((error, response) => {
-    // TODO: NOT IMPLEMENTED YET
+    if (error) {
+      dispatch(saveScheduleError(error))
+      return
+    }
+    const { body: saved } = response
+    dispatch(saveScheduleSuccess(saved))
   })
 }
 
@@ -93,7 +100,7 @@ export const deleteScheduleStart = scheduleId => ({
   type: DELETE_SCHEDULE_START, scheduleId
 })
 export const deleteScheduleSuccess = () => ({ type: DELETE_SCHEDULE_SUCCESS })
-export const deleteScheduleError = schedule => ({
+export const deleteScheduleError = scheduleId => ({
   type: DELETE_SCHEDULE_ERROR, scheduleId
 })
 export const deleteSchedule = scheduleId => dispatch => {
@@ -101,7 +108,11 @@ export const deleteSchedule = scheduleId => dispatch => {
   request.del(urls.schedule(scheduleId))
   .use(authorize())
   .use(authorizeCSRF())
-  .end((error, response) => {
-    // TODO: NOT IMPLEMENTED YET
+  .end((error) => {
+    if (error) {
+      dispatch(deleteScheduleError(error))
+      return
+    }
+    dispatch(deleteScheduleSuccess())
   })
 }

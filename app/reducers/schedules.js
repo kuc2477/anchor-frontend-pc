@@ -154,10 +154,11 @@ function reduceSaveSuccess(state, action) {
   const index = state.get('schedules').findIndex(
     schedule => schedule.id === saved.id
   )
+
   return state.merge({
     isSaving: false,
     didSaveFail: false,
-    schedules: state.get('schedules').set(index, saved),
+    schedules: state.get('schedules').set(index, saved.id),
     schedulesById: state.get('schedulesById').set(saved.id, saved),
   })
 }
