@@ -3,8 +3,8 @@ export const app = () => process.env.NODE_ENV === 'production' ?
   `http://localhost:${process.env.DEV_SERVER_PORT}`
 export const api = () => 'api'
 
-export const login = () => `${app()}/${api()}login`
-export const logout = () => `${app()}/${api()}logout`
+export const login = () => `${app()}/${api()}/login`
+export const logout = () => `${app()}/${api()}/logout`
 export const signup = () => `${app()}/${api()}/signup`
 export const csrf = () => `${app()}/${api()}/csrf`
 export const userinfo = () => `${app()}/${api()}/userinfo`

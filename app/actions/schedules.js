@@ -96,12 +96,14 @@ export const saveSchedule = schedule => dispatch => {
 export const DELETE_SCHEDULE_START = 'DELETE_SCHEDULE_START'
 export const DELETE_SCHEDULE_SUCCESS = 'DELETE_SCHEDULE_SUCCESS'
 export const DELETE_SCHEDULE_ERROR = 'DELETE_SCHEDULE_ERROR'
-export const deleteScheduleStart = scheduleId => ({
-  type: DELETE_SCHEDULE_START, scheduleId
+export const deleteScheduleStart = () => ({
+  type: DELETE_SCHEDULE_START
 })
-export const deleteScheduleSuccess = () => ({ type: DELETE_SCHEDULE_SUCCESS })
-export const deleteScheduleError = scheduleId => ({
-  type: DELETE_SCHEDULE_ERROR, scheduleId
+export const deleteScheduleSuccess = scheduleId => ({
+  type: DELETE_SCHEDULE_SUCCESS, scheduleId
+})
+export const deleteScheduleError = () => ({
+  type: DELETE_SCHEDULE_ERROR
 })
 export const deleteSchedule = scheduleId => dispatch => {
   dispatch(deleteScheduleStart())

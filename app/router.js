@@ -5,7 +5,7 @@ import App from './containers/App'
 import { FLOW_CLASS } from './constants/strings'
 import { SCHEDULES, NEWS, LOGIN, SIGNUP } from './constants/routes'
 import history from './modules/history'
-import { authRequired } from './modules/auth'
+import { authRequired } from './modules/routing'
 import { flowtype } from './modules/utils'
 
 

@@ -8,6 +8,8 @@ import IconButton from 'material-ui/lib/icon-button'
 import IconMenu from 'material-ui/lib/menus/icon-menu'
 import MenuItem from 'material-ui/lib/menus/menu-item'
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
+import ContentInbox from 'material-ui/lib/svg-icons/content/inbox'
+import Divider from 'material-ui/lib/divider'
 
 import ListItem from 'material-ui/lib/lists/list-item'
 import LinearProgress from 'material-ui/lib/linear-progress'
@@ -18,7 +20,7 @@ import { SchedulePropType } from '../../constants/types'
 
 export default class ScheduleItem extends React.Component {
   static propTypes = {
-    schedule: SchedulePropType,
+    schedule: SchedulePropType.isRequired,
     selected: PropTypes.bool.isRequired,
     removeSchedule: PropTypes.func.isRequired,
     onClick: PropTypes.func
@@ -27,7 +29,7 @@ export default class ScheduleItem extends React.Component {
   static STYLE = {};
   static LIST_ITEM_STYLE = {};
   static PROGRESS_ITEM_STYLE = {};
-  static PROGRESS_STYLE = { width: '85%' };
+  static PROGRESS_STYLE = { width: '80%' };
   static DEFAULT_NAME = 'Schedule name';
   static DEFAULT_URL = 'Schedule url to get subscribed';
 
@@ -38,14 +40,30 @@ export default class ScheduleItem extends React.Component {
   }
 
   _getProgressItem() {
+    const { isActive, status } = this.props.schedule
     const { PROGRESS_STYLE } = this.constructor
+
+    const mode = isActive && status === 'STARTED' ?
+      'indeterminate' : 'determinate'
+
+    const text =
+      !isActive ? 'Disabled' :
+      status === 'STARTED' ? 'Reporters are collecting news for you' :
+      status === 'PENDING' ? 'Reporters are wating to be dispatched' :
+      status === 'SUCCESS' ? 'Reporters successfully collected news' :
+        'Something went wrong with reporters. Wating to be dispatched again'
+
     const progressBar = (
-      <LinearProgress style={PROGRESS_STYLE} mode="indeterminate" />
+      <LinearProgress style={PROGRESS_STYLE} mode={mode} />
     )
+
     return (
-      <ListItem>
-        {progressBar}
-      </ListItem>
+      <div>
+        <Divider style={{paddingTop: 0}}/>
+        <ListItem disabled secondaryText={text}>
+          {progressBar}
+        </ListItem>
+      </div>
     )
   }
 
@@ -83,10 +101,9 @@ export default class ScheduleItem extends React.Component {
       <Paper style={this._getStyle()} onClick={onClick}>
         <ListItem
           style={LIST_ITEM_STYLE}
-          primaryTogglesNestedList
           primaryText={schedule.name || DEFAULT_NAME}
           secondaryText={schedule.url || DEFAULT_URL}
-          nestedItems={[this._getProgressItem()]}
+          leftIcon={<ContentInbox />}
           rightIconButton={this._getActionButtonMenu()}
         />
 

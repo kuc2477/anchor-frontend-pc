@@ -30,6 +30,8 @@ export const initialState = new Immutable.Map({
   didSaveFail: false,
   isFetching: false,
   didFetchFail: false,
+  isDeleting: false,
+  didDeleteFail: false,
   urlToFetch: urls.schedules(),
   board: DASH_BOARD_GENERAL_SETTINGS
 })
@@ -113,6 +115,7 @@ function reduceSetBoard(state, action) {
   return state.merge({ board: action.board })
 }
 
+
 // =====
 // Fetch
 // =====
@@ -159,10 +162,39 @@ function reduceSaveSuccess(state, action) {
     isSaving: false,
     didSaveFail: false,
     schedules: state.get('schedules').set(index, saved.id),
-    schedulesById: state.get('schedulesById').set(saved.id, saved),
+    schedulesById: state.get('schedulesById').set(
+      saved.id, Immutable.fromJS(saved)),
   })
 }
 
 function reduceSaveError(state) {
   return state.merge({ isSaving: false, didSaveFail: true })
+}
+
+
+// ======
+// Delete
+// ======
+
+function reduceDeleteStart(state) {
+  return state.merge({ isDeleting: true })
+}
+
+function reduceDeleteSuccess(state, action) {
+  const { scheduleId: toDelete } = action
+  const schedules = state.get('schedules').filter(id => id !== toDelete)
+  const schedulesById = state.get('schedulesById').delete(toDelete)
+  const schedule = schedules.last()
+  return state.merge({
+    schedule, schedules, schedulesById,
+    isDeleting: false,
+    didDeleteFail: false,
+  })
+}
+
+function reduceDeleteError(state) {
+  return state.merge({
+    isDeleting: false,
+    didDeleteFail: true
+  })
 }

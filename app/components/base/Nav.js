@@ -40,9 +40,7 @@ export default class Nav extends React.Component {
     }
   }
 
-  static ROUTES = [
-    [NEWS, SCHEDULES, LOGOUT]
-  ];
+  static ROUTES = [[NEWS, SCHEDULES, LOGOUT]];
   static APP_BAR_STYLE = { position: 'fixed' };
   static TAB_INK_STYLE = { color: INDICATOR };
   static TAB_ITEM_STYLE = { marginRight: 120 };

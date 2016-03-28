@@ -1,6 +1,7 @@
 import request from 'superagent-bluebird-promise'
 import { normalize, Schema, arrayOf } from 'normalizr'
 import { camelizeKeys } from 'humps'
+import { authorize, authorizeCSRF } from './auth'
 
 
 const userSchema = new Schema('users')
@@ -27,6 +28,8 @@ function getNextUrl(response) {
 function callAPI(endpoint, schema) {
   return request
     .get(endpoint)
+    .use(authorize())
+    .use(authorizeCSRF())
     .then(response => ({ response, payload: response.body }))
     .then(({ response, payload }) => {
       if (!response.ok) {

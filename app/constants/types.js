@@ -63,13 +63,16 @@ export const unsaved = (instance) => {
     return instance.includes(UNSAVED_PREFIX)
   }
   if (typeof instance === 'object') {
-    return instance.id.includes(UNSAVED_PREFIX)
+    return instance.id ?
+      instance.id.includes(UNSAVED_PREFIX) :
+      instance.get('id').includes(UNSAVED_PREFIX)
   }
-  throw new Error('Argument\'s should be number, string or object')
+  throw new Error('Argument\'s type should be number, string or object')
 }
 
 
-export const createSchedule = schedule => _.clone(schedule) || {
+export const createSchedule = schedule => schedule ?
+  Object.assign({}, schedule) : {
   id: _.uniqueId(UNSAVED_PREFIX),
   url: '',
   cycle: null,

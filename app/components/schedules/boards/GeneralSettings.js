@@ -28,7 +28,7 @@ export default class GeneralSettings extends React.Component {
 
   static CYCLE_FIELD_STYLE = {
     marginTop: 5,
-    marginBottom: 30,
+    marginBottom: 10,
   };
 
   static MAX_DEPTH_FIELD_STYLE = {
