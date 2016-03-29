@@ -56,11 +56,9 @@ export default (state = initialState, action) => {
     case SAVE_SCHEDULE_ERROR: return reduceSaveError(state, action)
 
     // delete
-    case DELETE_SCHEDULE_START:
-    case DELETE_SCHEDULE_SUCCESS:
-    case DELETE_SCHEDULE_ERROR:
-      // TODO: NOT IMPLEMENTED YET
-      return state
+    case DELETE_SCHEDULE_START: return reduceDeleteStart(state, action)
+    case DELETE_SCHEDULE_SUCCESS: return reduceDeleteSuccess(state, action)
+    case DELETE_SCHEDULE_ERROR: return reduceDeleteError(state, action)
 
     // auxiliary
     case LOGOUT: return initialState
@@ -182,9 +180,12 @@ function reduceDeleteStart(state) {
 
 function reduceDeleteSuccess(state, action) {
   const { scheduleId: toDelete } = action
+
+  const [ index, _ ] = state.get('schedules').findEntry(id => id === toDelete)
   const schedules = state.get('schedules').filter(id => id !== toDelete)
   const schedulesById = state.get('schedulesById').delete(toDelete)
-  const schedule = schedules.last()
+  const schedule = schedules.get(index - 1) || schedules.get(index + 1)
+
   return state.merge({
     schedule, schedules, schedulesById,
     isDeleting: false,

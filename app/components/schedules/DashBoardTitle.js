@@ -3,10 +3,8 @@ import React, { PropTypes } from 'react'
 
 import Ink from 'react-ink'
 import Colors from 'material-ui/lib/styles/colors'
-import {
-  ActionSettings,
-  ActionFlightTakeoff,
-} from 'material-ui/lib/svg-icons'
+import ActionSettings from 'material-ui/lib/svg-icons/action/settings'
+import ActionFlightTakeoff from 'material-ui/lib/svg-icons/action/flight-takeoff'
 
 import {
   DASH_BOARD_GENERAL_SETTINGS,
@@ -43,8 +41,8 @@ export default class DashBoardTitle extends React.Component {
 
   static TITLE_ROW_STYLE = {
     width: '100%',
-    paddingTop: 20,
-    paddingBottom: 15,
+    paddingTop: 10,
+    paddingBottom: 5,
     paddingLeft: 30,
     className: 'row middle-md between-md',
   };

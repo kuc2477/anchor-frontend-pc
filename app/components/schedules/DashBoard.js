@@ -33,8 +33,8 @@ export default class DashBoard extends React.Component {
 
   // root element style
   static STYLE = {
-    width: WINDOW_WIDTH * 0.5 - 100,
-    height: WINDOW_HEIGHT * 0.8 - 40,
+    width: WINDOW_WIDTH * 0.5 - 80,
+    height: WINDOW_HEIGHT * 0.8 - 30,
     marginTop: 20,
     marginBottom: 20,
     marginLeft: 35,

@@ -18,17 +18,16 @@ export default class GeneralSettings extends React.Component {
   };
 
   static NAME_FIELD_STYLE = {
-    marginTop: -10,
-    marginBottom: -10,
+    marginTop: -5,
+    marginBottom: -5,
   };
 
   static URL_FIELD_STYLE = {
-    marginBottom: -10,
+    marginBottom: -5,
   };
 
   static CYCLE_FIELD_STYLE = {
-    marginTop: 5,
-    marginBottom: 10,
+    marginBottom: 25,
   };
 
   static MAX_DEPTH_FIELD_STYLE = {

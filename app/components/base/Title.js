@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import Colors from 'material-ui/lib/styles/colors'
+import { Colors } from 'material-ui/lib/styles'
 import Ink from 'react-ink'
 
 

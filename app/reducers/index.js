@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import undoable from 'redux-undo'
 
 import base from './base'
 import auth from './auth'
@@ -7,5 +8,6 @@ import schedules from './schedules'
 
 
 export default combineReducers({
-  base, auth, schedules, signup
+  base, auth, signup,
+  schedules: undoable(schedules), 
 })

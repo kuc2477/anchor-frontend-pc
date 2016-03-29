@@ -60,7 +60,9 @@ export default class ScheduleList extends React.Component {
     } = this.props
 
     const select = scheduleId => () => {
-      selectSchedule(scheduleId)
+      if (scheduleId !== selected) {
+        selectSchedule(scheduleId)
+      }
     }
 
     return this.props.schedules
@@ -69,7 +71,6 @@ export default class ScheduleList extends React.Component {
         <ScheduleItem
           style={LIST_ITEM_STYLE}
           key={schedule.id}
-          value={schedule.id}
           selected={schedule.id === selected}
           schedule={schedule.id === selected ? editing : schedule}
           removeSchedule={removeSchedule}
@@ -106,7 +107,6 @@ export default class ScheduleList extends React.Component {
           elementHeight={SCHEDULE_ITEM_HEIGHT}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}
-          vlink={::this._getSelectedValueLink()}
         >
           {scheduleNodes}
         </Infinite>

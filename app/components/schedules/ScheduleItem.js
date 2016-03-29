@@ -1,18 +1,23 @@
 import React, { PropTypes } from 'react'
 
 import Paper from 'material-ui/lib/paper'
-import Colors from 'material-ui/lib/styles/colors'
+import { Colors } from 'material-ui/lib/styles'
 
-import Close from  'material-ui/lib/svg-icons/navigation/close'
 import IconButton from 'material-ui/lib/icon-button'
 import IconMenu from 'material-ui/lib/menus/icon-menu'
 import MenuItem from 'material-ui/lib/menus/menu-item'
-import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
-import ContentInbox from 'material-ui/lib/svg-icons/content/inbox'
-import Divider from 'material-ui/lib/divider'
-
 import ListItem from 'material-ui/lib/lists/list-item'
 import LinearProgress from 'material-ui/lib/linear-progress'
+import Divider from 'material-ui/lib/divider'
+import Toggle from 'material-ui/lib/toggle'
+
+import Close from  'material-ui/lib/svg-icons/navigation/close'
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
+import ContentInbox from 'material-ui/lib/svg-icons/content/inbox'
+import CloudQueue from 'material-ui/lib/svg-icons/file/cloud-queue'
+import CloudDownload from 'material-ui/lib/svg-icons/file/cloud-download'
+import CloudDone from 'material-ui/lib/svg-icons/file/cloud-done'
+import CloudOff from 'material-ui/lib/svg-icons/file/cloud-off'
 
 import { PRIMARY, SECONDARY } from '../../constants/colors'
 import { SchedulePropType } from '../../constants/types'
@@ -29,7 +34,10 @@ export default class ScheduleItem extends React.Component {
   static STYLE = {};
   static LIST_ITEM_STYLE = {};
   static PROGRESS_ITEM_STYLE = {};
-  static PROGRESS_STYLE = { width: '80%' };
+  static PROGRESS_STYLE = { 
+    marginTop: 12,
+    width: '80%',
+  };
   static DEFAULT_NAME = 'Schedule name';
   static DEFAULT_URL = 'Schedule url to get subscribed';
 
@@ -53,14 +61,25 @@ export default class ScheduleItem extends React.Component {
       status === 'SUCCESS' ? 'Reporters successfully collected news' :
         'Something went wrong with reporters. Wating to be dispatched again'
 
-    const progressBar = (
-      <LinearProgress style={PROGRESS_STYLE} mode={mode} />
-    )
+    const icon =
+      !isActive ? <CloudOff /> :
+      status === 'STARTED' ? <CloudDownload /> :
+      status === 'PENDING' ? <CloudQueue /> :
+      status === 'SUCCESS' ? <CloudDone /> : <CloudQueue />
+
+    const toggle = <Toggle />
+
+    const progressBar = <LinearProgress style={PROGRESS_STYLE} mode={mode} />
+
 
     return (
       <div>
-        <Divider style={{paddingTop: 0}}/>
-        <ListItem disabled secondaryText={text}>
+        <Divider />
+        <ListItem
+          secondaryText={text}
+          leftIcon={icon}
+          rightToggle={toggle}
+        >
           {progressBar}
         </ListItem>
       </div>
@@ -101,10 +120,12 @@ export default class ScheduleItem extends React.Component {
       <Paper style={this._getStyle()} onClick={onClick}>
         <ListItem
           style={LIST_ITEM_STYLE}
+          primaryTogglesNestedList
           primaryText={schedule.name || DEFAULT_NAME}
           secondaryText={schedule.url || DEFAULT_URL}
           leftIcon={<ContentInbox />}
           rightIconButton={this._getActionButtonMenu()}
+          nestedItems={[this._getProgressItem()]}
         />
 
       </Paper>

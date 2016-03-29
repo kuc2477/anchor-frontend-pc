@@ -160,14 +160,17 @@ class Schedules extends React.Component {
 }
 
 
-export default connect(app => ({
-  schedule: app.schedules.get('schedule'),
-  schedules: app.schedules.get('schedules').toJS(),
-  schedulesById: app.schedules.get('schedulesById').toJS(),
-  isSaving: app.schedules.get('isSaving'),
-  didSaveFail: app.schedules.get('didSaveFail'),
-  isFetching: app.schedules.get('isFetching'),
-  didFetchFail: app.schedules.get('didFetchFail'),
-  urlToFetch: app.schedules.get('urlToFetch'),
-  board: app.schedules.get('board'),
-}))(Schedules)
+export default connect(app => {
+  const { present } = app.schedules
+  return {
+    schedule: present.get('schedule'),
+    schedules: present.get('schedules').toJS(),
+    schedulesById: present.get('schedulesById').toJS(),
+    isSaving: present.get('isSaving'),
+    didSaveFail: present.get('didSaveFail'),
+    isFetching: present.get('isFetching'),
+    didFetchFail: present.get('didFetchFail'),
+    urlToFetch: present.get('urlToFetch'),
+    board: present.get('board'),
+  }
+})(Schedules)

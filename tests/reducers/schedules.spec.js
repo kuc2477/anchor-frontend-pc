@@ -322,11 +322,70 @@ describe('schedules reducer', () => {
   })
 
   describe('after schedule delete start', () => {
+    it('should be deleting', () => {
+      const after = reducer(initialState, deleteScheduleStart())
+      expect(after.get('isDeleting')).toBeTruthy()
+    })
   })
 
   describe('after schedule delete success', () => {
+    let toDelete
+    let previousSchedules
+    let previous
+    let after
+
+    beforeEach(() => {
+      toDelete = createFakeSchedule()
+      previousSchedules = [
+        ..._.times(2, createFakeSchedule), 
+        toDelete,
+        ..._.times(3, createFakeSchedule)
+      ]
+      previous = initialState.merge({
+        didDeleteFail: true,
+        isDeleting: true,
+        schedules: normalize(previousSchedules, Schemas.SCHEDULES).result,
+        schedulesById: normalize(previousSchedules, Schemas.SCHEDULE).entities.schedule
+      })
+
+      after = reducer(previous, deleteScheduleSuccess(toDelete.id))
+    })
+
+    it('shouldn\'t be deleting', () => {
+      expect(after.get('isDeleting')).toBeFalsy()
+    })
+
+    it('should remove from both list of schedule ids and entities', () => {
+      expect(after.get('schedules').includes(toDelete.id)).toBeFalsy()
+      expect(after.get('schedulesById').has(toDelete.id)).toBeFalsy()
+    })
+
+    it('should select available adjecent schedule among rest of the schedules', () => {
+      expect(after.get('schedule')).toEqual(previousSchedules[1].id)
+    })
+
+    it('should clear deletion failure status', () => {
+      expect(after.get('didDeleteFail')).toBeFalsy()
+    })
   })
 
   describe('after schedule delete error', () => {
+    let previous
+    let after
+
+    beforeEach(() => {
+      previous = initialState.merge({ isDeleting: true })
+      after = reducer(previous, deleteScheduleError())
+    })
+
+    it('shouldn\'t be deleting', () => {
+      expect(previous.get('isDeleting')).toBeTruthy()
+      expect(after.get('isDeleting')).toBeFalsy()
+    })
+
+    it('should mark it\'s failure', () => {
+      expect(previous.get('didDeleteFail')).toBeFalsy()
+      expect(after.get('didDeleteFail')).toBeTruthy()
+    })
   })
 })
