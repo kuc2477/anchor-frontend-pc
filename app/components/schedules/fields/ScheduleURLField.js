@@ -6,12 +6,13 @@ import { ValueLinkPropType } from '../../../constants/types'
 export default class ScheduleURLField extends React.Component {
   static propTypes = {
     style: PropTypes.object,
+    error: PropTypes.string,
     valueLink: ValueLinkPropType.isRequired,
   };
 
 
   render() {
-    const { style } = this.props
+    const { style, error } = this.props
     const { value, requestChange } = this.props.valueLink
 
     return (
@@ -19,6 +20,7 @@ export default class ScheduleURLField extends React.Component {
         style={style}
         floatingLabelText="Site url"
         onChange={requestChange}
+        errorText={error}
         value={value}
       />
     )

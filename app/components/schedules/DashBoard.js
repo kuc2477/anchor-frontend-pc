@@ -7,7 +7,7 @@ import SwipeableViews from 'react-swipeable-views'
 import DashBoardTitle from './DashBoardTitle'
 import GeneralSettings from './boards/GeneralSettings'
 import AdvancedSettings from './boards/AdvancedSettings'
-import { SchedulePropType } from '../../constants/types'
+import { SchedulePropType, ValueLinkPropType  } from '../../constants/types'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
 import {
   DASH_BOARD_GENERAL_SETTINGS,
@@ -19,16 +19,27 @@ import { SCHEDULE_DASH_BOARDS } from '../../constants/arrays'
 export default class DashBoard extends React.Component {
   static propTypes = {
     editing: SchedulePropType,
-    schedule: SchedulePropType,
+    schedule: PropTypes.number,
     board: PropTypes.oneOf([
       DASH_BOARD_GENERAL_SETTINGS,
       DASH_BOARD_ADVANCED_SETTINGS,
     ]).isRequired,
+    // value links
+    enabledValueLink: ValueLinkPropType.isRequired,
+    nameValueLink: ValueLinkPropType.isRequired,
+    urlValueLink: ValueLinkPropType.isRequired,
+    cycleValueLink: ValueLinkPropType.isRequired,
+    maxDepthValueLink: ValueLinkPropType.isRequired,
+    maxDistValueLink: ValueLinkPropType.isRequired,
+    brothersValueLink: ValueLinkPropType.isRequired,
+    // errors
+    nameError: PropTypes.string,
+    urlError: PropTypes.string,
+    cycleError: PropTypes.string,
     // schedule entry / board manipulation
-    updateSchedule: PropTypes.func.isRequired,
-    saveSchedule: PropTypes.func.isRequired,
+    update: PropTypes.func.isRequired,
+    save: PropTypes.func.isRequired,
     setBoard: PropTypes.func.isRequired,
-    linkValue: PropTypes.func.isRequired,
   };
 
   // root element style
@@ -54,6 +65,12 @@ export default class DashBoard extends React.Component {
     marginRight: 20,
   };
 
+  updateAndSave() {
+    const { schedule, editing, update, save } = this.props
+    update(schedule, editing)
+    saveSchedule(schedule)
+  }
+
   _getContainerStyle() {
     const { STYLE, SLIDE_CONTAINER_STYLE } = this.constructor
     return {
@@ -63,73 +80,26 @@ export default class DashBoard extends React.Component {
     }
   }
 
-  _getValueLink(name) {
-    const { editing, linkValue } = this.props
-
-    // return disconnected value link if we have no editing schedule
-    if (!editing) {
-      return { value: null, requestChange: (e, v) => v }
-    }
-
-    const value = editing[name] || null
-    const requestChange = (event, changedValue) => {
-      const eventChangedValue = event && event.target && event.target.value
-      linkValue(name, eventChangedValue || changedValue)
-    }
-    return { value, requestChange }
-  }
-
-  updateEditing() {
-    const { schedule, editing, updateSchedule } = this.props
-
-    // don't update if we have no editing schedule
-    if (!editing) {
-      return
-    }
-
-    updateSchedule(schedule.id, editing)
-  }
-
-  saveEditing() {
-    const { schedule, saveSchedule } = this.props
-
-    // don't save if we have no schedule
-    if (!schedule) {
-      return
-    }
-
-    saveSchedule(schedule.id)
-  }
-
-
   render() {
-    const { STYLE, SLIDE_STYLE } = this.constructor
     const SLIDE_CONTAINER_STYLE = this._getContainerStyle()
-    const { board, setBoard } = this.props
+    const { STYLE, SLIDE_STYLE } = this.constructor
+    const { schedule, editing, board, setBoard, update, save } = this.props
 
-    const settingsProps = {
-      nameValueLink: this._getValueLink('name'),
-      urlValueLink: this._getValueLink('url'),
-      cycleValueLink: this._getValueLink('cycle'),
-      maxDepthValueLink: this._getValueLink('maxDepth'),
-      maxDistValueLink: this._getValueLink('maxDist'),
-      brothersValueLink: this._getValueLink('brothers')
-    }
-
-    const generalSettingsProps = _.pick(settingsProps, [
+    const generalSettingsProps = _.pick(this.props, [
       'nameValueLink', 'urlValueLink', 'cycleValueLink',
-      'maxDepthValueLink', 'maxDistValueLink'
+      'maxDepthValueLink', 'maxDistValueLink',
+      'nameError', 'urlError', 'cycleError'
     ])
 
-    const advancedSettingsProps = _.pick(settingsProps, [
-      'brothersValueLink'
+    const advancedSettingsProps = _.pick(this.props, [
+      'brothersValueLink',
     ])
 
     return (
       <Paper
         zDepth={STYLE.zDepth}
         style={STYLE}
-        onMouseLeave={::this.updateEditing}
+        onMouseLeave={::this.updateAndSave}
       >
         <DashBoardTitle board={board} setBoard={setBoard} />
         <SwipeableViews

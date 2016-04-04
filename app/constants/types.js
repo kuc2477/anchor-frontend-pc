@@ -12,6 +12,7 @@ export const ValueLinkPropType = PropTypes.shape({
     PropTypes.number,
     PropTypes.object,
     PropTypes.array,
+    PropTypes.bool,
   ]),
   requestChange: PropTypes.func
 })
@@ -38,6 +39,8 @@ export const NewsPropType = PropTypes.shape({
 
 export const SchedulePropType = PropTypes.shape({
   id: PropTypes.number.isRequired,
+  enabled: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
   cycle: PropTypes.number.isRequired,
   maxDepth: PropTypes.number,
@@ -64,8 +67,8 @@ export const unsaved = (instance) => {
   }
   if (typeof instance === 'object') {
     return instance.id ?
-      instance.id.includes(UNSAVED_PREFIX) :
-      instance.get('id').includes(UNSAVED_PREFIX)
+      instance.id.toString().includes(UNSAVED_PREFIX) :
+      instance.get('id').toString().includes(UNSAVED_PREFIX)
   }
   throw new Error('Argument\'s type should be number, string or object')
 }
@@ -75,12 +78,13 @@ export const createSchedule = schedule => schedule ?
   Object.assign({}, schedule) : {
   id: _.uniqueId(UNSAVED_PREFIX),
   url: '',
+  name: '',
+  enabled: false,
+  state: 'PENDING',
   cycle: null,
   maxDepth: null,
   maxDistance: null,
   brothers: [],
-  isActive: false,
-  isUpdating: false,
 }
 
 

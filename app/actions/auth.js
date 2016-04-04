@@ -21,8 +21,7 @@ export function authSuccess(sessionKey, user) {
 }
 
 export const AUTH_ERROR = 'AUTH_ERROR'
-export function authError(reason = 'Wrong email & password combination',
-                          email = null) {
+export function authError(reason = 'Something went wrong', email = null) {
   return { type: AUTH_ERROR, reason, email }
 }
 
@@ -36,6 +35,11 @@ export function authenticate(email, password, router, next = NEWS.path) {
       .send({ email, password })
       .end((error, response) => {
         const { body, header } = response
+        if (!body) {
+          dispatch(authError())
+          return
+        }
+
         const { user, reason, email: emailToResend } = body
         if (error) {
           // we consider the user is unconfirmed if the server's response
@@ -44,6 +48,7 @@ export function authenticate(email, password, router, next = NEWS.path) {
           dispatch(authError(reason, emailToResend))
           return
         }
+
         const sessionKey = parseCookie(header['set-cookie'].pop(), 'session')
         dispatch(authSuccess(sessionKey, user))
         router.replace(next)

@@ -7,6 +7,10 @@ import colors from '../../constants/colors'
 
 export default class BaseSlider extends React.Component {
   static STYLE = {
+    paddingTop: 10,
+  };
+
+  static SLIDER_STYLE = {
     marginTop: 15,
     marginBottom: 15
   };
@@ -49,23 +53,25 @@ export default class BaseSlider extends React.Component {
   };
 
   render() {
+    const { STYLE, SLIDER_STYLE } = this.constructor
     const labelStyle = this._getLabelStyle()
-    const { STYLE } = this.constructor
     const {
       description,
       onDragStart: onDragStartProp,
-      onDragStop: onDragStopProp, style, ...rest
+      onDragStop: onDragStopProp, style, sliderStyle, ...rest
     } = this.props
 
     const onDragStart = this._onDragStart(onDragStartProp)
     const onDragStop = this._onDragStop(onDragStopProp)
+
     const mergedStyle = Object.assign({}, STYLE, style)
+    const mergedSliderStyle = Object.assign({}, SLIDER_STYLE, sliderStyle)
 
     return (
-      <div>
+      <div style={mergedStyle}>
         <small><div style={labelStyle}>{description}</div></small>
         <Slider
-          style={mergedStyle}
+          style={mergedSliderStyle}
           onDragStart={onDragStart}
           onDragStop={onDragStop}
           {...rest}

@@ -1,9 +1,11 @@
 import request from 'superagent-bluebird-promise'
+import { decamelizeKeys } from 'humps'
 
 import { CALL_API, Schemas } from '../middlewares/api'
-import { createSchedule } from '../constants/types'
-import { authorize, authorizeCSRF } from '../modules/auth'
+import { authorize, authorizeCSRF } from '../middlewares/auth'
+import { createSchedule, unsaved } from '../constants/types'
 import urls from '../modules/urls'
+
 
 
 // ===================================
@@ -68,23 +70,31 @@ export const SAVE_SCHEDULE_START = 'SAVE_SCHEDULE_START'
 export const SAVE_SCHEDULE_SUCCESS = 'SAVE_SCHEDULE_SUCCESS'
 export const SAVE_SCHEDULE_ERROR = 'SAVE_SCHEDULE_ERROR'
 export const saveScheduleStart = () => ({ type: SAVE_SCHEDULE_START })
-export const saveScheduleSuccess = schedule => ({
-  type: SAVE_SCHEDULE_SUCCESS, schedule
+export const saveScheduleSuccess = (previous, schedule) => ({
+  type: SAVE_SCHEDULE_SUCCESS, previous, schedule
 })
 export const saveScheduleError = () => ({ type: SAVE_SCHEDULE_ERROR })
 export const saveSchedule = schedule => dispatch => {
   dispatch(saveScheduleStart())
-  request.post(urls.schedules(schedule.id))
+
+  const targetEndPoint = unsaved(schedule) ?
+    urls.schedules() : urls.schedules(schedule.id)
+
+  const targetRequest = unsaved(schedule) ?
+    request.post : request.put
+
+  targetRequest(targetEndPoint)
   .use(authorize())
   .use(authorizeCSRF())
-  .send(schedule)
+  .type('json')
+  .send(decamelizeKeys(schedule))
   .end((error, response) => {
     if (error) {
       dispatch(saveScheduleError(error))
       return
     }
     const { body: saved } = response
-    dispatch(saveScheduleSuccess(saved))
+    dispatch(saveScheduleSuccess(schedule, saved))
   })
 }
 

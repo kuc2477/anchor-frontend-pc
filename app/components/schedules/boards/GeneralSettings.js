@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
+import { decamelize } from 'humps'
 
 import { ValueLinkPropType } from '../../../constants/types'
 import ScheduleNameField from '../fields/ScheduleNameField'
@@ -13,49 +14,104 @@ export default class GeneralSettings extends React.Component {
     nameValueLink: ValueLinkPropType.isRequired,
     urlValueLink: ValueLinkPropType.isRequired,
     cycleValueLink: ValueLinkPropType.isRequired,
-    maxDepthValueLink: ValueLinkPropType.isRequired,
     maxDistValueLink: ValueLinkPropType.isRequired,
+    maxDepthValueLink: ValueLinkPropType.isRequired,
+    nameError: PropTypes.string,
+    urlError: PropTypes.string,
+    cycleError: PropTypes.string,
   };
 
+  // ===========
+  // Base styles
+  // ===========
+
   static NAME_FIELD_STYLE = {
-    marginTop: -5,
-    marginBottom: -5,
+    marginTop: 0
   };
 
   static URL_FIELD_STYLE = {
-    marginBottom: -5,
+    marginTop: -10
   };
 
   static CYCLE_FIELD_STYLE = {
-    marginBottom: 25,
   };
 
   static MAX_DEPTH_FIELD_STYLE = {
-    marginBottom: 30
+    marginTop: 10
   };
 
   static MAX_DIST_FIELD_STYLE = {
-    marginBottom: 30
+  };
+
+  // ==================
+  // Compensated styles
+  // ==================
+
+  static COMPENSATED_URL_FIELD_STYLE = {
+    marginTop: -20
+  };
+
+  static COMPENSATED_CYCLE_FIELD_STYLE = {
+    marginTop: -20
+  };
+
+  static COMPENSATED_MAX_DEPTH_FIELD_STYLE = {
+    marginTop: -5
   };
 
   render() {
     const {
-      NAME_FIELD_STYLE, URL_FIELD_STYLE, CYCLE_FIELD_STYLE,
-      MAX_DEPTH_FIELD_STYLE, MAX_DIST_FIELD_STYLE,
+      // base styles
+      NAME_FIELD_STYLE,
+      URL_FIELD_STYLE,
+      CYCLE_FIELD_STYLE,
+      MAX_DEPTH_FIELD_STYLE,
+      MAX_DIST_FIELD_STYLE,
+      // compensated styles
+      COMPENSATED_URL_FIELD_STYLE,
+      COMPENSATED_CYCLE_FIELD_STYLE,
+      COMPENSATED_MAX_DEPTH_FIELD_STYLE,
     } = this.constructor
 
     const {
-      nameValueLink, urlValueLink, cycleValueLink,
-      maxDepthValueLink, maxDistValueLink,
+      // value links
+      nameValueLink,
+      urlValueLink,
+      cycleValueLink,
+      maxDepthValueLink,
+      maxDistValueLink,
+      // errors
+      nameError,
+      urlError,
     } = this.props
 
     return (
       <div>
-        <ScheduleNameField style={NAME_FIELD_STYLE} valueLink={nameValueLink}/>
-        <ScheduleURLField style={URL_FIELD_STYLE} valueLink={urlValueLink} />
-        <CycleSelectField style={CYCLE_FIELD_STYLE} valueLink={cycleValueLink} />
-        <MaxDepthSlider style={MAX_DEPTH_FIELD_STYLE} valueLink={maxDistValueLink} />
-        <MaxDistanceSlider style={MAX_DIST_FIELD_STYLE} valueLink={maxDepthValueLink} />
+        <ScheduleNameField
+          style={NAME_FIELD_STYLE}
+          valueLink={nameValueLink}
+          error={nameError}
+        />
+        <ScheduleURLField
+          style={nameError ? COMPENSATED_URL_FIELD_STYLE : URL_FIELD_STYLE}
+          valueLink={urlValueLink}
+          error={urlError}
+        />
+        <CycleSelectField
+          style={urlError ? COMPENSATED_CYCLE_FIELD_STYLE : CYCLE_FIELD_STYLE}
+          valueLink={cycleValueLink}
+          error={cycleError}
+        />
+        <MaxDepthSlider
+          style={
+            nameError || urlError ?
+            COMPENSATED_MAX_DEPTH_FIELD_STYLE: MAX_DEPTH_FIELD_STYLE}
+          valueLink={maxDistValueLink}
+        />
+        <MaxDistanceSlider
+          style={MAX_DIST_FIELD_STYLE}
+          valueLink={maxDepthValueLink}
+        />
       </div>
     )
   }

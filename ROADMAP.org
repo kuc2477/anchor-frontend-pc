@@ -1,0 +1,20 @@
+* FEATURE GOALS [0%]
+  - [ ] save / update only when needed [0%]
+        - [ ] save
+        - [ ] update
+
+
+  - [ ] Validation before save / update
+
+  - [ ] Optimistic save / delete [0%]
+        - [ ] save
+        - [ ] delete
+
+  - [ ] Implement schedule enable toggle
+
+  - [ ] Implement AdvancedSettings [0%]
+        - [ ] brother site field set
+        - [ ] brother site field
+
+  - [ ] Implement schedule status notification [0%]
+        - [ ] Design crossbar router subscription architecture

@@ -151,9 +151,9 @@ function reduceSaveStart(state) {
 }
 
 function reduceSaveSuccess(state, action) {
-  const saved = action.schedule
+  const { previous, schedule: saved } = action
   const index = state.get('schedules').findIndex(
-    schedule => schedule.id === saved.id
+    schedule => schedule.id === previous.id
   )
 
   return state.merge({

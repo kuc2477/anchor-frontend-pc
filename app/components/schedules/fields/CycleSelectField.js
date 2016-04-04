@@ -17,6 +17,10 @@ export default class CycleSelectField extends React.Component {
     style: PropTypes.object,
   };
 
+  static STYLE = {
+    marginTop: -10
+  };
+
   _getMenuItemNodes() {
     return _.zip(CYCLE_OPTIONS, CYCLE_OPTION_TEXTS).map(zipped => {
       const [cycle, text] = zipped
@@ -31,15 +35,20 @@ export default class CycleSelectField extends React.Component {
 
 
   render() {
-    const { style, valueLink, ...rest } = this.props
+    const { STYLE } = this.constructor
+    const { style, valueLink, error, ...rest } = this.props
+
+    const mergedStyle = Object.assign({}, STYLE, style)
     const { value } = valueLink
+
     const cycleMenuItemNodes = this._getMenuItemNodes()
 
     return (
         <SelectField
           floatingLabelText="News arrival cycle"
-          style={style}
+          style={mergedStyle}
           value={value}
+          errorText={error}
           onChange={::this._handleChange}
           {...rest}
         >

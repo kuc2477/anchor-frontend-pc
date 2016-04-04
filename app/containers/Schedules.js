@@ -1,4 +1,5 @@
 import Immutable from 'immutable'
+import validate from 'validate.js'
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
@@ -41,6 +42,12 @@ class Schedules extends React.Component {
     dispatch: PropTypes.func
   };
 
+
+  constructor(props) {
+    super(props)
+    this.state = this.constructor.INITIAL_STATE
+  }
+
   componentWillMount() {
     this.syncEditing()
   }
@@ -51,6 +58,67 @@ class Schedules extends React.Component {
     if (currentSchedule !== nextSchedule) {
       this.syncEditing(nextProps)
     }
+  }
+
+  static INITIAL_STATE = {
+    editing: null,
+    errors: {
+      nameError: '',
+      urlError: '',
+      cycleError: '',
+    }
+  };
+
+  static FORM_CONSTRAINT = {
+    name: {
+      length: {
+        minimum: 2,
+        message: 'is too short'
+      }
+    },
+    url: {
+      url: true
+    },
+    cycle: {
+      presence: true
+    }
+  };
+
+  // get value link to editing state
+  _getValueLink(name) {
+    const { editing, errors } = this.state
+
+    // return disconnected value link if we have no editing schedule
+    if (!editing) {
+      return { value: null, requestChange: (e, v) => v }
+    }
+    const value = editing[name] || null
+    const requestChange = (event, changedValue) => {
+      const eventChangedValue = event && event.target && event.target.value
+      const finalChangedValue = eventChangedValue || changedValue
+
+      const v = this._validate({ [name]: finalChangedValue })
+      const updated = Object.assign({}, editing, { [name]: finalChangedValue })
+      const updatedErrors = Object.assign({}, errors, {
+        [`${name}Error`]: v && v[name] ? v[name][0] : ''
+      })
+
+      this.setState({ editing: updated, errors: updatedErrors })
+    }
+    return { value, requestChange }
+  }
+
+  // Validates form on input value changes. Not that this function has
+  // nothing to do with `validateBeforeSave`.
+  _validate(values) {
+    const constraint = this.constructor.FORM_CONSTRAINT
+    const result = validate(
+      Object.assign({}, this.state.editing, values), constraint,
+    )
+    return result
+  }
+
+  validateBeforeSave() {
   }
 
   setBoard(board) {
@@ -73,9 +141,11 @@ class Schedules extends React.Component {
   }
 
   save(scheduleId) {
-    const { dispatch } = this.props
-    if (scheduleId) {
-      dispatch(saveSchedule(scheduleId))
+    // TODO: BUGGY
+    const { dispatch, schedulesById } = this.props
+    const toSave = schedulesById[scheduleId]
+    if (toSave) {
+      dispatch(saveSchedule(toSave))
     }
   }
 
@@ -118,14 +188,21 @@ class Schedules extends React.Component {
     this.setState({ editing })
   }
 
-  linkValue(name, value) {
-    const updated = Object.assign({}, this.state.editing, { [name]: value })
-    this.setState({ editing: updated })
-  }
-
   render() {
     const { editing } = this.state
     const { schedule, schedules, schedulesById, board } = this.props
+
+    const valueLinks = {
+      enabledValueLink: this._getValueLink('enabled'),
+      nameValueLink: this._getValueLink('name'),
+      urlValueLink: this._getValueLink('url'),
+      cycleValueLink: this._getValueLink('cycle'),
+      maxDepthValueLink: this._getValueLink('maxDepth'),
+      maxDistValueLink: this._getValueLink('maxDist'),
+      brothersValueLink: this._getValueLink('brothers')
+    }
+
+    const errors = Object.assign({}, this.state.errors)
 
     return (
       <div className="row">
@@ -137,21 +214,20 @@ class Schedules extends React.Component {
             schedules={schedules}
             schedulesById={schedulesById}
             load={::this.load}
-            addSchedule={::this.add}
-            deleteSchedule={::this.del}
-            removeSchedule={::this.remove}
-            selectSchedule={::this.select}
+            add={::this.add}
+            del={::this.del}
+            remove={::this.remove}
+            select={::this.select}
           />
         </div>
         <div className="col-md-6">
           <DashBoard
             board={board}
-            editing={editing}
-            schedule={schedulesById[schedule]}
-            updateSchedule={::this.update}
-            saveSchedule={::this.save}
+            schedule={schedule}
+            editing={editing} {...valueLinks} {...errors}
+            update={::this.update}
+            save={::this.save}
             setBoard={::this.setBoard}
-            linkValue={::this.linkValue}
           />
         </div>
       </div>

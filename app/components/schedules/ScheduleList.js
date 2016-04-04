@@ -22,10 +22,10 @@ export default class ScheduleList extends React.Component {
     schedulesById: PropTypes.objectOf(SchedulePropType).isRequired,
     load: PropTypes.func.isRequired,
     // schedule entry manipulation
-    addSchedule: PropTypes.func.isRequired,
-    removeSchedule: PropTypes.func.isRequired,
-    deleteSchedule: PropTypes.func.isRequired,
-    selectSchedule: PropTypes.func.isRequired,
+    add: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired,
+    del: PropTypes.func.isRequired,
+    select: PropTypes.func.isRequired,
   };
 
   static STYLE = {
@@ -55,15 +55,9 @@ export default class ScheduleList extends React.Component {
     const {
       editing,
       schedule: selected,
-      removeSchedule,
-      selectSchedule
+      remove,
+      select
     } = this.props
-
-    const select = scheduleId => () => {
-      if (scheduleId !== selected) {
-        selectSchedule(scheduleId)
-      }
-    }
 
     return this.props.schedules
       .map(id => this.props.schedulesById[id])
@@ -73,17 +67,17 @@ export default class ScheduleList extends React.Component {
           key={schedule.id}
           selected={schedule.id === selected}
           schedule={schedule.id === selected ? editing : schedule}
-          removeSchedule={removeSchedule}
-          onClick={select(schedule.id)}
+          remove={remove}
+          onClick={_.partial(select, schedule.id)}
         />
       ))
   }
 
   _getSelectedValueLink() {
-    const { schedule, schedules, selectSchedule } = this.props
+    const { schedule, schedules, select } = this.props
     const value = _.findIndex(schedules, s => s === schedule)
     const requestChange = index => {
-      selectSchedule(schedules[index])
+      select(schedules[index])
     }
     return { value, requestChange }
   }
@@ -93,10 +87,10 @@ export default class ScheduleList extends React.Component {
       STYLE, FAB_STYLE, LOAD_EDGE_OFFSET,
       SCHEDULE_LIST_HEIGHT, SCHEDULE_ITEM_HEIGHT,
     } = this.constructor
-    const { load, addSchedule } = this.props
+    const { load, add } = this.props
     const scheduleNodes = this._getScheduleNodes()
     const onContentAddClick = () => {
-      addSchedule()
+      add()
     }
 
     return (
