@@ -274,7 +274,7 @@ describe('schedules reducer', () => {
         schedulesById: normalize(previousSchedules, Schemas.SCHEDULES).entities.schedule
       })
 
-      after = reducer(previous, saveScheduleSuccess(response))
+      after = reducer(previous, saveScheduleSuccess(toBeSaved, response))
     })
 
     it('should update saved schedule with values from response', () => {
@@ -286,6 +286,7 @@ describe('schedules reducer', () => {
       expect(after.get('schedulesById').get(response.id).equals(
         Immutable.fromJS(response)
       )).toBeTruthy()
+      expect(after.get('schedule')).toEqual(response.id)
     })
 
     it('should clear previous save failure', () => {
@@ -337,7 +338,7 @@ describe('schedules reducer', () => {
     beforeEach(() => {
       toDelete = createFakeSchedule()
       previousSchedules = [
-        ..._.times(2, createFakeSchedule), 
+        ..._.times(2, createFakeSchedule),
         toDelete,
         ..._.times(3, createFakeSchedule)
       ]

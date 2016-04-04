@@ -18,7 +18,6 @@ import { SCHEDULE_DASH_BOARDS } from '../../constants/arrays'
 
 export default class DashBoard extends React.Component {
   static propTypes = {
-    editing: SchedulePropType,
     schedule: PropTypes.number,
     board: PropTypes.oneOf([
       DASH_BOARD_GENERAL_SETTINGS,
@@ -37,7 +36,6 @@ export default class DashBoard extends React.Component {
     urlError: PropTypes.string,
     cycleError: PropTypes.string,
     // schedule entry / board manipulation
-    update: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     setBoard: PropTypes.func.isRequired,
   };
@@ -65,12 +63,6 @@ export default class DashBoard extends React.Component {
     marginRight: 20,
   };
 
-  updateAndSave() {
-    const { schedule, editing, update, save } = this.props
-    update(schedule, editing)
-    saveSchedule(schedule)
-  }
-
   _getContainerStyle() {
     const { STYLE, SLIDE_CONTAINER_STYLE } = this.constructor
     return {
@@ -83,7 +75,7 @@ export default class DashBoard extends React.Component {
   render() {
     const SLIDE_CONTAINER_STYLE = this._getContainerStyle()
     const { STYLE, SLIDE_STYLE } = this.constructor
-    const { schedule, editing, board, setBoard, update, save } = this.props
+    const { schedule, board, setBoard, save } = this.props
 
     const generalSettingsProps = _.pick(this.props, [
       'nameValueLink', 'urlValueLink', 'cycleValueLink',
@@ -99,7 +91,7 @@ export default class DashBoard extends React.Component {
       <Paper
         zDepth={STYLE.zDepth}
         style={STYLE}
-        onMouseLeave={::this.updateAndSave}
+        onMouseLeave={save}
       >
         <DashBoardTitle board={board} setBoard={setBoard} />
         <SwipeableViews

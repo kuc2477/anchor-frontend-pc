@@ -23,7 +23,6 @@ export default class ScheduleList extends React.Component {
     load: PropTypes.func.isRequired,
     // schedule entry manipulation
     add: PropTypes.func.isRequired,
-    remove: PropTypes.func.isRequired,
     del: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
   };
@@ -55,7 +54,7 @@ export default class ScheduleList extends React.Component {
     const {
       editing,
       schedule: selected,
-      remove,
+      del,
       select
     } = this.props
 
@@ -67,7 +66,7 @@ export default class ScheduleList extends React.Component {
           key={schedule.id}
           selected={schedule.id === selected}
           schedule={schedule.id === selected ? editing : schedule}
-          remove={remove}
+          del={del}
           onClick={_.partial(select, schedule.id)}
         />
       ))

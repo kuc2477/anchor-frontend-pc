@@ -83,7 +83,9 @@ export default class GeneralSettings extends React.Component {
       // errors
       nameError,
       urlError,
+      cycleError,
     } = this.props
+
 
     return (
       <div>

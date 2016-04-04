@@ -28,14 +28,14 @@ export default class ScheduleItem extends React.Component {
   static propTypes = {
     schedule: SchedulePropType.isRequired,
     selected: PropTypes.bool.isRequired,
-    remove: PropTypes.func.isRequired,
+    del: PropTypes.func.isRequired,
     onClick: PropTypes.func
   };
 
   static STYLE = {};
   static LIST_ITEM_STYLE = {};
   static PROGRESS_ITEM_STYLE = {};
-  static PROGRESS_STYLE = { 
+  static PROGRESS_STYLE = {
     marginTop: 12,
     width: '80%',
   };
@@ -96,22 +96,17 @@ export default class ScheduleItem extends React.Component {
   }
 
   _getActionButtonMenu() {
-    const { remove, schedule } = this.props
+    const { del, schedule } = this.props
     return (
       <IconMenu iconButtonElement={this._getActionButton()}>
         <MenuItem>
-          <div className="row middle-md" onClick={_.partial(remove, schedule)}>
+          <div className="row middle-md" onClick={_.partial(del, schedule)}>
             <Close style={{ paddingLeft: 10, width: 20, height: 20}} />
             <div style={{paddingLeft: 5}}>Delete</div>
           </div>
         </MenuItem>
       </IconMenu>
     )
-  }
-
-  remove() {
-    const { schedule, removeSchedule } = this.props
-    removeSchedule(schedule.id)
   }
 
   render() {

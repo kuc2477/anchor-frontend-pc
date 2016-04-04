@@ -21,7 +21,6 @@ import {
   setBoard,
 } from '../actions/schedules'
 import { toast } from '../modules/utils'
-
 import '../styles/modules/no-scrollbar.scss'
 
 
@@ -41,7 +40,6 @@ class Schedules extends React.Component {
     ]),
     dispatch: PropTypes.func
   };
-
 
   constructor(props) {
     super(props)
@@ -119,6 +117,7 @@ class Schedules extends React.Component {
   }
 
   validateBeforeSave() {
+    // TODO: NOT IMPLEMENTED YET
   }
 
   setBoard(board) {
@@ -127,8 +126,8 @@ class Schedules extends React.Component {
   }
 
   select(scheduleId) {
-    const { dispatch } = this.props
-    if (scheduleId) {
+    const { dispatch, schedule } = this.props
+    if (scheduleId && scheduleId !== schedule) {
       dispatch(selectSchedule(scheduleId))
     }
   }
@@ -140,12 +139,20 @@ class Schedules extends React.Component {
     }
   }
 
-  save(scheduleId) {
-    // TODO: BUGGY
-    const { dispatch, schedulesById } = this.props
-    const toSave = schedulesById[scheduleId]
-    if (toSave) {
-      dispatch(saveSchedule(toSave))
+  save() {
+    const { editing } = this.state
+    const { dispatch, schedule, schedulesById } = this.props
+
+    const previous = schedulesById[schedule]
+    const changed = previous && editing &&
+      !Immutable.fromJS(previous).equals(
+      Immutable.fromJS(editing)
+    )
+
+    if (schedule && changed && this.validateBeforeSave()) {
+      dispatch(saveSchedule(editing, () => {
+        toast(`Synchronized schedule ${editing.name} successfully`)
+      }))
     }
   }
 
@@ -159,24 +166,6 @@ class Schedules extends React.Component {
   add(schedule) {
     const { dispatch } = this.props
     dispatch(addSchedule(schedule))
-  }
-
-  remove(scheduleId) {
-    const { dispatch } = this.props
-    if (scheduleId) {
-      dispatch(removeSchedule(scheduleId))
-    }
-  }
-
-  update(scheduleId, edited) {
-    const { dispatch, schedule, schedulesById } = this.props
-    const previous = schedulesById[schedule]
-
-    if (scheduleId &&
-        !Immutable.fromJS(previous).equals(Immutable.fromJS(edited))) {
-      dispatch(updateSchedule(scheduleId, edited))
-      toast(`Successfully updated schedule ${edited.name}`)
-    }
   }
 
   // manage currently selected schedule's state within container
@@ -216,7 +205,6 @@ class Schedules extends React.Component {
             load={::this.load}
             add={::this.add}
             del={::this.del}
-            remove={::this.remove}
             select={::this.select}
           />
         </div>
@@ -224,10 +212,9 @@ class Schedules extends React.Component {
           <DashBoard
             board={board}
             schedule={schedule}
-            editing={editing} {...valueLinks} {...errors}
-            update={::this.update}
             save={::this.save}
             setBoard={::this.setBoard}
+            {...valueLinks} {...errors}
           />
         </div>
       </div>

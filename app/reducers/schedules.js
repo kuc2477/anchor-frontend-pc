@@ -98,8 +98,8 @@ function reduceRemoveSchedule(state, action) {
 }
 
 function reduceUpdateSchedule(state, action) {
-  const schedulesById = state.get('schedulesById')
   const { scheduleId, schedule } = action
+  const schedulesById = state.get('schedulesById')
   const updated = schedulesById.merge({ [scheduleId]: schedule })
   return state.merge({ schedulesById: updated })
 }
@@ -146,27 +146,31 @@ function reduceFetchError(state) {
 // Save
 // ====
 
-function reduceSaveStart(state) {
-  return state.set('isSaving', true)
+function reduceSaveStart(state, action) {
+  return state.merge({ isSaving: true })
 }
 
 function reduceSaveSuccess(state, action) {
-  const { previous, schedule: saved } = action
-  const index = state.get('schedules').findIndex(
-    schedule => schedule.id === previous.id
-  )
+  const { previous, saved } = action
+  const savedSelected = previous.id === state.get('schedule')
+  const index = state.get('schedules').findIndex(s => s === previous.id)
 
   return state.merge({
     isSaving: false,
     didSaveFail: false,
+    schedule: savedSelected ? saved.id : state.get('schedule'),
     schedules: state.get('schedules').set(index, saved.id),
-    schedulesById: state.get('schedulesById').set(
-      saved.id, Immutable.fromJS(saved)),
+    schedulesById: state.get('schedulesById').delete(previous.id).merge({
+      [saved.id]: Immutable.fromJS(saved)
+    })
   })
 }
 
 function reduceSaveError(state) {
-  return state.merge({ isSaving: false, didSaveFail: true })
+  return state.merge({
+    isSaving: false,
+    didSaveFail: true
+  })
 }
 
 

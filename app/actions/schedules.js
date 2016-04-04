@@ -1,11 +1,11 @@
 import request from 'superagent-bluebird-promise'
-import { decamelizeKeys } from 'humps'
+import { ActionCreators } from 'redux-undo'
+import { decamelizeKeys, camelizeKeys } from 'humps'
 
 import { CALL_API, Schemas } from '../middlewares/api'
 import { authorize, authorizeCSRF } from '../middlewares/auth'
 import { createSchedule, unsaved } from '../constants/types'
 import urls from '../modules/urls'
-
 
 
 // ===================================
@@ -67,15 +67,24 @@ export function fetchSchedules(url) {
 // ====
 
 export const SAVE_SCHEDULE_START = 'SAVE_SCHEDULE_START'
-export const SAVE_SCHEDULE_SUCCESS = 'SAVE_SCHEDULE_SUCCESS'
-export const SAVE_SCHEDULE_ERROR = 'SAVE_SCHEDULE_ERROR'
-export const saveScheduleStart = () => ({ type: SAVE_SCHEDULE_START })
-export const saveScheduleSuccess = (previous, schedule) => ({
-  type: SAVE_SCHEDULE_SUCCESS, previous, schedule
+export const saveScheduleStart = (scheduleId, schedule) => ({
+  type: SAVE_SCHEDULE_START, scheduleId, schedule
 })
-export const saveScheduleError = () => ({ type: SAVE_SCHEDULE_ERROR })
-export const saveSchedule = schedule => dispatch => {
-  dispatch(saveScheduleStart())
+
+export const SAVE_SCHEDULE_SUCCESS = 'SAVE_SCHEDULE_SUCCESS'
+export const saveScheduleSuccess = (previous, saved) => ({
+  type: SAVE_SCHEDULE_SUCCESS, previous, saved
+})
+
+export const SAVE_SCHEDULE_ERROR = 'SAVE_SCHEDULE_ERROR'
+export const saveScheduleError = () => ({
+  type: SAVE_SCHEDULE_ERROR
+})
+
+export const saveSchedule = (schedule, callback) => dispatch => {
+  // dispatch save start and update the schedule
+  dispatch(saveScheduleStart(schedule.id, schedule))
+  dispatch(updateSchedule(schedule.id, schedule))
 
   const targetEndPoint = unsaved(schedule) ?
     urls.schedules() : urls.schedules(schedule.id)
@@ -90,11 +99,17 @@ export const saveSchedule = schedule => dispatch => {
   .send(decamelizeKeys(schedule))
   .end((error, response) => {
     if (error) {
+      // undo update on error and dispatch error
+      dispatch(ActionCreators.undo())
       dispatch(saveScheduleError(error))
       return
     }
     const { body: saved } = response
-    dispatch(saveScheduleSuccess(schedule, saved))
+
+    // dispatch success with response's saved values and fire callback
+    dispatch(saveScheduleSuccess(schedule, camelizeKeys(saved)))
+    callback && callback(saved)
+
   })
 }
 
@@ -104,17 +119,20 @@ export const saveSchedule = schedule => dispatch => {
 // ======
 
 export const DELETE_SCHEDULE_START = 'DELETE_SCHEDULE_START'
-export const DELETE_SCHEDULE_SUCCESS = 'DELETE_SCHEDULE_SUCCESS'
-export const DELETE_SCHEDULE_ERROR = 'DELETE_SCHEDULE_ERROR'
 export const deleteScheduleStart = () => ({
   type: DELETE_SCHEDULE_START
 })
+
+export const DELETE_SCHEDULE_SUCCESS = 'DELETE_SCHEDULE_SUCCESS'
 export const deleteScheduleSuccess = scheduleId => ({
   type: DELETE_SCHEDULE_SUCCESS, scheduleId
 })
+
+export const DELETE_SCHEDULE_ERROR = 'DELETE_SCHEDULE_ERROR'
 export const deleteScheduleError = () => ({
   type: DELETE_SCHEDULE_ERROR
 })
+
 export const deleteSchedule = scheduleId => dispatch => {
   dispatch(deleteScheduleStart())
   request.del(urls.schedule(scheduleId))

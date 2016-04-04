@@ -1,20 +1,24 @@
 * FEATURE GOALS [0%]
-  - [ ] save / update only when needed [0%]
-        - [ ] save
-        - [ ] update
 
+  - [-] Implement *Schedules* container [20%]
+        - [X] Save only when needed
+        - [ ] Validate before save
+        - [-] Optimistic save / delete [50%]
+              - [X] save
+              - [ ] delete
+        - [ ] Implement schedule enable toggle
+        - [ ] Implement AdvancedSettings [0%]
+              - [ ] brother site field set
+              - [ ] brother site field
+        - [ ] Implement accordion - selectable list
 
-  - [ ] Validation before save / update
+  - [ ] Implement *News* container [0%]
+        - [ ] Implement news list
+        - [ ] Implement news item
 
-  - [ ] Optimistic save / delete [0%]
-        - [ ] save
-        - [ ] delete
-
-  - [ ] Implement schedule enable toggle
-
-  - [ ] Implement AdvancedSettings [0%]
-        - [ ] brother site field set
-        - [ ] brother site field
-
-  - [ ] Implement schedule status notification [0%]
+  - [ ] Implement realtime notification with AutobahnJS [0%]
         - [ ] Design crossbar router subscription architecture
+        - [ ] Subscript to schedule events on application start
+        - [ ] Notify schedule events on app status bar
+
+  - [ ] Optimize render performance of forms with `shouldComponentUpdate`
