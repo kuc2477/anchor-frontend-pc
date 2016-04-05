@@ -117,7 +117,19 @@ class Schedules extends React.Component {
   }
 
   validateBeforeSave() {
-    // TODO: NOT IMPLEMENTED YET
+    const { editing, errors } = this.state
+    const { name, url, cycle } = editing
+    let { nameError, urlError, cycleError } = errors
+    nameError = !name ? 'Name should not be empty' : nameError
+    urlError = !url ? 'Url should not be empty' : urlError
+    cycleError = !cycle ? 'Cycle should not be empty' : cycleError
+
+    // update error states and return validation result
+    const updatedErrors = Object.assign({}, errors, {
+      nameError, urlError, cycleError
+    })
+    this.setState({ errors: updatedErrors })
+    return !nameError && !urlError && !cycleError
   }
 
   setBoard(board) {
@@ -151,14 +163,16 @@ class Schedules extends React.Component {
 
     if (schedule && changed && this.validateBeforeSave()) {
       dispatch(saveSchedule(editing, () => {
-        toast(`Synchronized schedule ${editing.name} successfully`)
+        toast(`Saved schedule ${editing.name}`)
       }))
     }
   }
 
   del(scheduleId) {
-    const { dispatch } = this.props
-    if (scheduleId) {
+    const { dispatch, schedulesById } = this.props
+    const toDelete = schedulesById[scheduleId]
+    debugger
+    if (scheduleId && toDelete) {
       dispatch(deleteSchedule(scheduleId))
     }
   }
@@ -195,7 +209,7 @@ class Schedules extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-md-6">
+        <div className="col-md-5">
           <ScheduleList
             board={board}
             editing={editing}
@@ -204,11 +218,13 @@ class Schedules extends React.Component {
             schedulesById={schedulesById}
             load={::this.load}
             add={::this.add}
+            save={::this.save}
             del={::this.del}
             select={::this.select}
+            {...valueLinks}
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-offset-1 col-md-4">
           <DashBoard
             board={board}
             schedule={schedule}

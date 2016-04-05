@@ -161,7 +161,9 @@ describe('schedules reducer', () => {
     beforeEach(() => {
        toRemove = createFakeSchedule()
        previousSchedules = [
-         ..._.times(5, createFakeSchedule), toRemove
+         ..._.times(2, createFakeSchedule),
+         toRemove,
+         ..._.times(3, createFakeSchedule),
        ]
        previous = initialState.merge({
          schedule: toRemove.id,
@@ -178,8 +180,8 @@ describe('schedules reducer', () => {
          expect(after.get('schedules').includes(toRemove.id)).toBeFalsy()
      })
 
-    it('should select last available schedule', () => {
-      expect(after.get('schedule')).toEqual(previousSchedules[4].id)
+    it('should select available adjecent schedule among rest of the schedules', () => {
+      expect(after.get('schedule')).toEqual(previousSchedules[1].id)
     })
   })
 
@@ -354,15 +356,6 @@ describe('schedules reducer', () => {
 
     it('shouldn\'t be deleting', () => {
       expect(after.get('isDeleting')).toBeFalsy()
-    })
-
-    it('should remove from both list of schedule ids and entities', () => {
-      expect(after.get('schedules').includes(toDelete.id)).toBeFalsy()
-      expect(after.get('schedulesById').has(toDelete.id)).toBeFalsy()
-    })
-
-    it('should select available adjecent schedule among rest of the schedules', () => {
-      expect(after.get('schedule')).toEqual(previousSchedules[1].id)
     })
 
     it('should clear deletion failure status', () => {

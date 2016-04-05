@@ -7,14 +7,12 @@ import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
-import { SchedulePropType } from '../../constants/types'
+import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
 import { WINDOW_WIDTH } from '../../constants/numbers'
 
 
 export default class ScheduleList extends React.Component {
   static propTypes = {
-    // component activeness
-    isActive: PropTypes.bool,
     // schedules
     editing: SchedulePropType,
     schedule: PropTypes.number,
@@ -23,21 +21,25 @@ export default class ScheduleList extends React.Component {
     load: PropTypes.func.isRequired,
     // schedule entry manipulation
     add: PropTypes.func.isRequired,
+    save: PropTypes.func.isRequired,
     del: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
+    // schedule enabled value link
+    enabledValueLink: ValueLinkPropType.isRequired
   };
 
   static STYLE = {
     height: 350,
-    width: WINDOW_WIDTH * 0.5 - 60,
+    width: WINDOW_WIDTH * 0.5 - 80,
+    marginLeft: 20,
     marginRight: 20,
     padding: 20,
   };
 
   static FAB_STYLE = {
     position: 'fixed',
-    right: WINDOW_WIDTH / 2,
-    bottom: 40,
+    right: WINDOW_WIDTH / 2 - 20,
+    bottom: 20,
     color: SECONDARY,
   };
 
@@ -52,10 +54,9 @@ export default class ScheduleList extends React.Component {
   _getScheduleNodes() {
     const { LIST_ITEM_STYLE } = this.constructor
     const {
-      editing,
-      schedule: selected,
-      del,
-      select
+      editing, schedule: selected,
+      del, select, save,
+      enabledValueLink
     } = this.props
 
     return this.props.schedules
@@ -66,8 +67,10 @@ export default class ScheduleList extends React.Component {
           key={schedule.id}
           selected={schedule.id === selected}
           schedule={schedule.id === selected ? editing : schedule}
-          del={del}
           onClick={_.partial(select, schedule.id)}
+          del={del}
+          save={schedule.id === selected ? save : null}
+          enabledValueLink={schedule.id === selected ? enabledValueLink : null}
         />
       ))
   }

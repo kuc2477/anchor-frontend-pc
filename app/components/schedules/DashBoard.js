@@ -42,11 +42,11 @@ export default class DashBoard extends React.Component {
 
   // root element style
   static STYLE = {
-    width: WINDOW_WIDTH * 0.5 - 80,
+    width: WINDOW_WIDTH * 0.50 - 120,
     height: WINDOW_HEIGHT * 0.8 - 30,
     marginTop: 20,
     marginBottom: 20,
-    marginLeft: 35,
+    marginLeft: 50,
     paddingTop: -20,
     paddingLeft: 20,
     zDepth: 1,

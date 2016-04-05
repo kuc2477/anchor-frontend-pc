@@ -90,10 +90,12 @@ function reduceAddSchedule(state, action) {
 }
 
 function reduceRemoveSchedule(state, action) {
-  const { scheduleId: toRemove } = action
-  const schedules = state.get('schedules').filter(id => id !== toRemove)
-  const schedulesById = state.get('schedulesById').delete(toRemove)
-  const schedule = schedules.last()
+  const { scheduleId: toDelete } = action
+
+  const [ index, _ ] = state.get('schedules').findEntry(id => id === toDelete)
+  const schedules = state.get('schedules').filter(id => id !== toDelete)
+  const schedulesById = state.get('schedulesById').delete(toDelete)
+  const schedule = schedules.get(index - 1) || schedules.get(index + 1)
   return state.merge({ schedule, schedules, schedulesById })
 }
 
@@ -183,23 +185,9 @@ function reduceDeleteStart(state) {
 }
 
 function reduceDeleteSuccess(state, action) {
-  const { scheduleId: toDelete } = action
-
-  const [ index, _ ] = state.get('schedules').findEntry(id => id === toDelete)
-  const schedules = state.get('schedules').filter(id => id !== toDelete)
-  const schedulesById = state.get('schedulesById').delete(toDelete)
-  const schedule = schedules.get(index - 1) || schedules.get(index + 1)
-
-  return state.merge({
-    schedule, schedules, schedulesById,
-    isDeleting: false,
-    didDeleteFail: false,
-  })
+  return state.merge({ isDeleting: false, didDeleteFail: false })
 }
 
 function reduceDeleteError(state) {
-  return state.merge({
-    isDeleting: false,
-    didDeleteFail: true
-  })
+  return state.merge({ isDeleting: false, didDeleteFail: true })
 }

@@ -41,7 +41,7 @@ export default class DashBoardTitle extends React.Component {
 
   static TITLE_ROW_STYLE = {
     width: '100%',
-    paddingTop: 10,
+    paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 30,
     className: 'row middle-md between-md',

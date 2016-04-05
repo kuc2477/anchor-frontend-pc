@@ -21,15 +21,17 @@ import CloudDone from 'material-ui/lib/svg-icons/file/cloud-done'
 import CloudOff from 'material-ui/lib/svg-icons/file/cloud-off'
 
 import { PRIMARY, SECONDARY } from '../../constants/colors'
-import { SchedulePropType } from '../../constants/types'
+import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
 
 
 export default class ScheduleItem extends React.Component {
   static propTypes = {
     schedule: SchedulePropType.isRequired,
     selected: PropTypes.bool.isRequired,
+    onClick: PropTypes.func,
     del: PropTypes.func.isRequired,
-    onClick: PropTypes.func
+    save: PropTypes.func.isRequired,
+    enabledValueLink: ValueLinkPropType
   };
 
   static STYLE = {};
@@ -49,7 +51,7 @@ export default class ScheduleItem extends React.Component {
   }
 
   _getProgressItem() {
-    const { isActive, status } = this.props.schedule
+    const { isActive, status, save, enabledValueLink } = this.props.schedule
     const { PROGRESS_STYLE } = this.constructor
 
     const mode = isActive && status === 'STARTED' ?
@@ -68,10 +70,9 @@ export default class ScheduleItem extends React.Component {
       status === 'PENDING' ? <CloudQueue /> :
       status === 'SUCCESS' ? <CloudDone /> : <CloudQueue />
 
+
     const toggle = <Toggle />
-
     const progressBar = <LinearProgress style={PROGRESS_STYLE} mode={mode} />
-
 
     return (
       <div>
@@ -100,7 +101,7 @@ export default class ScheduleItem extends React.Component {
     return (
       <IconMenu iconButtonElement={this._getActionButton()}>
         <MenuItem>
-          <div className="row middle-md" onClick={_.partial(del, schedule)}>
+          <div className="row middle-md" onClick={_.partial(del, schedule.id)}>
             <Close style={{ paddingLeft: 10, width: 20, height: 20}} />
             <div style={{paddingLeft: 5}}>Delete</div>
           </div>

@@ -34,13 +34,14 @@ export default class GeneralSettings extends React.Component {
   };
 
   static CYCLE_FIELD_STYLE = {
+    marginBottom: 10
   };
 
   static MAX_DEPTH_FIELD_STYLE = {
-    marginTop: 10
   };
 
   static MAX_DIST_FIELD_STYLE = {
+
   };
 
   // ==================
@@ -48,11 +49,11 @@ export default class GeneralSettings extends React.Component {
   // ==================
 
   static COMPENSATED_URL_FIELD_STYLE = {
-    marginTop: -20
+    marginTop: -30
   };
 
   static COMPENSATED_CYCLE_FIELD_STYLE = {
-    marginTop: -20
+    marginTop: -30
   };
 
   static COMPENSATED_MAX_DEPTH_FIELD_STYLE = {
