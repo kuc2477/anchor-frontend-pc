@@ -152,6 +152,7 @@ class Schedules extends React.Component {
   }
 
   save() {
+    debugger
     const { editing } = this.state
     const { dispatch, schedule, schedulesById } = this.props
 

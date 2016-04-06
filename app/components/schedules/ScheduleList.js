@@ -67,9 +67,9 @@ export default class ScheduleList extends React.Component {
           key={schedule.id}
           selected={schedule.id === selected}
           schedule={schedule.id === selected ? editing : schedule}
-          onClick={_.partial(select, schedule.id)}
           del={del}
           save={schedule.id === selected ? save : null}
+          select={select}
           enabledValueLink={schedule.id === selected ? enabledValueLink : null}
         />
       ))

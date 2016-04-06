@@ -51,27 +51,32 @@ export default class ScheduleItem extends React.Component {
   }
 
   _getProgressItem() {
-    const { isActive, status, save, enabledValueLink } = this.props.schedule
     const { PROGRESS_STYLE } = this.constructor
+    const { schedule, selected, save, select, enabledValueLink } = this.props
 
-    const mode = isActive && status === 'STARTED' ?
+    const mode = schedule.isActive && status === 'STARTED' ?
       'indeterminate' : 'determinate'
 
     const text =
-      !isActive ? 'Disabled' :
+      !schedule.isActive ? 'Disabled' :
       status === 'STARTED' ? 'Reporters are collecting news for you' :
       status === 'PENDING' ? 'Reporters are wating to be dispatched' :
       status === 'SUCCESS' ? 'Reporters successfully collected news' :
         'Something went wrong with reporters. Wating to be dispatched again'
 
     const icon =
-      !isActive ? <CloudOff /> :
+      !schedule.isActive ? <CloudOff /> :
       status === 'STARTED' ? <CloudDownload /> :
       status === 'PENDING' ? <CloudQueue /> :
       status === 'SUCCESS' ? <CloudDone /> : <CloudQueue />
 
+    const onToggle = (e, v) => {
+      select(schedule.id)
+      enabledValueLink.requestChange(null, v)
+      save()
+    }
+    const toggle = <Toggle toggled={schedule.isActive} onToggle={onToggle} />
 
-    const toggle = <Toggle />
     const progressBar = <LinearProgress style={PROGRESS_STYLE} mode={mode} />
 
     return (
@@ -112,10 +117,13 @@ export default class ScheduleItem extends React.Component {
 
   render() {
     const { LIST_ITEM_STYLE, DEFAULT_NAME, DEFAULT_URL } = this.constructor
-    const { schedule, onClick } = this.props
+    const { schedule, select } = this.props
 
     return (
-      <Paper style={this._getStyle()} onClick={onClick}>
+      <Paper
+        style={this._getStyle()}
+        onMouseEnter={_.partial(select, schedule.id)}
+      >
         <ListItem
           style={LIST_ITEM_STYLE}
           primaryTogglesNestedList

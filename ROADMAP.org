@@ -8,10 +8,10 @@
               - [X] delete
         - [X] Better layout ratio
         - [ ] Implement schedule enable toggle
+        - [ ] Implement accordion - selectable list
         - [ ] Implement AdvancedSettings [0%]
               - [ ] brother site field set
               - [ ] brother site field
-        - [ ] Implement accordion - selectable list
 
   - [ ] Implement *News* container [0%]
         - [ ] Implement news list
