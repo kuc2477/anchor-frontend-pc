@@ -1,7 +1,7 @@
 import request from 'superagent-bluebird-promise'
 
 import urls from '../modules/urls'
-import { authorizeCSRF } from '../modules/auth'
+import { authorizeCSRF } from '../middlewares/auth'
 import { LOGIN } from '../constants/routes'
 import { toast, clearToast } from '../modules/utils'
 

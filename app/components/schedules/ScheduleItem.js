@@ -81,7 +81,7 @@ export default class ScheduleItem extends React.Component {
     const progressBar = <LinearProgress style={PROGRESS_STYLE} mode={mode} />
 
     return (
-      <div>
+      <div key={schedule.id}>
         <Divider />
         <ListItem
           secondaryText={text}
@@ -118,10 +118,11 @@ export default class ScheduleItem extends React.Component {
 
   render() {
     const { LIST_ITEM_STYLE, DEFAULT_NAME, DEFAULT_URL } = this.constructor
-    const { schedule, select } = this.props
+    const { schedule, select, key } = this.props
 
     return (
       <Paper
+        key={key}
         style={this._getStyle()}
         onMouseEnter={_.partial(select, schedule.id)}
       >

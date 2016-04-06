@@ -48,7 +48,7 @@ export const SchedulePropType = PropTypes.shape({
   brothers: PropTypes.arrayOf(PropTypes.oneOfType(
     [PropTypes.string, PropTypes.number]
   )),
-  status: PropTypes.string.isRequired
+  state: PropTypes.string.isRequired
 })
 
 
