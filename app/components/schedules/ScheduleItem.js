@@ -28,21 +28,23 @@ export default class ScheduleItem extends React.Component {
   static propTypes = {
     schedule: SchedulePropType.isRequired,
     selected: PropTypes.bool.isRequired,
-    onClick: PropTypes.func,
     del: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     enabledValueLink: ValueLinkPropType
   };
 
-  static STYLE = {};
+  static STYLE = {
+  };
   static LIST_ITEM_STYLE = {};
   static PROGRESS_ITEM_STYLE = {};
   static PROGRESS_STYLE = {
     marginTop: 12,
     width: '80%',
   };
+
   static DEFAULT_NAME = 'Schedule name';
   static DEFAULT_URL = 'Schedule url to get subscribed';
+  static DEFAULT_SAVE_DELAY = 500;
 
   _getStyle() {
     const { style } = this.props
@@ -51,32 +53,31 @@ export default class ScheduleItem extends React.Component {
   }
 
   _getProgressItem() {
-    const { PROGRESS_STYLE } = this.constructor
+    const { PROGRESS_STYLE, DEFAULT_SAVE_DELAY } = this.constructor
     const { schedule, selected, save, select, enabledValueLink } = this.props
 
     const mode = schedule.isActive && status === 'STARTED' ?
       'indeterminate' : 'determinate'
 
     const text =
-      !schedule.isActive ? 'Disabled' :
-      status === 'STARTED' ? 'Reporters are collecting news for you' :
-      status === 'PENDING' ? 'Reporters are wating to be dispatched' :
-      status === 'SUCCESS' ? 'Reporters successfully collected news' :
-        'Something went wrong with reporters. Wating to be dispatched again'
+      !schedule.enabled ? 'Disabled' :
+      schedule.state === 'STARTED' ? 'Reporters are collecting news for you..' :
+      schedule.state === 'PENDING' ? 'Reporters are wating to be dispatched..' :
+      schedule.state === 'SUCCESS' ? 'Reporters successfully collected news!' :
+        'Something went wrong with reporters!'
 
     const icon =
-      !schedule.isActive ? <CloudOff /> :
-      status === 'STARTED' ? <CloudDownload /> :
-      status === 'PENDING' ? <CloudQueue /> :
-      status === 'SUCCESS' ? <CloudDone /> : <CloudQueue />
+      !schedule.enabled ? <CloudOff /> :
+      schedule.state === 'STARTED' ? <CloudDownload /> :
+      schedule.state === 'PENDING' ? <CloudQueue /> :
+      schedule.state === 'SUCCESS' ? <CloudDone /> : <CloudQueue />
 
     const onToggle = (e, v) => {
-      select(schedule.id)
       enabledValueLink.requestChange(null, v)
-      save()
+      setTimeout(save, DEFAULT_SAVE_DELAY)
     }
-    const toggle = <Toggle toggled={schedule.isActive} onToggle={onToggle} />
 
+    const toggle = <Toggle toggled={schedule.enabled} onToggle={onToggle} />
     const progressBar = <LinearProgress style={PROGRESS_STYLE} mode={mode} />
 
     return (

@@ -39,8 +39,8 @@ export const NewsPropType = PropTypes.shape({
 
 export const SchedulePropType = PropTypes.shape({
   id: PropTypes.number.isRequired,
-  enabled: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
+  enabled: PropTypes.bool.isRequired,
   url: PropTypes.string.isRequired,
   cycle: PropTypes.number.isRequired,
   maxDepth: PropTypes.number,
@@ -48,8 +48,7 @@ export const SchedulePropType = PropTypes.shape({
   brothers: PropTypes.arrayOf(PropTypes.oneOfType(
     [PropTypes.string, PropTypes.number]
   )),
-  status: PropTypes.string.isRequired,
-  isActive: PropTypes.bool.isRequired,
+  status: PropTypes.string.isRequired
 })
 
 

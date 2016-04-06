@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 
@@ -9,5 +10,5 @@ import schedules from './schedules'
 
 export default combineReducers({
   base, auth, signup,
-  schedules: undoable(schedules), 
+  schedules: undoable(schedules),
 })

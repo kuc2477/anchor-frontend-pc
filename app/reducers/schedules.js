@@ -95,7 +95,9 @@ function reduceRemoveSchedule(state, action) {
   const [ index, _ ] = state.get('schedules').findEntry(id => id === toDelete)
   const schedules = state.get('schedules').filter(id => id !== toDelete)
   const schedulesById = state.get('schedulesById').delete(toDelete)
-  const schedule = schedules.get(index - 1) || schedules.get(index + 1)
+  const schedule =
+    state.get('schedules').get(index - 1) ||
+    state.get('schedules').get(index + 1)
   return state.merge({ schedule, schedules, schedulesById })
 }
 

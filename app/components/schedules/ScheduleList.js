@@ -33,13 +33,13 @@ export default class ScheduleList extends React.Component {
     width: WINDOW_WIDTH * 0.5 - 80,
     marginLeft: 20,
     marginRight: 20,
-    padding: 20,
+    padding: 30,
   };
 
   static FAB_STYLE = {
     position: 'fixed',
     right: WINDOW_WIDTH / 2 - 20,
-    bottom: 20,
+    bottom: 60,
     color: SECONDARY,
   };
 
@@ -73,15 +73,6 @@ export default class ScheduleList extends React.Component {
           enabledValueLink={schedule.id === selected ? enabledValueLink : null}
         />
       ))
-  }
-
-  _getSelectedValueLink() {
-    const { schedule, schedules, select } = this.props
-    const value = _.findIndex(schedules, s => s === schedule)
-    const requestChange = index => {
-      select(schedules[index])
-    }
-    return { value, requestChange }
   }
 
   render() {

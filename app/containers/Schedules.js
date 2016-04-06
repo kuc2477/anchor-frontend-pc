@@ -54,7 +54,10 @@ class Schedules extends React.Component {
     const { schedule: currentSchedule } = this.props
     const { schedule: nextSchedule } = nextProps
     if (currentSchedule !== nextSchedule) {
+      // sync editing schedule and set general dash board when
+      // new schedule has been selected
       this.syncEditing(nextProps)
+      this.setBoard(DASH_BOARD_GENERAL_SETTINGS)
     }
   }
 
@@ -152,7 +155,6 @@ class Schedules extends React.Component {
   }
 
   save() {
-    debugger
     const { editing } = this.state
     const { dispatch, schedule, schedulesById } = this.props
 
@@ -172,9 +174,11 @@ class Schedules extends React.Component {
   del(scheduleId) {
     const { dispatch, schedulesById } = this.props
     const toDelete = schedulesById[scheduleId]
-    debugger
+
     if (scheduleId && toDelete) {
-      dispatch(deleteSchedule(scheduleId))
+      dispatch(deleteSchedule(scheduleId, () => {
+        toast(`Deleted schedule ${toDelete.name}`)
+      }))
     }
   }
 

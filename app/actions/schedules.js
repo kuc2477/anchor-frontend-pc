@@ -15,7 +15,7 @@ import urls from '../modules/urls'
 export const ADD_SCHEDULE = 'ADD_SCHEDULE'
 export const addSchedule = (schedule) => ({
   type: ADD_SCHEDULE,
-  schedule: createSchedule(schedule)
+  schedule: createSchedule(schedule),
 })
 
 export const REMOVE_SCHEDULE = 'REMOVE_SCHEDULE'
