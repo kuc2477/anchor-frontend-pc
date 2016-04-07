@@ -51,13 +51,13 @@ class Schedules extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { schedule: currentSchedule } = this.props
-    const { schedule: nextSchedule } = nextProps
+    const { schedule: currentSchedule, board: currentBoard } = this.props
+    const { schedule: nextSchedule, board: nextBoard } = nextProps
     if (currentSchedule !== nextSchedule) {
       // sync editing schedule and set general dash board when
       // new schedule has been selected
       this.syncEditing(nextProps)
-      this.setBoard(DASH_BOARD_GENERAL_SETTINGS)
+      currentBoard !== nextBoard && this.setBoard(DASH_BOARD_GENERAL_SETTINGS)
     }
   }
 

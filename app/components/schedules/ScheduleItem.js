@@ -27,29 +27,31 @@ import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
 export default class ScheduleItem extends React.Component {
   static propTypes = {
     schedule: SchedulePropType.isRequired,
+    opened: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
     del: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     enabledValueLink: ValueLinkPropType
   };
 
-  static STYLE = {
-  };
-  static LIST_ITEM_STYLE = {};
-  static PROGRESS_ITEM_STYLE = {};
   static PROGRESS_STYLE = {
     marginTop: 12,
     width: '80%',
   };
 
+  static LIST_ITEM_REF = "LIST_ITEM_REF";
+
   static DEFAULT_NAME = 'Schedule name';
   static DEFAULT_URL = 'Schedule url to get subscribed';
   static DEFAULT_SAVE_DELAY = 500;
 
-  _getStyle() {
-    const { style } = this.props
-    const { STYLE: base } = this.constructor
-    return Object.assign({}, base, style)
+  componentWillReceiveProps(nextProps) {
+    // TODO: close when other item gets opened
+    // close opened progress item on leaving selected
+    if (this.props.selected && !nextProps.selected) {
+      const listItem = this.refs[this.constructor.LIST_ITEM_REF]
+      listItem.setState({ open: false })
+    }
   }
 
   _getProgressItem() {
@@ -117,17 +119,17 @@ export default class ScheduleItem extends React.Component {
   }
 
   render() {
-    const { LIST_ITEM_STYLE, DEFAULT_NAME, DEFAULT_URL } = this.constructor
-    const { schedule, select, key } = this.props
+    const { LIST_ITEM_REF, DEFAULT_NAME, DEFAULT_URL } = this.constructor
+    const { schedule, selected, select, key, style } = this.props
 
     return (
       <Paper
         key={key}
-        style={this._getStyle()}
+        style={style}
         onMouseEnter={_.partial(select, schedule.id)}
       >
         <ListItem
-          style={LIST_ITEM_STYLE}
+          ref={LIST_ITEM_REF}
           primaryTogglesNestedList
           primaryText={schedule.name || DEFAULT_NAME}
           secondaryText={schedule.url || DEFAULT_URL}

@@ -28,6 +28,13 @@ export default class ScheduleList extends React.Component {
     enabledValueLink: ValueLinkPropType.isRequired
   };
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      opened: null
+    };
+  }
+
   static STYLE = {
     height: 350,
     width: WINDOW_WIDTH * 0.5 - 80,
@@ -44,18 +51,26 @@ export default class ScheduleList extends React.Component {
   };
 
   static LIST_ITEM_STYLE = {
-    marginBottom: 10,
+    marginBottom: 15,
   };
 
   static SCHEDULE_LIST_HEIGHT = 800;
-  static SCHEDULE_ITEM_HEIGHT = 100;
+  static SCHEDULE_ITEM_HEIGHT = 150;
   static LOAD_EDGE_OFFSET = 50;
+
+  open(toOpen) {
+    this.setState({ opened: toOpen })
+  }
 
   _getScheduleNodes() {
     const { LIST_ITEM_STYLE } = this.constructor
+    const { opened } = this.state
     const {
-      editing, schedule: selected,
-      del, select, save,
+      editing,
+      schedule: selected,
+      del,
+      select,
+      save,
       enabledValueLink
     } = this.props
 
@@ -65,6 +80,7 @@ export default class ScheduleList extends React.Component {
         <ScheduleItem
           style={LIST_ITEM_STYLE}
           key={schedule.id}
+          opened={schedule.id === opened}
           selected={schedule.id === selected}
           schedule={schedule.id === selected ? editing : schedule}
           del={del}
