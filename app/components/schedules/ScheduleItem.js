@@ -11,8 +11,10 @@ import ListItem from 'material-ui/lib/lists/list-item'
 import LinearProgress from 'material-ui/lib/linear-progress'
 import Divider from 'material-ui/lib/divider'
 import Toggle from 'material-ui/lib/toggle'
+import getMuiTheme from 'material-ui/lib/styles/getMuiTheme'
+import ColorManipulator from 'material-ui/lib/utils/color-manipulator'
 
-import Close from  'material-ui/lib/svg-icons/navigation/close'
+import Close from 'material-ui/lib/svg-icons/navigation/close'
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
 import ContentInbox from 'material-ui/lib/svg-icons/content/inbox'
 import CloudQueue from 'material-ui/lib/svg-icons/file/cloud-queue'
@@ -20,18 +22,21 @@ import CloudDownload from 'material-ui/lib/svg-icons/file/cloud-download'
 import CloudDone from 'material-ui/lib/svg-icons/file/cloud-done'
 import CloudOff from 'material-ui/lib/svg-icons/file/cloud-off'
 
-import { PRIMARY, SECONDARY } from '../../constants/colors'
 import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
 
 
 export default class ScheduleItem extends React.Component {
   static propTypes = {
+    key: PropTypes.string,
+    style: PropTypes.object,
     schedule: SchedulePropType.isRequired,
-    opened: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
+    opened: PropTypes.bool.isRequired,
     del: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
-    enabledValueLink: ValueLinkPropType
+    select: PropTypes.func.isRequired,
+    toggleOpen: PropTypes.func.isRequired,
+    enabledValueLink: ValueLinkPropType.isRequired
   };
 
   static PROGRESS_STYLE = {
@@ -39,24 +44,25 @@ export default class ScheduleItem extends React.Component {
     width: '80%',
   };
 
-  static LIST_ITEM_REF = "LIST_ITEM_REF";
+  static LIST_ITEM_REF = 'LIST_ITEM_REF';
 
   static DEFAULT_NAME = 'Schedule name';
   static DEFAULT_URL = 'Schedule url to get subscribed';
   static DEFAULT_SAVE_DELAY = 500;
 
+  componentDidMount() {
+    const listItem = this.refs[this.constructor.LIST_ITEM_REF]
+    listItem.setState({ open: this.props.opened })
+  }
+
   componentWillReceiveProps(nextProps) {
-    // TODO: close when other item gets opened
-    // close opened progress item on leaving selected
-    if (this.props.selected && !nextProps.selected) {
-      const listItem = this.refs[this.constructor.LIST_ITEM_REF]
-      listItem.setState({ open: false })
-    }
+    const listItem = this.refs[this.constructor.LIST_ITEM_REF]
+    listItem.setState({ open: nextProps.opened })
   }
 
   _getProgressItem() {
     const { PROGRESS_STYLE, DEFAULT_SAVE_DELAY } = this.constructor
-    const { schedule, selected, save, select, enabledValueLink } = this.props
+    const { schedule, save, enabledValueLink } = this.props
 
     const mode = schedule.isActive && status === 'STARTED' ?
       'indeterminate' : 'determinate'
@@ -83,8 +89,8 @@ export default class ScheduleItem extends React.Component {
     const progressBar = <LinearProgress style={PROGRESS_STYLE} mode={mode} />
 
     return (
-      <div key={schedule.id}>
-        <Divider />
+      <div key={schedule.id} style={{ margin: 0, padding: 0 }} >
+        <Divider style={{ margin: 0, padding: 0 }} />
         <ListItem
           secondaryText={text}
           leftIcon={icon}
@@ -110,32 +116,45 @@ export default class ScheduleItem extends React.Component {
       <IconMenu iconButtonElement={this._getActionButton()}>
         <MenuItem>
           <div className="row middle-md" onClick={_.partial(del, schedule.id)}>
-            <Close style={{ paddingLeft: 10, width: 20, height: 20}} />
-            <div style={{paddingLeft: 5}}>Delete</div>
+            <Close style={{ paddingLeft: 10, width: 20, height: 20 }} />
+            <div style={{ paddingLeft: 5 }}>Delete</div>
           </div>
         </MenuItem>
       </IconMenu>
     )
   }
 
+  _getStyle() {
+    const { selected, style } = this.props
+    const muiTheme = getMuiTheme()
+    const textColor = muiTheme.rawTheme.palette.textColor
+    const selectedColor = ColorManipulator.fade(textColor, 0.08)
+
+    const baseStyle = {
+      color: textColor,
+      backgroundColor: selected ? selectedColor : undefined
+    }
+    return Object.assign({}, baseStyle, style)
+  }
+
   render() {
     const { LIST_ITEM_REF, DEFAULT_NAME, DEFAULT_URL } = this.constructor
-    const { schedule, selected, select, key, style } = this.props
+    const { schedule, select, toggleOpen, key } = this.props
 
     return (
       <Paper
         key={key}
-        style={style}
+        style={this._getStyle()}
         onMouseEnter={_.partial(select, schedule.id)}
       >
         <ListItem
           ref={LIST_ITEM_REF}
-          primaryTogglesNestedList
           primaryText={schedule.name || DEFAULT_NAME}
           secondaryText={schedule.url || DEFAULT_URL}
           leftIcon={<ContentInbox />}
           rightIconButton={this._getActionButtonMenu()}
           nestedItems={[this._getProgressItem()]}
+          onClick={_.partial(toggleOpen, schedule.id)}
         />
 
       </Paper>

@@ -12,8 +12,6 @@ import DashBoard from '../components/schedules/DashBoard'
 import ScheduleList from '../components/schedules/ScheduleList'
 import {
   addSchedule,
-  removeSchedule,
-  updateSchedule,
   fetchSchedules,
   saveSchedule,
   deleteSchedule,
@@ -41,26 +39,6 @@ class Schedules extends React.Component {
     dispatch: PropTypes.func
   };
 
-  constructor(props) {
-    super(props)
-    this.state = this.constructor.INITIAL_STATE
-  }
-
-  componentWillMount() {
-    this.syncEditing()
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { schedule: currentSchedule, board: currentBoard } = this.props
-    const { schedule: nextSchedule, board: nextBoard } = nextProps
-    if (currentSchedule !== nextSchedule) {
-      // sync editing schedule and set general dash board when
-      // new schedule has been selected
-      this.syncEditing(nextProps)
-      currentBoard !== nextBoard && this.setBoard(DASH_BOARD_GENERAL_SETTINGS)
-    }
-  }
-
   static INITIAL_STATE = {
     editing: null,
     errors: {
@@ -85,6 +63,61 @@ class Schedules extends React.Component {
     }
   };
 
+  constructor(props) {
+    super(props)
+    this.state = this.constructor.INITIAL_STATE
+  }
+
+  componentWillMount() {
+    this.syncEditing()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { schedule: currentSchedule, board: currentBoard } = this.props
+    const { schedule: nextSchedule } = nextProps
+    if (currentSchedule !== nextSchedule) {
+      // sync editing schedule and set general dash board when
+      // new schedule has been selected
+      this.syncEditing(nextProps)
+      this.clearErrors()
+
+      if (currentBoard !== DASH_BOARD_GENERAL_SETTINGS) {
+        this.setBoard(DASH_BOARD_GENERAL_SETTINGS)
+      }
+    }
+  }
+
+  setBoard(board) {
+    const { dispatch } = this.props
+    dispatch(setBoard(board))
+  }
+
+  validateBeforeSave() {
+    const { editing, errors } = this.state
+    const { name, url, cycle } = editing
+    let { nameError, urlError, cycleError } = errors
+    nameError = !name ? 'Name should not be empty' : nameError
+    urlError = !url ? 'Url should not be empty' : urlError
+    cycleError = !cycle ? 'Cycle should not be empty' : cycleError
+
+    // update error states and return validation result
+    const updatedErrors = Object.assign({}, errors, {
+      nameError, urlError, cycleError
+    })
+    this.setState({ errors: updatedErrors })
+    return !nameError && !urlError && !cycleError
+  }
+
+  // Validates form on input value changes. Not that this function has
+  // nothing to do with `validateBeforeSave`.
+  _validate(values) {
+    const constraint = this.constructor.FORM_CONSTRAINT
+    const result = validate(
+      Object.assign({}, this.state.editing, values), constraint,
+    )
+    return result
+  }
+
   // get value link to editing state
   _getValueLink(name) {
     const { editing, errors } = this.state
@@ -107,37 +140,6 @@ class Schedules extends React.Component {
       this.setState({ editing: updated, errors: updatedErrors })
     }
     return { value, requestChange }
-  }
-
-  // Validates form on input value changes. Not that this function has
-  // nothing to do with `validateBeforeSave`.
-  _validate(values) {
-    const constraint = this.constructor.FORM_CONSTRAINT
-    const result = validate(
-      Object.assign({}, this.state.editing, values), constraint,
-    )
-    return result
-  }
-
-  validateBeforeSave() {
-    const { editing, errors } = this.state
-    const { name, url, cycle } = editing
-    let { nameError, urlError, cycleError } = errors
-    nameError = !name ? 'Name should not be empty' : nameError
-    urlError = !url ? 'Url should not be empty' : urlError
-    cycleError = !cycle ? 'Cycle should not be empty' : cycleError
-
-    // update error states and return validation result
-    const updatedErrors = Object.assign({}, errors, {
-      nameError, urlError, cycleError
-    })
-    this.setState({ errors: updatedErrors })
-    return !nameError && !urlError && !cycleError
-  }
-
-  setBoard(board) {
-    const { dispatch } = this.props
-    dispatch(setBoard(board))
   }
 
   select(scheduleId) {
@@ -194,6 +196,11 @@ class Schedules extends React.Component {
     const { schedule, schedulesById } = props || this.props
     const editing = schedulesById[schedule]
     this.setState({ editing })
+  }
+
+  clearErrors() {
+    const { errors } = this.constructor.INITIAL_STATE
+    this.setState({ errors })
   }
 
   render() {

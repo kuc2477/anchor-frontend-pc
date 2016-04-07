@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import Infinite from 'react-infinite'
 
@@ -28,16 +27,9 @@ export default class ScheduleList extends React.Component {
     enabledValueLink: ValueLinkPropType.isRequired
   };
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      opened: null
-    };
-  }
-
   static STYLE = {
     height: 350,
-    width: WINDOW_WIDTH * 0.5 - 80,
+    width: WINDOW_WIDTH * 0.5 - 100,
     marginLeft: 20,
     marginRight: 20,
     padding: 30,
@@ -58,20 +50,26 @@ export default class ScheduleList extends React.Component {
   static SCHEDULE_ITEM_HEIGHT = 150;
   static LOAD_EDGE_OFFSET = 50;
 
-  open(toOpen) {
-    this.setState({ opened: toOpen })
+  constructor(props) {
+    super(props)
+    this.state = {
+      opened: null
+    }
+  }
+
+  toggleOpen(toToggle) {
+    this.setState({ opened: toToggle !== this.state.opened ? toToggle : null })
   }
 
   _getScheduleNodes() {
     const { LIST_ITEM_STYLE } = this.constructor
     const { opened } = this.state
     const {
-      editing,
+      // editing, value link to editing and currently selected schedule
+      editing, enabledValueLink,
       schedule: selected,
-      del,
-      select,
-      save,
-      enabledValueLink
+      // schedule item operations
+      del, save, select
     } = this.props
 
     return this.props.schedules
@@ -86,6 +84,7 @@ export default class ScheduleList extends React.Component {
           del={del}
           save={schedule.id === selected ? save : null}
           select={select}
+          toggleOpen={::this.toggleOpen}
           enabledValueLink={schedule.id === selected ? enabledValueLink : null}
         />
       ))

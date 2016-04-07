@@ -2,7 +2,6 @@ import _ from 'lodash'
 import React, { PropTypes } from 'react'
 
 import Ink from 'react-ink'
-import Colors from 'material-ui/lib/styles/colors'
 import ActionSettings from 'material-ui/lib/svg-icons/action/settings'
 import ActionFlightTakeoff from 'material-ui/lib/svg-icons/action/flight-takeoff'
 
@@ -10,7 +9,7 @@ import {
   DASH_BOARD_GENERAL_SETTINGS,
   DASH_BOARD_ADVANCED_SETTINGS
 } from '../../constants/strings'
-import { PRIMARY, SECONDARY, INACTIVE } from '../../constants/colors'
+import { SECONDARY, INACTIVE } from '../../constants/colors'
 import { SCHEDULE_DASH_BOARDS } from '../../constants/arrays'
 import Title from '../base/Title'
 import BoardMenuIconButton from './menus/BoardMenuIconButton'
@@ -22,14 +21,9 @@ export default class DashBoardTitle extends React.Component {
     board: PropTypes.oneOf(SCHEDULE_DASH_BOARDS).isRequired,
   };
 
-  constructor(props) {
-    super(props)
-    this.state = { hovering: false }
-  }
-
   static RIPPLE_DELAY = 220;
 
-  static HOVER_COLORS =  {
+  static HOVER_COLORS = {
     on: SECONDARY,
     off: INACTIVE,
   };
@@ -58,6 +52,11 @@ export default class DashBoardTitle extends React.Component {
     position: 'relative',
     className: 'clickable',
   };
+
+  constructor(props) {
+    super(props)
+    this.state = { hovering: false }
+  }
 
   _getIcon() {
     const { hovering } = this.state
@@ -101,7 +100,7 @@ export default class DashBoardTitle extends React.Component {
       >
         {icon}
         {label}
-        <Ink background={false} style={{color: HOVER_COLORS.off}}/>
+        <Ink background={false} style={{ color: HOVER_COLORS.off }} />
       </Title>
     )
   }
@@ -111,7 +110,7 @@ export default class DashBoardTitle extends React.Component {
     const { RIPPLE_DELAY } = this.constructor
 
     const boards = SCHEDULE_DASH_BOARDS
-    const currentIndex = _.findIndex(boards, b => b == board)
+    const currentIndex = _.findIndex(boards, b => b === board)
 
     setTimeout(() => {
       setBoard(boards[(currentIndex + 1) % boards.length])

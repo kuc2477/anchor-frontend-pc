@@ -7,7 +7,7 @@ import SwipeableViews from 'react-swipeable-views'
 import DashBoardTitle from './DashBoardTitle'
 import GeneralSettings from './boards/GeneralSettings'
 import AdvancedSettings from './boards/AdvancedSettings'
-import { SchedulePropType, ValueLinkPropType  } from '../../constants/types'
+import { ValueLinkPropType } from '../../constants/types'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
 import {
   DASH_BOARD_GENERAL_SETTINGS,
@@ -42,11 +42,11 @@ export default class DashBoard extends React.Component {
 
   // root element style
   static STYLE = {
-    width: WINDOW_WIDTH * 0.50 - 120,
+    width: WINDOW_WIDTH * 0.5 - 140,
     height: WINDOW_HEIGHT * 0.8 - 30,
     marginTop: 30,
     marginBottom: 20,
-    marginLeft: 50,
+    marginLeft: 70,
     paddingTop: -20,
     paddingLeft: 20,
     zDepth: 1,
@@ -75,7 +75,7 @@ export default class DashBoard extends React.Component {
   render() {
     const SLIDE_CONTAINER_STYLE = this._getContainerStyle()
     const { STYLE, SLIDE_STYLE } = this.constructor
-    const { schedule, board, setBoard, save } = this.props
+    const { board, setBoard, save } = this.props
 
     const generalSettingsProps = _.pick(this.props, [
       'nameValueLink', 'urlValueLink', 'cycleValueLink',

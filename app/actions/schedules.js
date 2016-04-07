@@ -108,7 +108,9 @@ export const saveSchedule = (schedule, callback) => dispatch => {
 
     // dispatch success with response's saved values and fire callback
     dispatch(saveScheduleSuccess(schedule, camelizeKeys(saved)))
-    callback && callback(saved)
+    if (callback) {
+      callback(saved)
+    }
   })
 }
 
@@ -137,6 +139,11 @@ export const deleteSchedule = (scheduleId, callback) => dispatch => {
   dispatch(deleteScheduleStart())
   dispatch(removeSchedule(scheduleId))
 
+  // no http request if deleted schedule was unsaved instance
+  if (unsaved(scheduleId)) {
+    return
+  }
+
   request.del(urls.schedules(scheduleId))
   .use(authorize())
   .use(authorizeCSRF())
@@ -148,6 +155,8 @@ export const deleteSchedule = (scheduleId, callback) => dispatch => {
       return
     }
     dispatch(deleteScheduleSuccess())
-    callback && callback(scheduleId)
+    if (callback) {
+      callback(scheduleId)
+    }
   })
 }
