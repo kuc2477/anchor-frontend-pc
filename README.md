@@ -1,1 +1,3 @@
-WORK IN PROGRESS - See ROADMAP.org for feature goals
+# WORK IN PROGRESS
+
+* You can see the project roadmap in `ROADMAP.org`
