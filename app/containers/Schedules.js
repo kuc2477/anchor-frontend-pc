@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Immutable from 'immutable'
 import validate from 'validate.js'
 import React, { PropTypes } from 'react'
@@ -45,6 +46,7 @@ class Schedules extends React.Component {
       nameError: '',
       urlError: '',
       cycleError: '',
+      brothersError: '',
     }
   };
 
@@ -60,6 +62,10 @@ class Schedules extends React.Component {
     },
     cycle: {
       presence: true
+    },
+    brothers: {
+      array: true,
+      url: true
     }
   };
 
@@ -111,16 +117,33 @@ class Schedules extends React.Component {
   // Validates form on input value changes. Not that this function has
   // nothing to do with `validateBeforeSave`.
   _validate(values) {
-    const constraint = this.constructor.FORM_CONSTRAINT
-    const result = validate(
-      Object.assign({}, this.state.editing, values), constraint,
-    )
-    return result
+    const updated = Object.assign({}, this.state.editing, values)
+
+    const { FORM_CONSTRAINT } = this.constructor
+    const singleConstraint = _.pickBy(FORM_CONSTRAINT, v => !v['array'])
+    const arrayConstraint = _.pickBy(FORM_CONSTRAINT, v => v['array'])
+
+    const singleValidation = validate(updated, singleConstraint)
+    const arrayValidation =
+      _(updated)
+      .pickBy((v, k) => _.has(arrayConstraint, k))
+      .mapValues(
+        array => array
+        .map(v => validate.single(v, arrayConstraint))
+        .map(validation => validation[0])
+      )
+      .value()
+    return _.merge(singleValidation, arrayValidation)
   }
+
 
   // get value link to editing state
   _getValueLink(name) {
+    const { FORM_CONSTRAINT } = this.constructor
     const { editing, errors } = this.state
+    const isArrayField =
+      FORM_CONSTRAINT[name] &&
+      FORM_CONSTRAINT[name]['array']
 
     // return disconnected value link if we have no editing schedule
     if (!editing) {
@@ -134,7 +157,10 @@ class Schedules extends React.Component {
       const v = this._validate({ [name]: finalChangedValue })
       const updated = Object.assign({}, editing, { [name]: finalChangedValue })
       const updatedErrors = Object.assign({}, errors, {
-        [`${name}Error`]: v && v[name] ? v[name][0] : ''
+        [`${name}Error`]: v && v[name] ?
+          isArrayField ?
+          v[name] :
+          v[name][0] : ''
       })
 
       this.setState({ editing: updated, errors: updatedErrors })

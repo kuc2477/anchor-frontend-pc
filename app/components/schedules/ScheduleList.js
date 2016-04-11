@@ -37,7 +37,7 @@ export default class ScheduleList extends React.Component {
 
   static FAB_STYLE = {
     position: 'fixed',
-    right: WINDOW_WIDTH / 2 - 40,
+    right: WINDOW_WIDTH / 2 - 50,
     bottom: 30,
     color: SECONDARY,
   };
@@ -58,7 +58,6 @@ export default class ScheduleList extends React.Component {
   }
 
   toggleOpen(toToggle) {
-    debugger
     this.setState({ opened: toToggle !== this.state.opened ? toToggle : null })
   }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
 import { ValueLinkPropType } from '../../../constants/types'
 import BrotherSiteFieldSet from '../fields/BrotherSiteFieldSet'
@@ -7,6 +7,7 @@ import BrotherSiteFieldSet from '../fields/BrotherSiteFieldSet'
 export default class AdvancedSettings extends React.Component {
   static propTypes = {
     brothersValueLink: ValueLinkPropType.isRequired,
+    brothersError: PropTypes.arrayOf(PropTypes.string),
   };
 
   static BROTHER_FIELD_STYLE = {
@@ -15,13 +16,14 @@ export default class AdvancedSettings extends React.Component {
 
   render() {
     const { BROTHER_FIELD_STYLE } = this.constructor
-    const { brothersValueLink } = this.props
+    const { brothersValueLink, brothersError } = this.props
 
     return (
       <div>
         <BrotherSiteFieldSet
           style={BROTHER_FIELD_STYLE}
           valueLink={brothersValueLink}
+          error={brothersError}
         />
       </div>
     )

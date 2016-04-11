@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
@@ -9,12 +10,15 @@ import colors from '../../../constants/colors'
 export default class BrotherSiteFieldSet extends React.Component {
   static propTypes = {
     valueLink: ValueLinkPropType.isRequired,
+    error: PropTypes.string,
     style: PropTypes.object,
   };
 
   constructor(props) {
     super(props)
-    this.state = { isActive: false }
+    this.state = {
+      isActive: false,
+    }
   }
 
   static STYLE = {
@@ -40,9 +44,27 @@ export default class BrotherSiteFieldSet extends React.Component {
     width: 16,
   };
 
+  _onBrotherSiteFieldChange(index, url) {
+    const { value: brothers, requestChange } = this.props.valueLink
+    const updated = brothers.map((v, i) => i === index ? url : v)
+    requestChange(null, updated)
+  }
+
   _getBrotherSiteFieldNodes() {
     const { value: brothers } = this.props.valueLink
-    return (brothers || []).map(url => <BrotherSiteField url={url} />)
+    const onChangeFactory = index => (e, v) => {
+      this._onBrotherSiteFieldChange(
+        index, (e.target && e.target.value) || v
+      )
+    }
+
+    return (brothers || []).map(
+      (url, index) =>
+      <BrotherSiteField
+        url={url} index={index}
+        onChange={onChangeFactory(index)}
+      />
+    )
   }
 
   _getLabelStyle() {

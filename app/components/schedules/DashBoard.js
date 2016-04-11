@@ -35,6 +35,7 @@ export default class DashBoard extends React.Component {
     nameError: PropTypes.string,
     urlError: PropTypes.string,
     cycleError: PropTypes.string,
+    brothersError: PropTypes.string,
     // schedule entry / board manipulation
     save: PropTypes.func.isRequired,
     setBoard: PropTypes.func.isRequired,
@@ -84,7 +85,7 @@ export default class DashBoard extends React.Component {
     ])
 
     const advancedSettingsProps = _.pick(this.props, [
-      'brothersValueLink',
+      'brothersValueLink', 'brothersError'
     ])
 
     return (

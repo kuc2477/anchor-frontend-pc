@@ -39,6 +39,13 @@ export default class ScheduleItem extends React.Component {
     enabledValueLink: ValueLinkPropType.isRequired
   };
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      hovering: false
+    }
+  }
+
   static PROGRESS_STYLE = {
     marginTop: 12,
     width: '80%',
@@ -134,6 +141,7 @@ export default class ScheduleItem extends React.Component {
   }
 
   _getStyle() {
+    const { hovering } = this.state
     const { selected, style } = this.props
     const muiTheme = getMuiTheme()
     const textColor = muiTheme.rawTheme.palette.textColor
@@ -141,9 +149,19 @@ export default class ScheduleItem extends React.Component {
 
     const baseStyle = {
       color: textColor,
-      backgroundColor: selected ? selectedColor : undefined
+      backgroundColor: selected && !hovering ? selectedColor : undefined
     }
     return Object.assign({}, baseStyle, style)
+  }
+
+  _onMouseEnter() {
+    const { select, schedule } = this.props
+    this.setState({ hovering: true })
+    select(schedule.id)
+  }
+
+  _onMouseLeave() {
+    this.setState({ hovering: false })
   }
 
   render() {
@@ -154,7 +172,8 @@ export default class ScheduleItem extends React.Component {
       <Paper
         key={key}
         style={this._getStyle()}
-        onMouseEnter={_.partial(select, schedule.id)}
+        onMouseEnter={::this._onMouseEnter}
+        onMouseLeave={::this._onMouseLeave}
       >
         <ListItem
           ref={LIST_ITEM_REF}
