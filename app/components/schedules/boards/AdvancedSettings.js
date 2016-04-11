@@ -18,10 +18,12 @@ export default class AdvancedSettings extends React.Component {
     const { brothersValueLink } = this.props
 
     return (
-      <BrotherSiteFieldSet
-        style={BROTHER_FIELD_STYLE}
-        valueLink={brothersValueLink}
-      />
+      <div>
+        <BrotherSiteFieldSet
+          style={BROTHER_FIELD_STYLE}
+          valueLink={brothersValueLink}
+        />
+      </div>
     )
   }
 }

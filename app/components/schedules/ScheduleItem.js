@@ -89,8 +89,8 @@ export default class ScheduleItem extends React.Component {
     const progressBar = <LinearProgress style={PROGRESS_STYLE} mode={mode} />
 
     return (
-      <div key={schedule.id} style={{ margin: 0, padding: 0 }} >
-        <Divider style={{ margin: 0, padding: 0 }} />
+      <div key={schedule.id}>
+        <Divider />
         <ListItem
           secondaryText={text}
           leftIcon={icon}
@@ -103,8 +103,17 @@ export default class ScheduleItem extends React.Component {
   }
 
   _getActionButton() {
+    // do not bubble
+    const stopBubble = (e) => {
+      e.stopPropagation()
+    }
+
     return (
-      <IconButton touch tooltip="more" tooltipPosition="bottom-right" >
+      <IconButton touch
+        tooltip="more"
+        tooltipPosition="bottom-right"
+        onClick={stopBubble}
+      >
         <MoreVertIcon color={Colors.grey400} />
       </IconButton>
     )
@@ -153,6 +162,7 @@ export default class ScheduleItem extends React.Component {
           secondaryText={schedule.url || DEFAULT_URL}
           leftIcon={<ContentInbox />}
           rightIconButton={this._getActionButtonMenu()}
+          nestedListStyle={{ paddingTop: 0, paddingBottom: 0 }}
           nestedItems={[this._getProgressItem()]}
           onClick={_.partial(toggleOpen, schedule.id)}
         />
