@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { decamelize } from 'humps'
 
 import { ValueLinkPropType } from '../../../constants/types'
 import ScheduleNameField from '../fields/ScheduleNameField'

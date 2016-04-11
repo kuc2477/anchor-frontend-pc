@@ -10,12 +10,14 @@ export default class BrotherSiteField extends React.Component {
     url: PropTypes.string.isRequired,
     error: PropTypes.string,
     onChange: PropTypes.func.isRequired,
+    style: PropTypes.object,
   };
 
   render() {
-    const { url, error, onChange } = this.props
+    const { style, url, error, onChange } = this.props
     return (
       <TextField
+        style={style}
         hintText="Brother site url"
         value={url}
         errorText={error}

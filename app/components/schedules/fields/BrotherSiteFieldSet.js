@@ -15,13 +15,13 @@ export default class BrotherSiteFieldSet extends React.Component {
     style: PropTypes.object,
   };
 
-  static TITLE_STYLE = {
-    marginLeft: 0
-  };
-
   static LABEL_STYLE = {
     color: colors.INACTIVE,
     fontSize: 14
+  };
+
+  static BROTHER_SITE_FIELD_STYLE = {
+    marginBottom: 15
   };
 
   _onBrotherSiteFieldChange(index, url) {
@@ -38,6 +38,7 @@ export default class BrotherSiteFieldSet extends React.Component {
   }
 
   _getBrotherSiteFieldNodes() {
+    const { BROTHER_SITE_FIELD_STYLE } = this.constructor
     const { error, valueLink } = this.props
     const { value: brothers } = valueLink
 
@@ -55,8 +56,11 @@ export default class BrotherSiteFieldSet extends React.Component {
 
     return visibleBrothers.map((url, index) => (
       <BrotherSiteField
-        url={url} index={index} error={error[index]}
+        url={url}
+        index={index}
+        error={error[index]}
         onChange={onChangeFactory(index)}
+        style={BROTHER_SITE_FIELD_STYLE}
       />
     ))
   }

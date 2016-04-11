@@ -1,6 +1,6 @@
-* FEATURE GOALS [0%]
+* FEATURE GOALS [25%]
 
-  - [-] Implement *Schedules* container [85%]
+  - [X] Implement *Schedules* container [100%]
         - [X] Save only when needed
         - [X] Validate before save
         - [X] Optimistic save / delete [100%]
@@ -9,9 +9,9 @@
         - [X] Better layout ratio
         - [X] Implement schedule enable toggle
         - [X] Implement accordion - selectable list
-        - [ ] Implement AdvancedSettings [0%]
-              - [ ] brother site field set
-              - [ ] brother site field
+        - [X] Implement AdvancedSettings [100%]
+              - [X] brother site field set
+              - [X] brother site field
 
   - [ ] Implement *News* container [0%]
         - [ ] Implement news list

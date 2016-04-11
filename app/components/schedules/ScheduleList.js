@@ -28,7 +28,7 @@ export default class ScheduleList extends React.Component {
   };
 
   static STYLE = {
-    height: WINDOW_HEIGHT,
+    height: 800,
     width: WINDOW_WIDTH * 0.5 - 90,
     marginLeft: 20,
     marginRight: 20,
@@ -46,8 +46,8 @@ export default class ScheduleList extends React.Component {
     marginBottom: 15,
   };
 
-  static SCHEDULE_LIST_HEIGHT = WINDOW_HEIGHT;
-  static SCHEDULE_ITEM_HEIGHT = 100;
+  static SCHEDULE_LIST_HEIGHT = 500;
+  static SCHEDULE_ITEM_HEIGHT = 120;
   static LOAD_EDGE_OFFSET = 10;
 
   constructor(props) {
