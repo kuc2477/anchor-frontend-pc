@@ -7,7 +7,7 @@ import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
 import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
-import { WINDOW_WIDTH } from '../../constants/numbers'
+import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
 
 
 export default class ScheduleList extends React.Component {
@@ -28,8 +28,8 @@ export default class ScheduleList extends React.Component {
   };
 
   static STYLE = {
-    height: 350,
-    width: WINDOW_WIDTH * 0.5 - 100,
+    height: WINDOW_HEIGHT,
+    width: WINDOW_WIDTH * 0.5 - 90,
     marginLeft: 20,
     marginRight: 20,
     padding: 30,
@@ -37,7 +37,7 @@ export default class ScheduleList extends React.Component {
 
   static FAB_STYLE = {
     position: 'fixed',
-    right: WINDOW_WIDTH / 2 - 50,
+    right: WINDOW_WIDTH / 2 - 40,
     bottom: 30,
     color: SECONDARY,
   };
@@ -46,9 +46,9 @@ export default class ScheduleList extends React.Component {
     marginBottom: 15,
   };
 
-  static SCHEDULE_LIST_HEIGHT = 800;
-  static SCHEDULE_ITEM_HEIGHT = 150;
-  static LOAD_EDGE_OFFSET = 50;
+  static SCHEDULE_LIST_HEIGHT = WINDOW_HEIGHT;
+  static SCHEDULE_ITEM_HEIGHT = 100;
+  static LOAD_EDGE_OFFSET = 10;
 
   constructor(props) {
     super(props)
@@ -105,7 +105,6 @@ export default class ScheduleList extends React.Component {
       <div style={STYLE}>
         <Infinite
           useWindowAsScrollContainer
-          containerHeight={SCHEDULE_LIST_HEIGHT}
           elementHeight={SCHEDULE_ITEM_HEIGHT}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}

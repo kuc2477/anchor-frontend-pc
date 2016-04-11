@@ -10,16 +10,21 @@ export default class AdvancedSettings extends React.Component {
     brothersError: PropTypes.arrayOf(PropTypes.string),
   };
 
+  static STYLE = {
+    marginLeft: -20
+  };
+
   static BROTHER_FIELD_STYLE = {
-    marginBottom: 20
+    marginTop: 20,
+    marginBottom: 20,
   };
 
   render() {
-    const { BROTHER_FIELD_STYLE } = this.constructor
+    const { STYLE, BROTHER_FIELD_STYLE } = this.constructor
     const { brothersValueLink, brothersError } = this.props
 
     return (
-      <div>
+      <div style={STYLE}>
         <BrotherSiteFieldSet
           style={BROTHER_FIELD_STYLE}
           valueLink={brothersValueLink}

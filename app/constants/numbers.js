@@ -8,6 +8,7 @@ export const MAX_DEPTH_DEFAULT = 2
 export const MAX_DIST_RANGE_MIN = 0
 export const MAX_DIST_RANGE_MAX = 5
 export const MAX_DIST_DEFALT = 2
+export const MAX_BROTHER_SITE_NUMBER = 3
 
 export const FLOW_MAX_WIDTH = '1400px'
 export const FLOW_MIN_WIDTH = '300px'

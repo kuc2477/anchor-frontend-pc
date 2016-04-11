@@ -35,7 +35,7 @@ export default class DashBoard extends React.Component {
     nameError: PropTypes.string,
     urlError: PropTypes.string,
     cycleError: PropTypes.string,
-    brothersError: PropTypes.string,
+    brothersError: PropTypes.arrayOf(PropTypes.string),
     // schedule entry / board manipulation
     save: PropTypes.func.isRequired,
     setBoard: PropTypes.func.isRequired,

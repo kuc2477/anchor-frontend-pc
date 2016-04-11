@@ -46,7 +46,7 @@ class Schedules extends React.Component {
       nameError: '',
       urlError: '',
       cycleError: '',
-      brothersError: '',
+      brothersError: [],
     }
   };
 
@@ -101,7 +101,7 @@ class Schedules extends React.Component {
   validateBeforeSave() {
     const { editing, errors } = this.state
     const { name, url, cycle } = editing
-    let { nameError, urlError, cycleError } = errors
+    let { nameError, urlError, cycleError, brothersError } = errors
     nameError = !name ? 'Name should not be empty' : nameError
     urlError = !url ? 'Url should not be empty' : urlError
     cycleError = !cycle ? 'Cycle should not be empty' : cycleError
@@ -111,7 +111,8 @@ class Schedules extends React.Component {
       nameError, urlError, cycleError
     })
     this.setState({ errors: updatedErrors })
-    return !nameError && !urlError && !cycleError
+    return !nameError && !urlError && !cycleError &&
+      brothersError.every(v => !v)
   }
 
   // Validates form on input value changes. Not that this function has
@@ -121,21 +122,27 @@ class Schedules extends React.Component {
 
     const { FORM_CONSTRAINT } = this.constructor
     const singleConstraint = _.pickBy(FORM_CONSTRAINT, v => !v['array'])
-    const arrayConstraint = _.pickBy(FORM_CONSTRAINT, v => v['array'])
+    const arrayConstraint =
+      _(FORM_CONSTRAINT)
+      .pickBy(v => v['array'])
+      .mapValues(v => _.omit(v, 'array'))
+      .value()
 
     const singleValidation = validate(updated, singleConstraint)
     const arrayValidation =
       _(updated)
       .pickBy((v, k) => _.has(arrayConstraint, k))
       .mapValues(
-        array => array
-        .map(v => validate.single(v, arrayConstraint))
-        .map(validation => validation[0])
+        (array, key) => array
+        .map(v => validate.single(v, arrayConstraint[key]))
+        .map(validation =>
+             validation && validation[0] &&
+             `${key.replace(/s$/, '')} ${validation[0]}`)
       )
       .value()
+
     return _.merge(singleValidation, arrayValidation)
   }
-
 
   // get value link to editing state
   _getValueLink(name) {
@@ -149,7 +156,7 @@ class Schedules extends React.Component {
     if (!editing) {
       return { value: null, requestChange: (e, v) => v }
     }
-    const value = editing[name] || null
+    const value = editing[name] || (isArrayField ? [] : null)
     const requestChange = (event, changedValue) => {
       const eventChangedValue = event && event.target && event.target.value
       const finalChangedValue = eventChangedValue || changedValue
