@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { PropTypes } from 'react'
-import { currentUser } from '../modules/utils'
 
 
 // ==================

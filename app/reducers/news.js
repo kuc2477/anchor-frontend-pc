@@ -4,7 +4,13 @@ import urls from '../modules/urls'
 import {
   FETCH_NEWS_START,
   FETCH_NEWS_SUCCESS,
-  FETCH_NEWS_ERROR
+  FETCH_NEWS_ERROR,
+  RATING_START,
+  RATING_SUCCESS,
+  RATING_ERROR,
+  CANCEL_RATING_START,
+  CANCEL_RATING_SUCCESS,
+  CANCEL_RATING_ERROR
 } from '../actions/news'
 import { LOGOUT } from '../actions/auth'
 
@@ -38,7 +44,7 @@ export default (state = initialState, action) => {
 
     // auxiliary
     case LOGOUT: return initialState
-    default : return state
+    default: return state
   }
 }
 

@@ -56,6 +56,7 @@
   "author": "Ha Junsoo",
   "license": "ISC",
   "dependencies": {
+    "autobahn": "^0.9.9",
     "bluebird": "^3.1.1",
     "electron-debug": "^0.5.1",
     "envify": "^3.4.0",
@@ -68,6 +69,7 @@
     "keyboardjs": "^2.2.0",
     "lodash": "^4.6.1",
     "material-ui": "^0.14.4",
+    "menubar": "^4.1.0",
     "normalize.css": "^3.0.3",
     "normalizr": "^2.0.0",
     "react": "^0.14.7",
