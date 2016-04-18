@@ -104,10 +104,10 @@ export const saveSchedule = (schedule, callback) => dispatch => {
       dispatch(saveScheduleError(error))
       return
     }
-    const { body: saved } = response
 
     // dispatch success with response's saved values and fire callback
-    dispatch(saveScheduleSuccess(schedule, camelizeKeys(saved)))
+    const saved = camelizeKeys(response.body)
+    dispatch(saveScheduleSuccess(schedule, saved))
     if (callback) {
       callback(saved)
     }

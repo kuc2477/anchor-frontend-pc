@@ -27,3 +27,53 @@ export default (state = initialState, action) => {
     case FETCH_SCHEDULES_ERROR: return state
   }
 }
+
+
+// =====
+// Fetch
+// =====
+
+function reduceFetchStart(state) {
+  return state.set('isFetching', true)
+}
+
+function reduceFetchSuccess(state, action) {
+  const { result, entities, link } = action
+  const newsList = state.get('newsList').push(...result).toOrderedSet().toList()
+  const newsListById = state.get('newsListById').merge(entities.news)
+  return state.merge({
+    newsList,
+    newsListById,
+    isFetching: false,
+    didFetchFail: false,
+    urlToFetch: link
+  })
+}
+
+function reduceFetchError(state) {
+  return state.merge({ isFetching: false, didFetchFail: true })
+}
+
+
+// ======
+// Rating
+// ======
+
+// TODO: NOT IMPLEMENTED YET
+function reduceRatingStart(state, action) {
+}
+
+function reduceRatingSuccess(state, action) {
+}
+
+function reduceRatingError(state, action) {
+}
+
+function reduceCancelRatingStart(state, action) {
+}
+
+function reduceCancelRatingSuccess(state, action) {
+}
+
+function reduceCancelRatingError(state, action) {
+}

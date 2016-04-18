@@ -10,6 +10,10 @@ import {
 } from '../constants/numbers'
 
 
+export function currentUser() {
+  return store.getState().get('auth').get('user')
+}
+
 export function parseCookie(cookies, name) {
   const value = '; ' + cookies
   const parts = value.split('; ' + name + '=')

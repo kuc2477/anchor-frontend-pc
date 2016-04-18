@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { PropTypes } from 'react'
+import { currentUser } from '../modules/utils'
 
 
 // ==================
@@ -23,6 +24,7 @@ export const ValueLinkPropType = PropTypes.shape({
 // ================
 
 export const UserPropType = PropTypes.shape({
+  id: PropTypes.number,
   firstname: PropTypes.string,
   lastname: PropTypes.string,
 })
@@ -37,11 +39,15 @@ export const NewsPropType = PropTypes.shape({
   url: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired
+  image: PropTypes.string.isRequired,
+  currentUserRating: PropTypes.bool
 })
 
 export const SchedulePropType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]).isRequired,
   name: PropTypes.string.isRequired,
   enabled: PropTypes.bool.isRequired,
   url: PropTypes.string.isRequired,
@@ -52,6 +58,16 @@ export const SchedulePropType = PropTypes.shape({
     [PropTypes.string, PropTypes.number]
   )),
   state: PropTypes.string.isRequired
+})
+
+export const RatingPropType = PropTypes.shape({
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
+  user: PropTypes.number.isRequired,
+  news: PropTypes.number.isRequired,
+  positive: PropTypes.bool
 })
 
 
@@ -98,5 +114,5 @@ export default {
   SchedulePropType,
   // client side creators
   unsaved,
-  createSchedule
+  createSchedule,
 }
