@@ -13,10 +13,10 @@
               - [X] brother site field set
               - [X] brother site field
 
-  - [-] Implement *News* container [0%]
-        - [-] add news fetch / rating actions and reducers [50%]
+  - [-] Implement *News* container [33%]
+        - [X] add news fetch / rating actions and reducers [100%]
               - [X] fetch / rating actions
-              - [ ] fetch / rating reducers
+              - [X] fetch / rating reducers
         - [ ] Implement news list
         - [ ] Implement news item
 

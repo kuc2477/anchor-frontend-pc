@@ -60,16 +60,6 @@ export const SchedulePropType = PropTypes.shape({
   state: PropTypes.string.isRequired
 })
 
-export const RatingPropType = PropTypes.shape({
-  id: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]).isRequired,
-  user: PropTypes.number.isRequired,
-  news: PropTypes.number.isRequired,
-  positive: PropTypes.bool
-})
-
 
 // ==============================
 // Client side instance creators

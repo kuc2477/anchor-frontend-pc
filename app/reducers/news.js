@@ -22,9 +22,23 @@ export const initialState = new Immutable.Map({
 export default (state = initialState, action) => {
   switch(action.type) {
     // fetch
-    case FETCH_NEWS_START: return state
-    case FETCH_NEWS_SUCCESS: return state
-    case FETCH_SCHEDULES_ERROR: return state
+    case FETCH_NEWS_START: return reduceFetchStart(state, action)
+    case FETCH_NEWS_SUCCESS: return reduceFetchSuccess(state, action)
+    case FETCH_SCHEDULES_ERROR: return reduceFetchError(state, action)
+
+    // save
+    case RATING_START: return reduceRatingStart(state, action)
+    case RATING_SUCCESS: return reduceRatingSuccess(state, action)
+    case RATING_ERROR: return reduceRatingError(state, action)
+
+    // delete
+    case CANCEL_RATING_START: return reduceCancelRatingStart(state, action)
+    case CANCEL_RATING_SUCCESS: return reduceCancelRatingSuccess(state, action)
+    case CANCEL_RATING_ERROR: return reduceCancelRatingError(state, action)
+
+    // auxiliary
+    case LOGOUT: return initialState
+    default : return state
   }
 }
 
@@ -59,21 +73,44 @@ function reduceFetchError(state) {
 // Rating
 // ======
 
-// TODO: NOT IMPLEMENTED YET
 function reduceRatingStart(state, action) {
+  const { newsId, rating } = action
+  const newsListById = state.get('newsListById')
+  const news = newsListById.get(newsId)
+
+  const updated = news.set('currentUserRating', rating)
+  const updatedNewsListById = newsListById.set(newsId, updated)
+  return state.merge({
+    newsListById: updatedNewsListById,
+    isRating: true
+  })
 }
 
 function reduceRatingSuccess(state, action) {
+  return state.merge({ isRating: false, didRatingFail: false })
 }
 
 function reduceRatingError(state, action) {
+  return state.merge({ isRating: false, didRatingFail: true })
 }
 
 function reduceCancelRatingStart(state, action) {
+  const { newsId } = action
+  const newsListById = state.get('newsListById')
+  const news = newsListById.get(newsId)
+
+  const updated = news.set('currentUserRating', null)
+  const updatedNewsListById = newsListById.set(newsId, updated)
+  return state.merge({
+    newsListById: updatedNewsListById,
+    isRating: true
+  })
 }
 
 function reduceCancelRatingSuccess(state, action) {
+  return state.merge({ isRating: false, didRatingFail: false })
 }
 
 function reduceCancelRatingError(state, action) {
+  return state.merge({ isRating: false, didRatingFail: true })
 }

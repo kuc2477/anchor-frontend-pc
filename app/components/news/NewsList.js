@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react'
 import Infinite from 'react-infinite'
-import Immutable from 'immutable'
-import ImmutablePropTypes from 'react-immutable-proptypes'
 
 import NewsItem from './NewsItem'
 import { NewsPropType } from '../../constants/types'
@@ -9,25 +7,17 @@ import { NewsPropType } from '../../constants/types'
 
 export default class NewsList extends React.Component {
   static propTypes = {
-    news: ImmutablePropTypes.listOf(PropTypes.number).isRequired,
-    newsById: PropTypes.instanceOf(Immutable.Map).isRequired,
-    isFetching: PropTypes.bool.isRequired,
-    load: PropTypes.func.isRequired
-  };
-
-  static defaultProps = {
-    news: new Immutable.List(),
-    newsById: new Immutable.Map(),
-    isFetching: false,
-    load: () => {}
+    newsList: PropTypes.arrayOf(PropTypes.number).isRequired,
+    newsListById: PropTypes.objectOf(NewsPropType).isRequired,
+    load: PropTypes.func.isRequired,
   };
 
   static NEWS_ITEM_HEIGHT = 600;
   static LOAD_EDGE_OFFSET = 200;
 
   _getNewsNodes() {
-    return this.props.news
-      .map(id => this.props.newsById[id])
+    return this.props.newsList
+      .map(id => this.props.newsListById[id])
       .map(news => <NewsItem {...news} />)
   }
 
@@ -39,7 +29,6 @@ export default class NewsList extends React.Component {
         useWindowAsScrollContainer={true}
         elementHeight={this.constructor.NEWS_ITEM_HEIGHT}
         infiniteLoadBeginEdgeOffset={this.constructor.LOAD_EDGE_OFFSET}
-        isInfiniteLoading={this.props.isFetching}
         onInfiniteLoad={this.props.load}
       >
         {newsNodes}

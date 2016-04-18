@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Card, CardTitle, CardText, CardMedia, FlatButton } from 'material-ui'
 
 import { NewsPropType } from '../../constants/types'
@@ -6,22 +6,21 @@ import { NewsPropType } from '../../constants/types'
 
 export default class NewsItem extends React.Component {
   static propTypes = {
-    news: NewsPropType.isRequired
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
   };
 
   render() {
+    const { title, image, description, url } = this.props
     return (
       <Card>
-        <CardTitle>
-          {this.props.news.get('title')}
-        </CardTitle>
-
+        <CardTitle title={title} subtitle={url} />
         <CardMedia>
-          <img src={this.props.news.get('image')} />
+          <img src={image} />
         </CardMedia>
-
         <CardText>
-          {this.props.news.get('description')}
+          {description}
         </CardText>
       </Card>
     )
