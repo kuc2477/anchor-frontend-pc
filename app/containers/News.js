@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import { NewsPropType } from '../constants/types'
 import NewsList from '../components/news/NewsList'
 import { fetchNews } from '../actions/news'
-import { NewsPropType } from '../constants/types'
 
 
 class News extends React.Component {

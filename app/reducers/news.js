@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
     // fetch
     case FETCH_NEWS_START: return reduceFetchStart(state, action)
     case FETCH_NEWS_SUCCESS: return reduceFetchSuccess(state, action)
-    case FETCH_SCHEDULES_ERROR: return reduceFetchError(state, action)
+    case FETCH_NEWS_ERROR: return reduceFetchError(state, action)
 
     // save
     case RATING_START: return reduceRatingStart(state, action)
