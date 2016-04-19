@@ -7,7 +7,7 @@ import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
 import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
-import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
+import { WINDOW_WIDTH } from '../../constants/numbers'
 
 
 export default class ScheduleList extends React.Component {
@@ -26,6 +26,13 @@ export default class ScheduleList extends React.Component {
     // schedule enabled value link
     enabledValueLink: ValueLinkPropType.isRequired
   };
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      opened: null
+    }
+  }
 
   static STYLE = {
     height: 800,
@@ -49,13 +56,6 @@ export default class ScheduleList extends React.Component {
   static SCHEDULE_LIST_HEIGHT = 500;
   static SCHEDULE_ITEM_HEIGHT = 120;
   static LOAD_EDGE_OFFSET = 10;
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      opened: null
-    }
-  }
 
   toggleOpen(toToggle) {
     this.setState({ opened: toToggle !== this.state.opened ? toToggle : null })
@@ -93,7 +93,7 @@ export default class ScheduleList extends React.Component {
   render() {
     const {
       STYLE, FAB_STYLE, LOAD_EDGE_OFFSET,
-      SCHEDULE_LIST_HEIGHT, SCHEDULE_ITEM_HEIGHT,
+      SCHEDULE_ITEM_HEIGHT,
     } = this.constructor
     const { load, add } = this.props
     const scheduleNodes = this._getScheduleNodes()

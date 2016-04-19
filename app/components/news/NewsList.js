@@ -3,6 +3,7 @@ import Infinite from 'react-infinite'
 
 import NewsItem from './NewsItem'
 import { NewsPropType } from '../../constants/types'
+import { WINDOW_WIDTH } from '../../constants/numbers'
 
 
 export default class NewsList extends React.Component {
@@ -12,8 +13,17 @@ export default class NewsList extends React.Component {
     load: PropTypes.func.isRequired,
   };
 
-  static NEWS_ITEM_HEIGHT = 600;
-  static LOAD_EDGE_OFFSET = 200;
+  static STYLE = {
+    height: 800,
+    width: WINDOW_WIDTH * 0.5 - 50,
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 30,
+  };
+
+  static NEWS_LIST_HEIGHT = 500
+  static NEWS_ITEM_HEIGHT = 200;
+  static LOAD_EDGE_OFFSET = 10;
 
   _getNewsNodes() {
     return this.props.newsList
@@ -22,17 +32,21 @@ export default class NewsList extends React.Component {
   }
 
   render() {
+    const { STYLE, NEWS_ITEM_HEIGHT, LOAD_EDGE_OFFSET } = this.constructor
+    const { load } = this.props
     const newsNodes = this._getNewsNodes()
 
     return (
-      <Infinite
-        useWindowAsScrollContainer={true}
-        elementHeight={this.constructor.NEWS_ITEM_HEIGHT}
-        infiniteLoadBeginEdgeOffset={this.constructor.LOAD_EDGE_OFFSET}
-        onInfiniteLoad={this.props.load}
-      >
-        {newsNodes}
-      </Infinite>
+      <div style={STYLE}>
+        <Infinite
+          useWindowAsScrollContainer
+          elementHeight={NEWS_ITEM_HEIGHT}
+          infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
+          onInfiniteLoad={load}
+        >
+          {newsNodes}
+        </Infinite>
+      </div>
     )
   }
 }
