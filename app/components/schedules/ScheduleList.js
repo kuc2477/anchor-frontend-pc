@@ -3,6 +3,7 @@ import Infinite from 'react-infinite'
 
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
+import RefreshIndicator from 'material-ui/lib/refresh-indicator'
 
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
@@ -49,6 +50,12 @@ export default class ScheduleList extends React.Component {
     color: SECONDARY,
   };
 
+  static LOADING_INDICATOR_PROPS = {
+    size: 40,
+    left: 10,
+    top: 0
+  };
+
   static LIST_ITEM_STYLE = {
     marginBottom: 15,
   };
@@ -59,6 +66,11 @@ export default class ScheduleList extends React.Component {
 
   toggleOpen(toToggle) {
     this.setState({ opened: toToggle !== this.state.opened ? toToggle : null })
+  }
+
+  _getLoadingIndicator() {
+    const { LOADING_INDICATOR_PROPS } = this.props
+    return <RefreshIndicator {...LOADING_INDICATOR_STYLE} status='loading' />
   }
 
   _getScheduleNodes() {
@@ -95,7 +107,7 @@ export default class ScheduleList extends React.Component {
       STYLE, FAB_STYLE, LOAD_EDGE_OFFSET,
       SCHEDULE_ITEM_HEIGHT,
     } = this.constructor
-    const { load, add } = this.props
+    const { load, add, isFetching } = this.props
     const scheduleNodes = this._getScheduleNodes()
     const onContentAddClick = () => {
       add()
@@ -108,6 +120,8 @@ export default class ScheduleList extends React.Component {
           elementHeight={SCHEDULE_ITEM_HEIGHT}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}
+          isInfiniteLoading={isFetching}
+          loadingSpinnerDelegate={this._getLoadingIndicator()}
         >
           {scheduleNodes}
         </Infinite>

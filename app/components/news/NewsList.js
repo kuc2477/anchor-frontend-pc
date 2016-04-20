@@ -35,7 +35,7 @@ export default class NewsList extends React.Component {
   static LOAD_EDGE_OFFSET = 10;
 
   _getLoadingIndicator() {
-    const { LOADING_INDICATOR_STYLE } = this.props
+    const { LOADING_INDICATOR_PROPS } = this.props
     return <RefreshIndicator {...LOADING_INDICATOR_STYLE} status='loading' />
   }
 

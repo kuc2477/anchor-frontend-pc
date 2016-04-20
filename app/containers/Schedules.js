@@ -238,7 +238,13 @@ class Schedules extends React.Component {
 
   render() {
     const { editing } = this.state
-    const { schedule, schedules, schedulesById, board } = this.props
+    const {
+      schedule,
+      schedules,
+      schedulesById,
+      isFetching,
+      board
+    } = this.props
 
     const valueLinks = {
       enabledValueLink: this._getValueLink('enabled'),
@@ -261,6 +267,7 @@ class Schedules extends React.Component {
             schedule={schedule}
             schedules={schedules}
             schedulesById={schedulesById}
+            isFetching={isFetching}
             load={::this.load}
             add={::this.add}
             save={::this.save}

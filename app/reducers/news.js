@@ -80,14 +80,23 @@ function reduceFetchError(state) {
 // ======
 
 function reduceRatingStart(state, action) {
-  debugger
   const { newsId, rating } = action
+
+  const newsList = state.get('newsList')
   const newsListById = state.get('newsListById')
+  const index = newsList.findIndex(newsId)
   const news = newsListById.get(newsId)
 
   const updated = news.set('currentUserRating', rating)
-  const updatedNewsListById = newsListById.set(newsId, updated)
+  const updatedNewsList = rating === false ?
+    newsList.delete(index) :
+    newsList
+  const updatedNewsListById = rating === false ?
+    newsListById.delete(newsId) :
+    newsListById.set(newsId, updated)
+
   return state.merge({
+    newsList: updatedNewsList,
     newsListById: updatedNewsListById,
     isRating: true
   })
