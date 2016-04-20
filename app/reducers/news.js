@@ -26,7 +26,7 @@ export const initialState = new Immutable.Map({
 })
 
 export default (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     // fetch
     case FETCH_NEWS_START: return reduceFetchStart(state, action)
     case FETCH_NEWS_SUCCESS: return reduceFetchSuccess(state, action)
@@ -102,11 +102,11 @@ function reduceRatingStart(state, action) {
   })
 }
 
-function reduceRatingSuccess(state, action) {
+function reduceRatingSuccess(state) {
   return state.merge({ isRating: false, didRatingFail: false })
 }
 
-function reduceRatingError(state, action) {
+function reduceRatingError(state) {
   return state.merge({ isRating: false, didRatingFail: true })
 }
 
@@ -123,10 +123,10 @@ function reduceCancelRatingStart(state, action) {
   })
 }
 
-function reduceCancelRatingSuccess(state, action) {
+function reduceCancelRatingSuccess(state) {
   return state.merge({ isRating: false, didRatingFail: false })
 }
 
-function reduceCancelRatingError(state, action) {
+function reduceCancelRatingError(state) {
   return state.merge({ isRating: false, didRatingFail: true })
 }

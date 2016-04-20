@@ -19,6 +19,7 @@ export default class ScheduleList extends React.Component {
     schedules: PropTypes.arrayOf(PropTypes.number).isRequired,
     schedulesById: PropTypes.objectOf(SchedulePropType).isRequired,
     load: PropTypes.func.isRequired,
+    isFetching: PropTypes.bool.isRequired,
     // schedule entry manipulation
     add: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
@@ -61,7 +62,7 @@ export default class ScheduleList extends React.Component {
   };
 
   static SCHEDULE_LIST_HEIGHT = 500;
-  static SCHEDULE_ITEM_HEIGHT = 120;
+  static SCHEDULE_ITEM_HEIGHT = 50;
   static LOAD_EDGE_OFFSET = 10;
 
   toggleOpen(toToggle) {
@@ -70,7 +71,7 @@ export default class ScheduleList extends React.Component {
 
   _getLoadingIndicator() {
     const { LOADING_INDICATOR_PROPS } = this.constructor
-    return <RefreshIndicator {...LOADING_INDICATOR_PROPS} status='loading' />
+    return <RefreshIndicator {...LOADING_INDICATOR_PROPS} status="loading" />
   }
 
   _getScheduleNodes() {
@@ -104,7 +105,10 @@ export default class ScheduleList extends React.Component {
 
   render() {
     const {
-      STYLE, FAB_STYLE, LOAD_EDGE_OFFSET,
+      STYLE,
+      FAB_STYLE,
+      LOAD_EDGE_OFFSET,
+      SCHEDULE_LIST_HEIGHT,
       SCHEDULE_ITEM_HEIGHT,
     } = this.constructor
     const { load, add, isFetching } = this.props
@@ -116,7 +120,7 @@ export default class ScheduleList extends React.Component {
     return (
       <div style={STYLE}>
         <Infinite
-          useWindowAsScrollContainer
+          containerHeight={SCHEDULE_LIST_HEIGHT}
           elementHeight={SCHEDULE_ITEM_HEIGHT}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}

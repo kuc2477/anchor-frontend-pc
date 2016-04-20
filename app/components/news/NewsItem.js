@@ -77,7 +77,7 @@ export default class NewsItem extends React.Component {
           secondary
           label="Like it"
           labelPosition="after"
-          onClick={_.partial(rate, id, true)}
+          onClick={_.partial(rate, id, true, null)}
         >
           <ThumbUp style={BUTTON_ICON_STYLE} />
         </FlatButton>
@@ -86,8 +86,8 @@ export default class NewsItem extends React.Component {
           primary
           label="Useless"
           labelPosition="after"
-          onClick={_.partial(rate, id, false)}
-         >
+          onClick={_.partial(rate, id, false, null)}
+        >
           <ThumbDown style={BUTTON_ICON_STYLE} />
         </FlatButton>
       </Card>

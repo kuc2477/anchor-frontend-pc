@@ -12,7 +12,7 @@ import urls from '../modules/urls'
 // ========================================
 
 export const REMOVE_NEWS = 'REMOVE_NEWS'
-export const removeNews = (newsId) =>  ({
+export const removeNews = (newsId) => ({
   type: REMOVE_NEWS, newsId
 })
 
@@ -65,7 +65,7 @@ export const rateNews = (newsId, rating, callback) => dispatch => {
   .use(authorize())
   .use(authorizeCSRF())
   .type('json')
-  .send(decamelizeKeys({'positive': rating}))
+  .send(decamelizeKeys({ positive: rating }))
   .end((error, response) => {
     if (error) {
       dispatch(ActionCreators.undo())
@@ -104,7 +104,7 @@ export const cancelRatingError = () => ({
 export const cancelRating = (newsId, callback) => dispatch => {
   dispatch(cancelRatingStart(newsId))
 
-  request.del(newsRatings(newsId))
+  request.del(urls.newsRatings(newsId))
   .use(authorize())
   .use(authorizeCSRF())
   .end((error, response) => {
