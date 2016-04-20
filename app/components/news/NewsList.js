@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Infinite from 'react-infinite'
+import RefreshIndicator from 'material-ui/lib/refresh-indicator'
 
 import NewsItem from './NewsItem'
 import { NewsPropType } from '../../constants/types'
@@ -10,6 +11,7 @@ export default class NewsList extends React.Component {
   static propTypes = {
     newsList: PropTypes.arrayOf(PropTypes.number).isRequired,
     newsListById: PropTypes.objectOf(NewsPropType).isRequired,
+    isFetching: PropTypes.bool.isRequired,
     load: PropTypes.func.isRequired,
     rate: PropTypes.func.isRequired,
   };
@@ -22,9 +24,20 @@ export default class NewsList extends React.Component {
     padding: 30,
   };
 
-  static NEWS_LIST_HEIGHT = 500
+  static LOADING_INDICATOR_PROPS = {
+    size: 40,
+    left: 10,
+    top: 0
+  };
+
+  static NEWS_LIST_HEIGHT = 500;
   static NEWS_ITEM_HEIGHT = 200;
   static LOAD_EDGE_OFFSET = 10;
+
+  _getLoadingIndicator() {
+    const { LOADING_INDICATOR_STYLE } = this.props
+    return <RefreshIndicator {...LOADING_INDICATOR_STYLE} status='loading' />
+  }
 
   _getNewsNodes() {
     return this.props.newsList
@@ -34,7 +47,7 @@ export default class NewsList extends React.Component {
 
   render() {
     const { STYLE, NEWS_ITEM_HEIGHT, LOAD_EDGE_OFFSET } = this.constructor
-    const { load } = this.props
+    const { load, isFetching } = this.props
     const newsNodes = this._getNewsNodes()
 
     return (
@@ -44,6 +57,8 @@ export default class NewsList extends React.Component {
           elementHeight={NEWS_ITEM_HEIGHT}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}
+          isInfiniteLoading={isFetching}
+          loadingSpinnerDelegate={this._getLoadingIndicator()}
         >
           {newsNodes}
         </Infinite>

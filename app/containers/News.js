@@ -33,12 +33,13 @@ class News extends React.Component {
   }
 
   render() {
-    const { newsList, newsListById } = this.props
+    const { newsList, newsListById, isFetching } = this.props
     return (
       <div>
         <NewsList
           newsList={newsList}
           newsListById={newsListById}
+          isFetching={isFetching}
           load={::this.load}
           rate={::this.rate}
         />
