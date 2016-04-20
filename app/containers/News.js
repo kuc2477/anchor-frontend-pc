@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import { NewsPropType } from '../constants/types'
 import NewsList from '../components/news/NewsList'
+import DashBoard from './.components/news/DashBoard'
 import { fetchNews, rateNews } from '../actions/news'
 
 
@@ -35,7 +36,8 @@ class News extends React.Component {
   render() {
     const { newsList, newsListById, isFetching } = this.props
     return (
-      <div>
+      <div className="row">
+        <div className="col-md-6">
         <NewsList
           newsList={newsList}
           newsListById={newsListById}
@@ -43,6 +45,10 @@ class News extends React.Component {
           load={::this.load}
           rate={::this.rate}
         />
+      </div>
+      <div classname="col-md-6">
+        <DashBoard />
+      </div>
       </div>
     )
   }
