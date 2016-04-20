@@ -11,6 +11,7 @@ export default class NewsList extends React.Component {
     newsList: PropTypes.arrayOf(PropTypes.number).isRequired,
     newsListById: PropTypes.objectOf(NewsPropType).isRequired,
     load: PropTypes.func.isRequired,
+    rate: PropTypes.func.isRequired,
   };
 
   static STYLE = {
@@ -28,7 +29,7 @@ export default class NewsList extends React.Component {
   _getNewsNodes() {
     return this.props.newsList
       .map(id => this.props.newsListById[id])
-      .map(news => <NewsItem {...news} />)
+      .map(news => <NewsItem {...news} rate={this.props.rate} />)
   }
 
   render() {

@@ -80,6 +80,7 @@ function reduceFetchError(state) {
 // ======
 
 function reduceRatingStart(state, action) {
+  debugger
   const { newsId, rating } = action
   const newsListById = state.get('newsListById')
   const news = newsListById.get(newsId)

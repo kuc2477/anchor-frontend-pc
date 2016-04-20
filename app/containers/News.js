@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { NewsPropType } from '../constants/types'
 import NewsList from '../components/news/NewsList'
-import { fetchNews } from '../actions/news'
+import { fetchNews, rateNews } from '../actions/news'
 
 
 class News extends React.Component {
@@ -25,6 +25,13 @@ class News extends React.Component {
     }
   }
 
+  rate(newsId, rating, callback) {
+    const { dispatch } = this.props
+    if (newsId) {
+      dispatch(rateNews(newsId, rating, callback))
+    }
+  }
+
   render() {
     const { newsList, newsListById } = this.props
     return (
@@ -33,6 +40,7 @@ class News extends React.Component {
           newsList={newsList}
           newsListById={newsListById}
           load={::this.load}
+          rate={::this.rate}
         />
       </div>
     )
