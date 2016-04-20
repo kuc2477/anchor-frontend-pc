@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { NewsPropType } from '../constants/types'
 import NewsList from '../components/news/NewsList'
-import DashBoard from './.components/news/DashBoard'
+import DashBoard from '../components/news/DashBoard'
 import { fetchNews, rateNews } from '../actions/news'
 
 
@@ -46,7 +46,7 @@ class News extends React.Component {
           rate={::this.rate}
         />
       </div>
-      <div classname="col-md-6">
+      <div className="col-md-6">
         <DashBoard />
       </div>
       </div>

@@ -26,8 +26,8 @@ export default class NewsList extends React.Component {
 
   static LOADING_INDICATOR_PROPS = {
     size: 40,
-    left: 10,
-    top: 0
+    left: 100,
+    top: 100
   };
 
   static NEWS_LIST_HEIGHT = 500;
@@ -36,7 +36,7 @@ export default class NewsList extends React.Component {
 
   _getLoadingIndicator() {
     const { LOADING_INDICATOR_PROPS } = this.props
-    return <RefreshIndicator {...LOADING_INDICATOR_STYLE} status='loading' />
+    return <RefreshIndicator {...LOADING_INDICATOR_PROPS} status='loading' />
   }
 
   _getNewsNodes() {

@@ -69,8 +69,8 @@ export default class ScheduleList extends React.Component {
   }
 
   _getLoadingIndicator() {
-    const { LOADING_INDICATOR_PROPS } = this.props
-    return <RefreshIndicator {...LOADING_INDICATOR_STYLE} status='loading' />
+    const { LOADING_INDICATOR_PROPS } = this.constructor
+    return <RefreshIndicator {...LOADING_INDICATOR_PROPS} status='loading' />
   }
 
   _getScheduleNodes() {
