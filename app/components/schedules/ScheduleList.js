@@ -53,8 +53,8 @@ export default class ScheduleList extends React.Component {
 
   static LOADING_INDICATOR_PROPS = {
     size: 40,
-    left: 10,
-    top: 0
+    left: WINDOW_WIDTH / 3 - 80,
+    top: 150
   };
 
   static LIST_ITEM_STYLE = {

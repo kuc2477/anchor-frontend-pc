@@ -26,12 +26,17 @@ export default class NewsList extends React.Component {
 
   static LOADING_INDICATOR_PROPS = {
     size: 40,
-    left: 100,
-    top: 100
+    left: WINDOW_WIDTH / 3 - 80,
+    top: 150
   };
 
-  static NEWS_LIST_HEIGHT = 500;
-  static NEWS_ITEM_HEIGHT = 200;
+  static NEWS_LIST_ITEM_STYLE = {
+    marginBottom: 15,
+    padding: 10,
+  };
+
+  static NEWS_LIST_HEIGHT = 800;
+  static NEWS_ITEM_HEIGHT = 500;
   static LOAD_EDGE_OFFSET = 10;
 
   _getLoadingIndicator() {
@@ -40,9 +45,16 @@ export default class NewsList extends React.Component {
   }
 
   _getNewsNodes() {
+    const { NEWS_LIST_ITEM_STYLE } = this.constructor
     return this.props.newsList
       .map(id => this.props.newsListById[id])
-      .map(news => <NewsItem {...news} rate={this.props.rate} />)
+      .map(news => (
+        <NewsItem
+          style={NEWS_LIST_ITEM_STYLE}
+          rate={this.props.rate}
+          {...news}
+        />
+      ))
   }
 
   render() {

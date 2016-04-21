@@ -26,10 +26,10 @@ class News extends React.Component {
     }
   }
 
-  rate(newsId, rating, callback) {
+  rate(newsId, rating ) {
     const { dispatch } = this.props
     if (newsId) {
-      dispatch(rateNews(newsId, rating, callback))
+      dispatch(rateNews(newsId, rating))
     }
   }
 

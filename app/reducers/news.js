@@ -84,7 +84,7 @@ function reduceRatingStart(state, action) {
 
   const newsList = state.get('newsList')
   const newsListById = state.get('newsListById')
-  const index = newsList.findIndex(newsId)
+  const index = newsList.findIndex(n => n == newsId)
   const news = newsListById.get(newsId)
 
   const updated = news.set('currentUserRating', rating)

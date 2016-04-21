@@ -7,16 +7,6 @@ import { authorize, authorizeCSRF } from '../middlewares/auth'
 import urls from '../modules/urls'
 
 
-// ========================================
-// Client level news / rating manipulation
-// ========================================
-
-export const REMOVE_NEWS = 'REMOVE_NEWS'
-export const removeNews = (newsId) => ({
-  type: REMOVE_NEWS, newsId
-})
-
-
 // =====
 // Fetch
 // =====
@@ -58,7 +48,7 @@ export const ratingError = () => ({
   type: RATING_ERROR
 })
 
-export const rateNews = (newsId, rating, callback) => dispatch => {
+export const rateNews = (newsId, rating) => dispatch => {
   dispatch(ratingStart(newsId, rating))
 
   request.post(urls.newsRatings(newsId))
@@ -75,9 +65,6 @@ export const rateNews = (newsId, rating, callback) => dispatch => {
 
     const updated = camelizeKeys(response.body)
     dispatch(ratingSuccess(updated))
-    if (callback) {
-      callback(updated)
-    }
   })
 }
 
@@ -101,7 +88,7 @@ export const cancelRatingError = () => ({
   type: CANCEL_RATING_ERROR
 })
 
-export const cancelRating = (newsId, callback) => dispatch => {
+export const cancelRating = (newsId) => dispatch => {
   dispatch(cancelRatingStart(newsId))
 
   request.del(urls.newsRatings(newsId))
@@ -116,8 +103,5 @@ export const cancelRating = (newsId, callback) => dispatch => {
 
     const updated = camelizeKeys(response.body)
     dispatch(cancelRatingSuccess(updated))
-    if (callback) {
-      callback(updated)
-    }
   })
 }

@@ -2,6 +2,9 @@
 'use strict'
 
 const electron = require('electron')
+const menubar = require('menubar')
+
+const mb = menubar()
 const app = electron.app
 
 const BrowserWindow = electron.BrowserWindow
@@ -16,6 +19,11 @@ crashReporter.start('Anchor')
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')()
 }
+
+// menubar
+mb.on('after-create-window', () => {
+  // TODO: NOT IMPLEMENTED YET
+})
 
 // shutdown application when all windows are closed
 app.on('window-all-closed', () => {
