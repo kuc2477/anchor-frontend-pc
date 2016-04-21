@@ -37,7 +37,7 @@ export default class NewsList extends React.Component {
 
   static NEWS_LIST_HEIGHT = 800;
   static NEWS_ITEM_HEIGHT = 500;
-  static LOAD_EDGE_OFFSET = 10;
+  static LOAD_EDGE_OFFSET = 20;
 
   _getLoadingIndicator() {
     const { LOADING_INDICATOR_PROPS } = this.constructor
@@ -58,18 +58,23 @@ export default class NewsList extends React.Component {
   }
 
   render() {
-    const { STYLE, NEWS_ITEM_HEIGHT, LOAD_EDGE_OFFSET } = this.constructor
+    const {
+      STYLE,
+      NEWS_LIST_HEIGHT,
+      NEWS_ITEM_HEIGHT,
+      LOAD_EDGE_OFFSET
+    } = this.constructor
     const { load, isFetching } = this.props
     const newsNodes = this._getNewsNodes()
 
     return (
       <div style={STYLE}>
         <Infinite
-          useWindowAsScrollContainer
+          containerHeight={NEWS_LIST_HEIGHT}
           elementHeight={NEWS_ITEM_HEIGHT}
-          infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}
           isInfiniteLoading={isFetching}
+          infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           loadingSpinnerDelegate={this._getLoadingIndicator()}
         >
           {newsNodes}

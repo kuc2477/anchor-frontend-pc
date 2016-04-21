@@ -26,7 +26,7 @@ describe('news reducer', () => {
   describe('after news fetch start', () => {
     it('should be fetching', () => {
       const previous = initialState
-      const after = reducer(initialState, { type : FETCH_NEWS_START })
+      const after = reducer(initialState, { type: FETCH_NEWS_START })
       expect(previous.get('isFetching')).toBeFalsy()
       expect(after.get('isFetching')).toBeTruthy()
     })
@@ -106,13 +106,11 @@ describe('news reducer', () => {
 
   describe('news rating', () => {
     let fetched
-    let normalized
     let previous
     let rated
 
     beforeEach(() => {
       fetched = _.times(5, createFakeNews)
-      normalized = normalize(fetched, Schemas.NEWS_LIST)
       previous = reducer(initialState, {
         type: FETCH_NEWS_SUCCESS,
         link: 'testlink',
@@ -157,7 +155,7 @@ describe('news reducer', () => {
         expect(
           previous.get('newsList').findIndex(n => n === rated.id)
         ).toEqual(0)
-        expect(previous.get('newsListById').has(rated.id)).toBeFalsy
+        expect(previous.get('newsListById').has(rated.id)).toBeFalsy()
 
         expect(
           after.get('newsList').findIndex(n => n === rated.id)

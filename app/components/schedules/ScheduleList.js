@@ -8,7 +8,7 @@ import RefreshIndicator from 'material-ui/lib/refresh-indicator'
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
 import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
-import { WINDOW_WIDTH } from '../../constants/numbers'
+import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
 
 
 export default class ScheduleList extends React.Component {
@@ -37,7 +37,7 @@ export default class ScheduleList extends React.Component {
   }
 
   static STYLE = {
-    height: 800,
+    height: WINDOW_HEIGHT - 200,
     width: WINDOW_WIDTH * 0.5 - 90,
     marginLeft: 20,
     marginRight: 20,
@@ -61,9 +61,9 @@ export default class ScheduleList extends React.Component {
     marginBottom: 15,
   };
 
-  static SCHEDULE_LIST_HEIGHT = 500;
-  static SCHEDULE_ITEM_HEIGHT = 50;
-  static LOAD_EDGE_OFFSET = 10;
+  static SCHEDULE_LIST_HEIGHT = WINDOW_HEIGHT - 200;
+  static SCHEDULE_ITEM_HEIGHT = 100;
+  static LOAD_EDGE_OFFSET = 200;
 
   toggleOpen(toToggle) {
     this.setState({ opened: toToggle !== this.state.opened ? toToggle : null })

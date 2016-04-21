@@ -40,35 +40,6 @@ class Schedules extends React.Component {
     dispatch: PropTypes.func
   };
 
-  static INITIAL_STATE = {
-    editing: null,
-    errors: {
-      nameError: '',
-      urlError: '',
-      cycleError: '',
-      brothersError: [],
-    }
-  };
-
-  static FORM_CONSTRAINT = {
-    name: {
-      length: {
-        minimum: 2,
-        message: 'is too short'
-      }
-    },
-    url: {
-      url: true
-    },
-    cycle: {
-      presence: true
-    },
-    brothers: {
-      array: true,
-      url: true
-    }
-  };
-
   constructor(props) {
     super(props)
     this.state = this.constructor.INITIAL_STATE
@@ -98,10 +69,40 @@ class Schedules extends React.Component {
     dispatch(setBoard(board))
   }
 
+  static INITIAL_STATE = {
+    editing: null,
+    errors: {
+      nameError: '',
+      urlError: '',
+      cycleError: '',
+      brothersError: [],
+    }
+  };
+
+  static FORM_CONSTRAINT = {
+    name: {
+      length: {
+        minimum: 2,
+        message: 'is too short'
+      }
+    },
+    url: {
+      url: true
+    },
+    cycle: {
+      presence: true
+    },
+    brothers: {
+      array: true,
+      url: true
+    }
+  };
+
   validateBeforeSave() {
     const { editing, errors } = this.state
     const { name, url, cycle } = editing
-    let { nameError, urlError, cycleError, brothersError } = errors
+    const { brothersError } = errors
+    let { nameError, urlError, cycleError } = errors
     nameError = !name ? 'Name should not be empty' : nameError
     urlError = !url ? 'Url should not be empty' : urlError
     cycleError = !cycle ? 'Cycle should not be empty' : cycleError
@@ -121,10 +122,10 @@ class Schedules extends React.Component {
     const updated = Object.assign({}, this.state.editing, values)
 
     const { FORM_CONSTRAINT } = this.constructor
-    const singleConstraint = _.pickBy(FORM_CONSTRAINT, v => !v['array'])
+    const singleConstraint = _.pickBy(FORM_CONSTRAINT, v => !v.array)
     const arrayConstraint =
       _(FORM_CONSTRAINT)
-      .pickBy(v => v['array'])
+      .pickBy(v => v.array)
       .mapValues(v => _.omit(v, 'array'))
       .value()
 
@@ -150,7 +151,7 @@ class Schedules extends React.Component {
     const { editing, errors } = this.state
     const isArrayField =
       FORM_CONSTRAINT[name] &&
-      FORM_CONSTRAINT[name]['array']
+      FORM_CONSTRAINT[name].array
 
     // return disconnected value link if we have no editing schedule
     if (!editing) {

@@ -1,6 +1,4 @@
-import _ from 'lodash'
 import React, { PropTypes } from 'react'
-import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 
 import BrotherSiteField from './BrotherSiteField'
 import { ValueLinkPropType } from '../../../constants/types'
@@ -57,6 +55,7 @@ export default class BrotherSiteFieldSet extends React.Component {
     return visibleBrothers.map((url, index) => (
       <BrotherSiteField
         url={url}
+        key={index}
         index={index}
         error={error[index]}
         onChange={onChangeFactory(index)}

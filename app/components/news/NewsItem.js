@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import { Card } from 'material-ui/lib/card'
 
@@ -27,7 +26,6 @@ export default class NewsItem extends React.Component {
   }
 
   render() {
-    const { STYLE } = this.constructor
     const { style, id, rate } = this.props
 
     return (

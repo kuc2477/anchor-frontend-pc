@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { PropTypes } from 'react'
 import ThumbUp from 'material-ui/lib/svg-icons/action/thumb-up'
 import ThumbDown from 'material-ui/lib/svg-icons/action/thumb-down'
@@ -20,15 +19,19 @@ export default class NewsItemControl extends React.Component {
     marginRight: 10,
   };
 
+  rateFactory(rating) {
+    const { rate, id } = this.props
+    return () => { rate(id, rating) }
+  }
+
   render() {
     const { BUTTON_ICON_STYLE } = this.constructor
-    const { id, rate, currentUserRating } = this.props
     return (
       <div className="row end-md">
         <IconButton
           tooltip="Like"
           tooltipPosition="top-left"
-          onClick={_.partial(rate, id, true)}
+          onClick={this.rateFactory(true)}
         >
           <ThumbUp color={INACTIVE} style={BUTTON_ICON_STYLE} />
         </IconButton>
@@ -36,7 +39,7 @@ export default class NewsItemControl extends React.Component {
         <IconButton
           tooltip="useless"
           tooltipPosition="top-left"
-          onClick={_.partial(rate, id, false)}
+          onClick={this.rateFactory(false)}
         >
           <ThumbDown color={INACTIVE} style={BUTTON_ICON_STYLE} />
         </IconButton>

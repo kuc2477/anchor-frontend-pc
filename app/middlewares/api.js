@@ -32,13 +32,9 @@ function callAPI(endpoint, schema) {
     .use(authorizeCSRF())
     .then(response => ({ response, payload: response.body }))
     .then(({ response, payload }) => {
-      if (!response.ok) {
-        return Promise.reject()
-      }
       const camelized = camelizeKeys(payload)
       const normalized = normalize(camelized, schema)
       const link = getNextUrl(response)
-
       return Object.assign({}, normalized, { link })
     })
 }
