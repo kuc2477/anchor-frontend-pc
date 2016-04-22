@@ -1,8 +1,8 @@
-import request from 'superagent-bluebird-promise'
-
-import urls from '../modules/urls'
-import { authorizeCSRF } from '../middlewares/auth'
+import 'isomorphic-fetch'
+import { decamelizeKeys } from 'humps'
 import { LOGIN } from '../constants/routes'
+import urls from '../modules/urls'
+import { authorizeCSRF } from '../modules/http'
 import { toast, clearToast } from '../modules/utils'
 
 
@@ -32,15 +32,14 @@ export function signup(
   router, next = LOGIN.path) {
   return (dispatch) => {
     dispatch(signupStart())
-    request
-      .post(urls.signup()).type('form')
-      .use(authorizeCSRF())
-      .send({ email, firstname, lastname, password,
-            password_validation: passwordValidation })
-      .end((error, response) => {
-        const { body } = response
-        const { email, reason } = body
-        if (error) {
+    fetch(urls.signup(), {
+      headers: headers([authorize, authorizeCSRF, jsonContent]),
+      body: JSON.stringify(decamelizeKeys({
+        email, firstname, lastname, password, passwordValidation
+      }))
+    }).then(response => {
+        const { email, reason } = response.json()
+        if (!response.ok) {
           dispatch(signupError(reason))
           return
         }

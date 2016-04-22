@@ -1,7 +1,7 @@
-import request from 'superagent-bluebird-promise'
+import 'isomorphic-fetch'
 import { normalize, Schema, arrayOf } from 'normalizr'
 import { camelizeKeys } from 'humps'
-import { authorize, authorizeCSRF } from './auth'
+import { headers, authorize, authorizeCSRF } from '../modules/http'
 
 
 const userSchema = new Schema('users')
@@ -20,23 +20,23 @@ export const Schemas = {
 // Returns next url from a paginated response if found and returns null
 // otherwise.
 function getNextUrl(response) {
-  return response.headers.link
+  return response.headers.get('link')
 }
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested.
 function callAPI(endpoint, schema) {
-  return request
-    .get(endpoint)
-    .use(authorize())
-    .use(authorizeCSRF())
-    .then(response => ({ response, payload: response.body }))
-    .then(({ response, payload }) => {
-      const camelized = camelizeKeys(payload)
-      const normalized = normalize(camelized, schema)
-      const link = getNextUrl(response)
-      return Object.assign({}, normalized, { link })
-    })
+  return fetch(endpoint, { headers: headers([authorize, authorizeCSRF]) })
+  .then(response => response.json().then(json => ({ response, json })))
+  .then(({ response, json }) => {
+    if (!response.ok) {
+      return Promise.reject(json)
+    }
+    const camelized = camelizeKeys(json)
+    const normalized = normalize(camelized, schema)
+    const link = getNextUrl(response)
+    return Object.assign({}, normalized, { link })
+  })
 }
 
 // Action key that carries API call information interpreted by this
@@ -76,7 +76,7 @@ export default store => next => action => {
   next(actionWith({ type: requestType }))
 
   return callAPI(endpoint, schema).then(
-    response => next(actionWith({ ...response, type: successType })),
+    response => next(actionWith({ type: successType, ...response })),
     error => next(actionWith({
       type: failureType,
       error: error ? error.message : 'something bad happened'
