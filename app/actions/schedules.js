@@ -1,15 +1,10 @@
-import 'isomorphic-fetch'
+import request from 'superagent-bluebird-promise'
 import { ActionCreators } from 'redux-undo'
 import { decamelizeKeys, camelizeKeys } from 'humps'
 
 import { CALL_API, Schemas } from '../middlewares/api'
+import { authorize, authorizeCSRF } from '../middlewares/auth'
 import { createSchedule, unsaved } from '../constants/types'
-import {
-  headers,
-  authorize,
-  authorizeCSRF,
-  jsonContent
-} from '../modules/http'
 import urls from '../modules/urls'
 
 
@@ -97,20 +92,21 @@ export const saveSchedule = (schedule, callback) => dispatch => {
   const targetRequest = unsaved(schedule) ?
     request.post : request.put
 
-  fetch(targetEndPoint, {
-    headers: headers([authorize, authorizeCSRF, jsonContent]),
-    type: unsaved(schedule) ? 'POST': 'PUT',
-    body: JSON.stringify(decamelizeKeys(schedule))
-  }).then(response => {
-    if (!response.ok) {
+  targetRequest(targetEndPoint)
+  .use(authorize())
+  .use(authorizeCSRF())
+  .type('json')
+  .send(decamelizeKeys(schedule))
+  .end((error, response) => {
+    if (error) {
       // undo update on error and dispatch error
       dispatch(ActionCreators.undo())
       dispatch(saveScheduleError(error))
-      return Promise.reject(response.statusText)
+      return
     }
 
     // dispatch success with response's saved values and fire callback
-    const saved = camelizeKeys(response.json())
+    const saved = camelizeKeys(response.body)
     dispatch(saveScheduleSuccess(schedule, saved))
     if (callback) {
       callback(saved)
@@ -148,14 +144,14 @@ export const deleteSchedule = (scheduleId, callback) => dispatch => {
     return
   }
 
-  fetch(urls.schedules(scheduleId), {
-    method: 'DELETE',
-    headers: headers([authorize, authorizeCSRF])
-  }).then(response => {
-    if (!response.ok) {
+  request.del(urls.schedules(scheduleId))
+  .use(authorize())
+  .use(authorizeCSRF())
+  .end((error) => {
+    if (error) {
       // undo schedule removal and dispatch error on error
       dispatch(ActionCreators.undo())
-      dispatch(deleteScheduleError(response.statusText))
+      dispatch(deleteScheduleError(error))
       return
     }
     dispatch(deleteScheduleSuccess())

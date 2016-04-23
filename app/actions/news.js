@@ -1,9 +1,9 @@
-import 'isomorphic-fetch'
+import request from 'superagent-bluebird-promise'
 import { ActionCreators } from 'redux-undo'
 import { decamelizeKeys, camelizeKeys } from 'humps'
 
 import { CALL_API, Schemas } from '../middlewares/api'
-import { headers, authorize, authorizeCSRF, jsonContent } from '../modules/http'
+import { authorize, authorizeCSRF } from '../middlewares/auth'
 import urls from '../modules/urls'
 
 
@@ -51,18 +51,19 @@ export const ratingError = () => ({
 export const rateNews = (newsId, rating) => dispatch => {
   dispatch(ratingStart(newsId, rating))
 
-  fetch(urls.newsRatings(newsId), {
-    method: 'POST',
-    headers: headers([authorize, authorizeCSRF, jsonContent]),
-    body: JSON.stringify(decamelizeKeys({ positive: rating }))
-  }).then(response => {
-    if (!response.ok) {
+  request.post(urls.newsRatings(newsId))
+  .use(authorize())
+  .use(authorizeCSRF())
+  .type('json')
+  .send(decamelizeKeys({ positive: rating }))
+  .end((error, response) => {
+    if (error) {
       dispatch(ActionCreators.undo())
-      dispatch(ratingError(response.statusText))
+      dispatch(ratingError(error))
       return
     }
 
-    const updated = camelizeKeys(response.json())
+    const updated = camelizeKeys(response.body)
     dispatch(ratingSuccess(updated))
   })
 }
@@ -90,18 +91,17 @@ export const cancelRatingError = () => ({
 export const cancelRating = (newsId) => dispatch => {
   dispatch(cancelRatingStart(newsId))
 
-  fetch(urls.newsRatings(newsId), {
-    method: 'DELETE',
-    headers: headers([authorize, authorizeCSRF, jsonContent])
-  })
-  .then(response => {
-    if (!response.ok) {
+  request.del(urls.newsRatings(newsId))
+  .use(authorize())
+  .use(authorizeCSRF())
+  .end((error, response) => {
+    if (error) {
       dispatch(ActionCreators.undo())
       dispatch(cancelRatingError(error))
       return
     }
 
-    const updated = camelizeKeys(response.json())
+    const updated = camelizeKeys(response.body)
     dispatch(cancelRatingSuccess(updated))
   })
 }
