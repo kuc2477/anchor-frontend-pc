@@ -1,9 +1,9 @@
-import request from 'superagent-bluebird-promise'
+import request from 'superagent'
 
 import urls from '../modules/urls'
 import { authorizeCSRF } from '../middlewares/auth'
 import { LOGIN } from '../constants/routes'
-import { toast, clearToast } from '../modules/utils'
+import { toast } from '../modules/utils'
 
 
 export const SIGNUP_START = 'SIGNUP_START'
@@ -23,7 +23,7 @@ export function signupError(reason = 'Signup failed due to unknown error') {
 
 export const CLEAR_SIGNUP_STATE = 'CLEAR_SIGNUP_STATE'
 export function clearSignupState() {
-  return { type: CLEAR_SIGNUP_STATE  }
+  return { type: CLEAR_SIGNUP_STATE }
 }
 
 export function signup(

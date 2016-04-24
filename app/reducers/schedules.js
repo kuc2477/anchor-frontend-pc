@@ -92,7 +92,7 @@ function reduceAddSchedule(state, action) {
 function reduceRemoveSchedule(state, action) {
   const { scheduleId: toDelete } = action
 
-  const [ index, _ ] = state.get('schedules').findEntry(id => id === toDelete)
+  const [index, _] = state.get('schedules').findEntry(id => id === toDelete)
   const schedules = state.get('schedules').filter(id => id !== toDelete)
   const schedulesById = state.get('schedulesById').delete(toDelete)
   const schedule =
@@ -128,9 +128,20 @@ function reduceFetchStart(state) {
 
 function reduceFetchSuccess(state, action) {
   const { result, entities, link } = action
-  const schedules = state.get('schedules').push(...result).toOrderedSet().toList()
-  const schedulesById = state.get('schedulesById').merge(entities.schedule)
-  const schedule = !state.get('schedules').count() && result.length ?
+
+  const schedules = state
+    .get('schedules')
+    .push(...result)
+    .toOrderedSet()
+    .toList()
+
+  const schedulesById = state
+    .get('schedulesById')
+    .merge(entities.schedule)
+    .mapKeys(k => parseInt(k, 10))
+
+  const schedule =
+    !state.get('schedules').count() && result.length ?
     result[0] : state.get('schedule')
 
   return state.merge({
@@ -150,7 +161,7 @@ function reduceFetchError(state) {
 // Save
 // ====
 
-function reduceSaveStart(state, action) {
+function reduceSaveStart(state) {
   return state.merge({ isSaving: true })
 }
 
@@ -186,7 +197,7 @@ function reduceDeleteStart(state) {
   return state.merge({ isDeleting: true })
 }
 
-function reduceDeleteSuccess(state, action) {
+function reduceDeleteSuccess(state) {
   return state.merge({ isDeleting: false, didDeleteFail: false })
 }
 

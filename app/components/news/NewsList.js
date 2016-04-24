@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react'
-import Infinite from 'react-infinite'
-import RefreshIndicator from 'material-ui/lib/refresh-indicator'
 
+import InfiniteList from '../base/InfiniteList'
 import NewsItem from './NewsItem'
 import { NewsPropType } from '../../constants/types'
-import { WINDOW_WIDTH } from '../../constants/numbers'
+import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
 
 
 export default class NewsList extends React.Component {
@@ -14,10 +13,11 @@ export default class NewsList extends React.Component {
     isFetching: PropTypes.bool.isRequired,
     load: PropTypes.func.isRequired,
     rate: PropTypes.func.isRequired,
+    cancel: PropTypes.func.isRequired
   };
 
   static STYLE = {
-    height: 800,
+    height: WINDOW_HEIGHT - 150,
     width: WINDOW_WIDTH * 0.5 - 50,
     marginLeft: 20,
     marginRight: 20,
@@ -31,27 +31,28 @@ export default class NewsList extends React.Component {
   };
 
   static NEWS_LIST_ITEM_STYLE = {
-    marginBottom: 15,
-    padding: 10,
+    marginTop: 5,
+    marginBottom: 20,
+    marginLeft: 5,
+    marginRight: 5,
+    paddingLeft: 25,
+    paddingRight: 25,
   };
 
-  static NEWS_LIST_HEIGHT = 800;
+  static NEWS_LIST_HEIGHT = WINDOW_HEIGHT - 100;
   static NEWS_ITEM_HEIGHT = 500;
   static LOAD_EDGE_OFFSET = 20;
 
-  _getLoadingIndicator() {
-    const { LOADING_INDICATOR_PROPS } = this.constructor
-    return <RefreshIndicator {...LOADING_INDICATOR_PROPS} status="loading" />
-  }
-
   _getNewsNodes() {
-    const { NEWS_LIST_ITEM_STYLE } = this.constructor
+    const { NEWS_LIST_ITEM_STYLE, NEWS_LIST_ITEM_HEIGHT } = this.constructor
     return this.props.newsList
       .map(id => this.props.newsListById[id])
       .map(news => (
         <NewsItem
           style={NEWS_LIST_ITEM_STYLE}
+          height={NEWS_LIST_ITEM_HEIGHT}
           rate={this.props.rate}
+          cancel={this.props.cancel}
           {...news}
         />
       ))
@@ -62,23 +63,24 @@ export default class NewsList extends React.Component {
       STYLE,
       NEWS_LIST_HEIGHT,
       NEWS_ITEM_HEIGHT,
-      LOAD_EDGE_OFFSET
+      LOAD_EDGE_OFFSET,
+      LOADING_INDICATOR_PROPS,
     } = this.constructor
     const { load, isFetching } = this.props
     const newsNodes = this._getNewsNodes()
 
     return (
       <div style={STYLE}>
-        <Infinite
+        <InfiniteList
           containerHeight={NEWS_LIST_HEIGHT}
           elementHeight={NEWS_ITEM_HEIGHT}
           onInfiniteLoad={load}
           isInfiniteLoading={isFetching}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
-          loadingSpinnerDelegate={this._getLoadingIndicator()}
+          loadingIndicatorProps={LOADING_INDICATOR_PROPS}
         >
           {newsNodes}
-        </Infinite>
+        </InfiniteList>
       </div>
     )
   }

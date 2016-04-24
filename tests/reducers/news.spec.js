@@ -136,7 +136,7 @@ describe('news reducer', () => {
           after
           .get('newsListById').get(rated.id)
           .get('currentUserRating')
-        ).toBeTruthy()
+        ).toEqual(true)
       })
     })
 
@@ -152,14 +152,10 @@ describe('news reducer', () => {
       })
 
       it('news should be removed from store', () => {
-        expect(
-          previous.get('newsList').findIndex(n => n === rated.id)
-        ).toEqual(0)
-        expect(previous.get('newsListById').has(rated.id)).toBeFalsy()
+        expect(previous.get('newsList').findIndex(n => n === rated.id)).toEqual(0)
+        expect(previous.get('newsListById').has(rated.id)).toEqual(false)
 
-        expect(
-          after.get('newsList').findIndex(n => n === rated.id)
-        ).toEqual(-1)
+        expect(after.get('newsList').findIndex(n => n === rated.id)).toEqual(-1)
         expect(after.get('newsListById').has(rated.id)).toBeFalsy()
       })
     })

@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react'
-import Infinite from 'react-infinite'
 
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
-import RefreshIndicator from 'material-ui/lib/refresh-indicator'
 
+import InfiniteList from '../base/InfiniteList'
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
 import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
@@ -37,7 +36,7 @@ export default class ScheduleList extends React.Component {
   }
 
   static STYLE = {
-    height: WINDOW_HEIGHT - 200,
+    height: WINDOW_HEIGHT - 150,
     width: WINDOW_WIDTH * 0.5 - 90,
     marginLeft: 20,
     marginRight: 20,
@@ -46,8 +45,8 @@ export default class ScheduleList extends React.Component {
 
   static FAB_STYLE = {
     position: 'fixed',
-    right: WINDOW_WIDTH / 2 - 40,
-    bottom: 30,
+    right: WINDOW_WIDTH / 2 - 20,
+    bottom: 40,
     color: SECONDARY,
   };
 
@@ -61,17 +60,34 @@ export default class ScheduleList extends React.Component {
     marginBottom: 15,
   };
 
-  static SCHEDULE_LIST_HEIGHT = WINDOW_HEIGHT - 200;
+  static SCHEDULE_LIST_HEIGHT = WINDOW_HEIGHT - 150;
   static SCHEDULE_ITEM_HEIGHT = 100;
-  static LOAD_EDGE_OFFSET = 200;
+  static LOAD_EDGE_OFFSET = 50;
 
   toggleOpen(toToggle) {
     this.setState({ opened: toToggle !== this.state.opened ? toToggle : null })
   }
 
-  _getLoadingIndicator() {
-    const { LOADING_INDICATOR_PROPS } = this.constructor
-    return <RefreshIndicator {...LOADING_INDICATOR_PROPS} status="loading" />
+  _getFab() {
+    const { add, isFetching } = this.props
+    const { FAB_STYLE } = this.constructor
+    const onContentAddClick = () => {
+      add()
+    }
+
+    if (isFetching) {
+      return null
+    }
+
+    return (
+      <FloatingActionButton
+        mini backgroundColor={FAB_STYLE.color}
+        style={FAB_STYLE}
+        onClick={onContentAddClick}
+      >
+        <ContentAdd />
+      </FloatingActionButton>
+    )
   }
 
   _getScheduleNodes() {
@@ -106,37 +122,28 @@ export default class ScheduleList extends React.Component {
   render() {
     const {
       STYLE,
-      FAB_STYLE,
       LOAD_EDGE_OFFSET,
       SCHEDULE_LIST_HEIGHT,
       SCHEDULE_ITEM_HEIGHT,
+      LOADING_INDICATOR_PROPS,
     } = this.constructor
-    const { load, add, isFetching } = this.props
+    const { load, isFetching } = this.props
     const scheduleNodes = this._getScheduleNodes()
-    const onContentAddClick = () => {
-      add()
-    }
+    const fab = this._getFab()
 
     return (
       <div style={STYLE}>
-        <Infinite
+        <InfiniteList
+          loadingIndicatorProps={LOADING_INDICATOR_PROPS}
           containerHeight={SCHEDULE_LIST_HEIGHT}
           elementHeight={SCHEDULE_ITEM_HEIGHT}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}
           onInfiniteLoad={load}
           isInfiniteLoading={isFetching}
-          loadingSpinnerDelegate={this._getLoadingIndicator()}
         >
           {scheduleNodes}
-        </Infinite>
-
-        <FloatingActionButton
-          mini backgroundColor={FAB_STYLE.color}
-          style={FAB_STYLE}
-          onClick={onContentAddClick}
-        >
-          <ContentAdd />
-        </FloatingActionButton>
+        </InfiniteList>
+        {fab}
       </div>
     )
   }

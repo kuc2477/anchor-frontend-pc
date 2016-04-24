@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { NewsPropType } from '../constants/types'
 import NewsList from '../components/news/NewsList'
 import DashBoard from '../components/news/DashBoard'
-import { fetchNews, rateNews } from '../actions/news'
+import { fetchNews, rateNews, cancelRating } from '../actions/news'
 
 
 class News extends React.Component {
@@ -20,9 +20,16 @@ class News extends React.Component {
   };
 
   load() {
-    const { dispatch, urlToFetch } = this.props
-    if (urlToFetch) {
+    const { dispatch, urlToFetch, isFetching } = this.props
+    if (urlToFetch && !isFetching) {
       dispatch(fetchNews(urlToFetch))
+    }
+  }
+
+  cancel(newsId) {
+    const { dispatch } = this.props
+    if (newsId) {
+      dispatch(cancelRating(newsId))
     }
   }
 
@@ -44,6 +51,7 @@ class News extends React.Component {
           isFetching={isFetching}
           load={::this.load}
           rate={::this.rate}
+          cancel={::this.cancel}
         />
       </div>
       <div className="col-md-6">

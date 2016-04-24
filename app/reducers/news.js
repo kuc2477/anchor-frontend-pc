@@ -59,8 +59,18 @@ function reduceFetchStart(state) {
 
 function reduceFetchSuccess(state, action) {
   const { result, entities, link } = action
-  const newsList = state.get('newsList').push(...result).toOrderedSet().toList()
-  const newsListById = state.get('newsListById').merge(entities.news)
+
+  const newsList = state
+    .get('newsList')
+    .push(...result)
+    .toOrderedSet()
+    .toList()
+
+  const newsListById = state
+    .get('newsListById')
+    .merge(entities.news)
+    .mapKeys(k => parseInt(k, 10))
+
   return state.merge({
     newsList,
     newsListById,
@@ -85,15 +95,15 @@ function reduceRatingStart(state, action) {
   const newsList = state.get('newsList')
   const newsListById = state.get('newsListById')
   const index = newsList.findIndex(n => n === newsId)
-  const news = newsListById.get(JSON.stringify(newsId))
+  const news = newsListById.get(newsId)
 
   const updated = news.set('currentUserRating', rating)
   const updatedNewsList = rating === false ?
     newsList.delete(index) :
     newsList
   const updatedNewsListById = rating === false ?
-    newsListById.delete(JSON.stringify(newsId)) :
-    newsListById.set(JSON.stringify(newsId), updated)
+    newsListById.delete(newsId) :
+    newsListById.set(newsId, updated)
 
   return state.merge({
     newsList: updatedNewsList,
@@ -113,10 +123,10 @@ function reduceRatingError(state) {
 function reduceCancelRatingStart(state, action) {
   const { newsId } = action
   const newsListById = state.get('newsListById')
-  const news = newsListById.get(JSON.stringify(newsId))
+  const news = newsListById.get(newsId)
 
   const updated = news.set('currentUserRating', null)
-  const updatedNewsListById = newsListById.set(JSON.stringify(newsId), updated)
+  const updatedNewsListById = newsListById.set(newsId, updated)
   return state.merge({
     newsListById: updatedNewsListById,
     isRating: true

@@ -1,4 +1,4 @@
-import request from 'superagent-bluebird-promise'
+import request from 'superagent'
 
 import urls from '../modules/urls'
 import { authorize, authorizeCSRF } from '../middlewares/auth'
@@ -30,7 +30,6 @@ export function authenticate(email, password, router, next = NEWS.path) {
     dispatch(authStart())
     request
       .post(urls.login())
-      .type('form')
       .use(authorizeCSRF())
       .send({ email, password })
       .end((error, response) => {
@@ -155,7 +154,7 @@ export function csrfInitError() {
 
 export function initCSRF() {
   return (dispatch) => {
-    // stajjjjjrf init
+    // start csrf init
     dispatch(csrfInitStart())
 
     // TODO: should handle exceptional case where csrf token not set on
@@ -167,6 +166,7 @@ export function initCSRF() {
           dispatch(csrfInitError())
           return
         }
+        const { token } = response.body
         dispatch(csrfInitSuccess(token))
       })
   }

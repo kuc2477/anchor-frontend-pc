@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Card } from 'material-ui/lib/card'
+import Divider from 'material-ui/lib/divider'
 
 import NewsItemContent from './NewsItemContent'
 import NewsItemControl from './NewsItemControl'
@@ -9,6 +10,7 @@ export default class NewsItem extends React.Component {
   static propTypes = {
     // style
     style: PropTypes.object,
+    height: PropTypes.number.isRequired,
     // news props
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
@@ -18,20 +20,27 @@ export default class NewsItem extends React.Component {
     currentUserRating: PropTypes.bool,
     // action
     rate: PropTypes.func.isRequired,
+    cancel: PropTypes.func.isRequired,
   };
 
-  _mediaOnClick() {
-    const { url } = this.props
-    window.open(url)
+  _getStyle() {
+    const { style, height } = this.props
+    return Object.assign({}, style, { height })
   }
 
   render() {
-    const { style, id, rate } = this.props
+    const { id, currentUserRating, rate, cancel } = this.props
 
     return (
-      <Card style={style}>
+      <Card style={this._getStyle()}>
         <NewsItemContent {...this.props} />
-        <NewsItemControl id={id} rate={rate} />
+        <Divider />
+        <NewsItemControl
+          id={id}
+          currentUserRating={currentUserRating}
+          rate={rate}
+          cancel={cancel}
+        />
       </Card>
     )
   }

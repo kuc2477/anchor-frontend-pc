@@ -2,16 +2,14 @@ import React from 'react'
 import { Router, Route, IndexRedirect } from 'react-router'
 
 import App from './containers/App'
-import { FLOW_CLASS } from './constants/strings'
 import { SCHEDULES, NEWS, LOGIN, SIGNUP } from './constants/routes'
 import history from './modules/history'
 import { authRequired } from './modules/routing'
-import { flowtype } from './modules/utils'
 
 
 export const router = (
-  <Router history={history} onUpdate={()=>{flowtype(FLOW_CLASS)}}>
-    <Route path="/" component={App} >
+  <Router history={history}>
+    <Route path="/" component={App}>
       <IndexRedirect to={NEWS.path} />
       <Route path={NEWS.path} component={NEWS.component} onEnter={authRequired}/>
       <Route path={SCHEDULES.path} component={SCHEDULES.component} onEnter={authRequired}/>

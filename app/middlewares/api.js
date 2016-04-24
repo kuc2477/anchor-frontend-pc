@@ -1,7 +1,8 @@
-import request from 'superagent-bluebird-promise'
+import request from 'superagent'
 import { normalize, Schema, arrayOf } from 'normalizr'
 import { camelizeKeys } from 'humps'
 import { authorize, authorizeCSRF } from './auth'
+import urls from '../modules/urls'
 
 
 const userSchema = new Schema('users')
@@ -35,7 +36,9 @@ function callAPI(endpoint, schema) {
       const camelized = camelizeKeys(payload)
       const normalized = normalize(camelized, schema)
       const link = getNextUrl(response)
-      return Object.assign({}, normalized, { link })
+      return Object.assign({}, normalized, {
+        link: link ? `${urls.app()}${link}` : null
+      })
     })
 }
 

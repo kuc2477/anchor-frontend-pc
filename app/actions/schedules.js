@@ -1,4 +1,4 @@
-import request from 'superagent-bluebird-promise'
+import request from 'superagent'
 import { ActionCreators } from 'redux-undo'
 import { decamelizeKeys, camelizeKeys } from 'humps'
 

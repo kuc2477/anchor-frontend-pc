@@ -7,8 +7,6 @@ import './modules/keyboard'
 import router from './router'
 import store from './store'
 
-import { FLOW_CLASS } from './constants/strings'
-
 
 // inject tap event plugin
 injectTapEventPlugin()

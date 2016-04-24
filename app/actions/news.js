@@ -1,9 +1,10 @@
-import request from 'superagent-bluebird-promise'
+import request from 'superagent'
 import { ActionCreators } from 'redux-undo'
 import { decamelizeKeys, camelizeKeys } from 'humps'
 
 import { CALL_API, Schemas } from '../middlewares/api'
 import { authorize, authorizeCSRF } from '../middlewares/auth'
+import { toast } from '../modules/utils'
 import urls from '../modules/urls'
 
 
@@ -64,6 +65,7 @@ export const rateNews = (newsId, rating) => dispatch => {
     }
 
     const updated = camelizeKeys(response.body)
+    toast('Rated news successfully')
     dispatch(ratingSuccess(updated))
   })
 }
@@ -102,6 +104,7 @@ export const cancelRating = (newsId) => dispatch => {
     }
 
     const updated = camelizeKeys(response.body)
+    toast('Canceled rating successfully')
     dispatch(cancelRatingSuccess(updated))
   })
 }

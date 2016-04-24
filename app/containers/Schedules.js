@@ -184,8 +184,8 @@ class Schedules extends React.Component {
   }
 
   load() {
-    const { dispatch, urlToFetch } = this.props
-    if (urlToFetch) {
+    const { dispatch, urlToFetch, isFetching } = this.props
+    if (urlToFetch && !isFetching) {
       dispatch(fetchSchedules(urlToFetch))
     }
   }

@@ -1,7 +1,21 @@
+// ===============
+// Component Bases
+// ===============
+
 export const app = () => process.env.NODE_ENV === 'production' ?
   `http://localhost:${process.env.DEV_SERVER_PORT}` :
   `http://localhost:${process.env.DEV_SERVER_PORT}`
+
+export const router = () => process.env.NODE_ENV === 'production' ?
+  `http://localhost:${process.env.DEV_ROUTER_PORT}` :
+  `http://localhost:${process.env.DEV_ROUTER_PORT}`
+
 export const api = () => 'api'
+
+
+// ==========
+// Resources
+// ==========
 
 export const login = () => `${app()}/${api()}/login`
 export const logout = () => `${app()}/${api()}/logout`

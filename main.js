@@ -4,23 +4,19 @@
 const electron = require('electron')
 const menubar = require('menubar')
 
-const mb = menubar()
+// const mb = menubar()
 const app = electron.app
 
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
-const crashReporter = electron.crashReporter
 
-
-// launch crash reporter
-crashReporter.start('Anchor')
 
 // run electron-debug if it's in dev environment
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')()
 }
 
-// menubar
+const mb = menubar()
 mb.on('after-create-window', () => {
   // TODO: NOT IMPLEMENTED YET
 })

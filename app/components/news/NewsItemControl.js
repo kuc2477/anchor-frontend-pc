@@ -3,45 +3,63 @@ import ThumbUp from 'material-ui/lib/svg-icons/action/thumb-up'
 import ThumbDown from 'material-ui/lib/svg-icons/action/thumb-down'
 import IconButton from 'material-ui/lib/icon-button'
 
-import { INACTIVE } from '../../constants/colors'
+import { INACTIVE, PRIMARY, SECONDARY } from '../../constants/colors'
 
 
 export default class NewsItemControl extends React.Component {
   static propTypes = {
     id: PropTypes.number.isRequired,
     rate: PropTypes.func.isRequired,
+    cancel: PropTypes.func.isRequired,
     currentUserRating: PropTypes.bool
   };
 
   static BUTTON_ICON_STYLE = {
-    height: 16,
-    width: 16,
-    marginRight: 10,
+    height: 15,
+    width: 15,
+    marginRight: 3,
   };
 
-  rateFactory(rating) {
-    const { rate, id } = this.props
-    return () => { rate(id, rating) }
+  clickHandlerFactory(rating) {
+    const { currentUserRating, cancel, rate, id } = this.props
+    return () => {
+      if (typeof currentUserRating !== 'undefined' &&
+          currentUserRating !== null &&
+          currentUserRating === rating) {
+        cancel(id)
+        return
+      }
+      rate(id, rating)
+    }
   }
 
   render() {
+    const { currentUserRating } = this.props
     const { BUTTON_ICON_STYLE } = this.constructor
     return (
       <div className="row end-md">
         <IconButton
           tooltip="Like"
           tooltipPosition="top-left"
-          onClick={this.rateFactory(true)}
+          onClick={this.clickHandlerFactory(true)}
+          iconStyle={BUTTON_ICON_STYLE}
         >
-          <ThumbUp color={INACTIVE} style={BUTTON_ICON_STYLE} />
+          <ThumbUp
+            color={currentUserRating === true ? SECONDARY : INACTIVE}
+            hoverColor={SECONDARY}
+          />
         </IconButton>
 
         <IconButton
           tooltip="useless"
           tooltipPosition="top-left"
-          onClick={this.rateFactory(false)}
+          onClick={this.clickHandlerFactory(false)}
+          iconStyle={BUTTON_ICON_STYLE}
         >
-          <ThumbDown color={INACTIVE} style={BUTTON_ICON_STYLE} />
+          <ThumbDown
+            color={currentUserRating === false ? PRIMARY : INACTIVE}
+            hoverColor={PRIMARY}
+          />
         </IconButton>
       </div>
     )
