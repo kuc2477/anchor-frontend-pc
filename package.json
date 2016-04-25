@@ -15,6 +15,12 @@
   },
   "betterScripts": {
     "test": {
+      "command": "karma start ./karma.conf.js --single-run",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "watch": {
       "command": "karma start ./karma.conf.js",
       "env": {
         "NODE_ENV": "production"
@@ -106,6 +112,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "babel-runtime": "^6.3.19",
     "better-npm-run": "0.0.8",
+    "coveralls": "^2.11.9",
     "css-loader": "^0.23.1",
     "electron-prebuilt": "^0.37.2",
     "eslint": "^2.8.0",
