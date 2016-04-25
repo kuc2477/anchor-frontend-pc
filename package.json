@@ -14,14 +14,14 @@
     "lint": "eslint app test *.js"
   },
   "betterScripts": {
-    "test": {
-      "command": "karma start ./karma.conf.js --single-run",
+    "watch": {
+      "command": "karma start ./karma.conf.js",
       "env": {
         "NODE_ENV": "production"
       }
     },
-    "watch": {
-      "command": "karma start ./karma.conf.js",
+    "test": {
+      "command": "karma start ./karma.conf.js --single-run",
       "env": {
         "NODE_ENV": "production"
       }
