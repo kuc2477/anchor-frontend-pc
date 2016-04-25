@@ -53,7 +53,6 @@ describe('schedules reducer', () => {
       const previousSchedules = [
         ..._.times(5, createFakeSchedule), previousSchedule
       ]
-
       const updated = Object.assign({}, previousSchedule, {
         url: 'updatedurl',
         cycle: 999,
@@ -64,14 +63,19 @@ describe('schedules reducer', () => {
         status: 'STARTED'
       })
 
-      const previous = initialState.merge({
-        schedule: previousSchedule.id,
-        schedules: normalize(previousSchedules, Schemas.SCHEDULES).result,
-        schedulesById: normalize(previousSchedules, Schemas.SCHEDULES).entities.schedule
-      })
+      const previous = reducer(initialState, {
+        type: FETCH_SCHEDULES_SUCCESS,
+        link: 'testlink',
+        result: normalize(previousSchedules, Schemas.SCHEDULES).result,
+        entities: normalize(previousSchedules, Schemas.SCHEDULES).entities,
+      }).merge({ schedule: previousSchedule.id })
 
-      const after = reducer(previous, updateSchedule(updated))
-      expect(after.get('schedulesById').get(after.get('schedule')).equals(updated))
+      const after = reducer(previous, updateSchedule(updated.id, updated))
+      const afterUpdated = after
+        .get('schedulesById')
+        .get(after.get('schedule'))
+
+      expect(afterUpdated.equals(Immutable.fromJS(updated))).toBeTruthy()
     })
   })
 
@@ -107,9 +111,11 @@ describe('schedules reducer', () => {
 
     it('should add passed schedule if given', () => {
       const toAdd = createFakeSchedule()
+
       const after = reducer(initialState, addSchedule(toAdd))
       const schedule = after.get('schedule')
       const entitiy = after.get('schedulesById').get(schedule)
+
       expect(entitiy.equals(Immutable.fromJS(toAdd))).toBeTruthy()
     })
 
@@ -165,10 +171,11 @@ describe('schedules reducer', () => {
          toRemove,
          ..._.times(3, createFakeSchedule),
        ]
-       previous = initialState.merge({
-         schedule: toRemove.id,
-         schedules: normalize(previousSchedules, Schemas.SCHEDULES).result,
-         schedulesById: normalize(previousSchedules, Schemas.SCHEDULES).entities.schedule
+       previous = reducer(initialState, {
+         type: FETCH_SCHEDULES_SUCCESS,
+         result: normalize(previousSchedules, Schemas.SCHEDULES).result,
+         entities: normalize(previousSchedules, Schemas.SCHEDULES).entities,
+         link: 'testlink'
        })
        after = reducer(previous, removeSchedule(toRemove.id))
     })
@@ -228,7 +235,11 @@ describe('schedules reducer', () => {
 
       expect(after.get('isFetching')).toBeFalsy()
       expect(schedules.equals(Immutable.fromJS(result)))
-      expect(schedulesById.equals(Immutable.fromJS(entities))).toBeTruthy()
+      expect(schedulesById.equals(
+        Immutable
+        .fromJS(entities)
+        .mapKeys(k => Number(k) || k)
+      )).toBeTruthy()
     })
   })
 
@@ -264,16 +275,19 @@ describe('schedules reducer', () => {
     beforeEach(() => {
       toBeSaved = createSchedule()
       response = createFakeSchedule()
+
       previousSchedules = [
         ..._.times(5, createFakeSchedule), toBeSaved
       ]
 
-      previous = initialState.merge({
+      previous = reducer(initialState, {
+        type: FETCH_SCHEDULES_SUCCESS,
+        link: 'testlink',
+        result: normalize(previousSchedules, Schemas.SCHEDULES).result,
+        entities: normalize(previousSchedules, Schemas.SCHEDULES).entities,
+      }).merge({
         isSaving: true,
         didSaveFail: true,
-        schedule: toBeSaved.id,
-        schedules: normalize(previousSchedules, Schemas.SCHEDULES).result,
-        schedulesById: normalize(previousSchedules, Schemas.SCHEDULES).entities.schedule
       })
 
       after = reducer(previous, saveScheduleSuccess(toBeSaved, response))
@@ -288,7 +302,6 @@ describe('schedules reducer', () => {
       expect(after.get('schedulesById').get(response.id).equals(
         Immutable.fromJS(response)
       )).toBeTruthy()
-      expect(after.get('schedule')).toEqual(response.id)
     })
 
     it('should clear previous save failure', () => {

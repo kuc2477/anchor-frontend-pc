@@ -75,7 +75,9 @@ describe('news reducer', () => {
       )).toBeTruthy()
       expect(
         after.get('newsListById').equals(
-          Immutable.fromJS(action.entities.news)
+          Immutable
+          .fromJS(action.entities.news)
+          .mapKeys(k => Number(k) || k)
         )).toBeTruthy()
     })
   })
@@ -153,8 +155,7 @@ describe('news reducer', () => {
 
       it('news should be removed from store', () => {
         expect(previous.get('newsList').findIndex(n => n === rated.id)).toEqual(0)
-        expect(previous.get('newsListById').has(rated.id)).toEqual(false)
-
+        expect(previous.get('newsListById').has(rated.id)).toBeTruthy()
         expect(after.get('newsList').findIndex(n => n === rated.id)).toEqual(-1)
         expect(after.get('newsListById').has(rated.id)).toBeFalsy()
       })

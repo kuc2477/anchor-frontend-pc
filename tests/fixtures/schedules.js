@@ -1,8 +1,9 @@
+import _ from 'lodash'
 import faker from 'faker'
 
 export function createFakeSchedule() {
   return {
-    id: faker.random.uuid(),
+    id: Number(_.uniqueId()),
     url: faker.internet.url(),
     cycle: 60,
     maxDepth: null,

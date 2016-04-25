@@ -28,7 +28,15 @@ module.exports = (config) => {
 
     // test specific webpack configuration
     webpack: {
-      module: require('./webpack.config.dev').module,
+      module: Object.assign({}, require('./webpack.config.dev').module, {
+        postLoaders: [
+          {
+            test: /\.jsx?$/,
+            exclude: /(node_modules|dist)/,
+            loader: 'istanbul-instrumenter'
+          }
+        ]
+      }),
       devtool: 'inline-source-map'
     },
     webpackMiddleware: { noInfo: true },
@@ -40,13 +48,19 @@ module.exports = (config) => {
       'karma-sourcemap-loader',
       'karma-jasmine',
       'karma-jasmine-matchers',
-      'karma-spec-reporter'
+      'karma-spec-reporter',
+      'karma-coverage',
+      'karma-coveralls',
     ],
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['spec'],
+    reporters: [
+      'spec',
+      'coverage',
+      'coveralls',
+    ],
 
 
     // web server port

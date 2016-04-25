@@ -69,7 +69,7 @@ function reduceFetchSuccess(state, action) {
   const newsListById = state
     .get('newsListById')
     .merge(entities.news)
-    .mapKeys(k => parseInt(k, 10))
+    .mapKeys(k => Number(k) || k)
 
   return state.merge({
     newsList,
@@ -90,7 +90,8 @@ function reduceFetchError(state) {
 // ======
 
 function reduceRatingStart(state, action) {
-  const { newsId, rating } = action
+  const newsId = Number(action.newsId) || action.newsId
+  const { rating } = action
 
   const newsList = state.get('newsList')
   const newsListById = state.get('newsListById')
@@ -121,7 +122,7 @@ function reduceRatingError(state) {
 }
 
 function reduceCancelRatingStart(state, action) {
-  const { newsId } = action
+  const newsId = Number(action.newsId) || action.newsId
   const newsListById = state.get('newsListById')
   const news = newsListById.get(newsId)
 

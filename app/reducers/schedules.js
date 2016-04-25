@@ -73,6 +73,7 @@ export default (state = initialState, action) => {
 
 function reduceAddSchedule(state, action) {
   const { schedule } = action
+  const scheduleId = Number(schedule.id) || schedule.id
   const existingUnsaved = state.get('schedules').find(s => unsaved(s))
 
   // just activate existing unsaved schedule if already exists
@@ -81,11 +82,9 @@ function reduceAddSchedule(state, action) {
   }
   // otherwise add new schedule and activate it
   return state.merge({
-    schedule: schedule.id,
-    schedules: state.get('schedules').push(schedule.id),
-    schedulesById: state.get('schedulesById').merge({
-      [schedule.id]: schedule
-    })
+    schedule: scheduleId,
+    schedules: state.get('schedules').push(scheduleId),
+    schedulesById: state.get('schedulesById').set(scheduleId, Immutable.fromJS(schedule))
   })
 }
 
@@ -102,9 +101,11 @@ function reduceRemoveSchedule(state, action) {
 }
 
 function reduceUpdateSchedule(state, action) {
-  const { scheduleId, schedule } = action
+  const scheduleId = Number(action.scheduleId) || action.scheduleId
+  const { schedule } = action
+
   const schedulesById = state.get('schedulesById')
-  const updated = schedulesById.merge({ [scheduleId]: schedule })
+  const updated = schedulesById.set(scheduleId, Immutable.fromJS(schedule))
   return state.merge({ schedulesById: updated })
 }
 
@@ -137,8 +138,8 @@ function reduceFetchSuccess(state, action) {
 
   const schedulesById = state
     .get('schedulesById')
-    .merge(entities.schedule)
-    .mapKeys(k => parseInt(k, 10))
+    .merge(Immutable.fromJS(entities.schedule))
+    .mapKeys(k => Number(k) || k)
 
   const schedule =
     !state.get('schedules').count() && result.length ?
@@ -167,17 +168,22 @@ function reduceSaveStart(state) {
 
 function reduceSaveSuccess(state, action) {
   const { previous, saved } = action
+
+  const previousId = Number(previous.id) || previous.id
+  const savedId = Number(saved.id) || saved.id
+
   const savedSelected = previous.id === state.get('schedule')
   const index = state.get('schedules').findIndex(s => s === previous.id)
 
   return state.merge({
     isSaving: false,
     didSaveFail: false,
-    schedule: savedSelected ? saved.id : state.get('schedule'),
-    schedules: state.get('schedules').set(index, saved.id),
-    schedulesById: state.get('schedulesById').delete(previous.id).merge({
-      [saved.id]: Immutable.fromJS(saved)
-    })
+    schedule: savedSelected ? savedId : state.get('schedule'),
+    schedules: state.get('schedules').set(index, savedId),
+    schedulesById: state
+      .get('schedulesById')
+      .delete(previousId)
+      .set(savedId, Immutable.fromJS(saved))
   })
 }
 
