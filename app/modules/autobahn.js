@@ -8,7 +8,7 @@ import {
 
 
 // connection to crossbar router
-export default const connection = new autobahn.Connection({
+export const connection = new autobahn.Connection({
   url: urls.router(),
   realm: ROUTER_REALM
 })
@@ -17,13 +17,16 @@ export default const connection = new autobahn.Connection({
 // subscribe router events
 connection.onopen = (session) => {
   session.subscribe(TOPIC_COVER_STARTED, (args) => {
-    // TODO: NOT IMPLEMENTED YET
+    console.log(`${TOPIC_COVER_STARTED}: router call!`)
   })
   session.subscribe(TOPIC_COVER_FINISHED, (args) => {
-    // TODO: NOT IMPLEMENTED YET
+    console.log(`${TOPIC_COVER_FINISHED}: router call!`)
   })
 }
 
 
 // open connection to the crossbar router
 connection.open()
+
+
+export default connection

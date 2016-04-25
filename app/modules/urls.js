@@ -40,6 +40,6 @@ export const schedules = id => id ?
 
 
 export default {
-  app, login, logout, signup, csrf, userinfo, resend,
+  app, router, login, logout, signup, csrf, userinfo, resend,
   users, schedules, news, newsRatings,
 }

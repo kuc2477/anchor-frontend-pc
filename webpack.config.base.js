@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 
 
 module.exports = {
@@ -53,6 +54,8 @@ module.exports = {
       ['jam', 'main'], 'main'
     ]
   },
-  plugins: [],
+  plugins: [
+    new webpack.IgnorePlugin(/vertx/),
+  ],
   externals: [],
 }
