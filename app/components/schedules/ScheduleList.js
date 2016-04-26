@@ -1,3 +1,4 @@
+import Immutable from 'immutable'
 import React, { PropTypes } from 'react'
 
 import FloatingActionButton from 'material-ui/lib/floating-action-button'

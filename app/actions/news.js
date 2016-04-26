@@ -29,6 +29,23 @@ export function fetchNews(url) {
   }
 }
 
+export const FETCH_LATEST_NEWS_START = 'FETCH_LATEST_NEWS_START'
+export const FETCH_LATEST_NEWS_SUCCESS = 'FETCH_LATEST_NEWS_START'
+export const FETCH_LATEST_NEWS_ERROR = 'FETCH_LATEST_NEWS_ERROR'
+export function fetchLatestNews() {
+  return {
+    [CALL_API]: {
+      types: [
+        FETCH_LATEST_NEWS_START,
+        FETCH_LATEST_NEWS_SUCCESS,
+        FETCH_LATEST_NEWS_ERROR
+      ],
+      endpoint: urls.latestNews(),
+      schema: Schemas.NEWS_LIST
+    }
+  }
+}
+
 
 // ====
 // Save

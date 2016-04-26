@@ -1,14 +1,13 @@
-/* eslint strict: 0 */
-'use strict'
-
 const electron = require('electron')
 const menubar = require('menubar')
 
-// const mb = menubar()
-const app = electron.app
-
+const ipcMain = electron.ipcMain
+const ipcRenderer = electron.ipcRenderer
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
+
+const app = electron.app
+const mb = menubar()
 
 
 // run electron-debug if it's in dev environment
@@ -16,10 +15,19 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')()
 }
 
-const mb = menubar()
+
+// =======
+// Menubar
+// =======
+
 mb.on('after-create-window', () => {
-  // TODO: NOT IMPLEMENTED YET
+  mb.showWindow()
 })
+
+
+// ====
+// Main
+// ====
 
 // shutdown application when all windows are closed
 app.on('window-all-closed', () => {

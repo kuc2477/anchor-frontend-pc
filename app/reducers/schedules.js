@@ -18,6 +18,8 @@ import {
   UPDATE_SCHEDULE,
   SELECT_SCHEDULE,
   SET_BOARD,
+  COVER_STARTED,
+  COVER_FINISHED,
 } from '../actions/schedules'
 import { LOGOUT } from '../actions/auth'
 
@@ -38,6 +40,9 @@ export const initialState = new Immutable.Map({
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    // notifications
+    case COVER_STARTED: return reduceCoverStarted(state, action)
+    case COVER_FINISHED: return reduceCoverFinished(state, action)
     // client level schedule manipulation
     case ADD_SCHEDULE: return reduceAddSchedule(state, action)
     case REMOVE_SCHEDULE: return reduceRemoveSchedule(state, action)
@@ -209,4 +214,39 @@ function reduceDeleteSuccess(state) {
 
 function reduceDeleteError(state) {
   return state.merge({ isDeleting: false, didDeleteFail: true })
+}
+
+
+// =============
+// Notifications
+// =============
+
+function reduceCoverStarted(state, action) {
+  const { scheduleId, status } = action
+
+  const schedulesById = state.get('schedulesById')
+  const schedule = schedulesById.get(scheduleId)
+
+  if (!schedule) {
+    return state
+  }
+
+  const updated = schedule.set('state', status)
+  const updatedSchedulesById = schedulesById.set(scheduleId, updated)
+  return state.merge({ schedulesById: updatedSchedulesById })
+}
+
+function reduceCoverFinished(state, action) {
+  const { scheduleId, status } = action
+
+  const schedulesById = state.get('schedulesById')
+  const schedule = schedulesById.get(scheduleId)
+
+  if (!schedule) {
+    return state
+  }
+
+  const updated = schedule.set('state', status)
+  const updatedSchedulesById = schedulesById.set(scheduleId, updated)
+  return state.merge({ schedulesById: updatedSchedulesById })
 }

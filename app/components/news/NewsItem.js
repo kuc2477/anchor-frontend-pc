@@ -29,7 +29,7 @@ export default class NewsItem extends React.Component {
   }
 
   render() {
-    const { id, currentUserRating, rate, cancel } = this.props
+    const { id, url, currentUserRating, rate, cancel } = this.props
 
     return (
       <Card style={this._getStyle()}>
@@ -37,6 +37,7 @@ export default class NewsItem extends React.Component {
         <Divider />
         <NewsItemControl
           id={id}
+          url={url}
           currentUserRating={currentUserRating}
           rate={rate}
           cancel={cancel}

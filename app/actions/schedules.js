@@ -5,7 +5,26 @@ import { decamelizeKeys, camelizeKeys } from 'humps'
 import { CALL_API, Schemas } from '../middlewares/api'
 import { authorize, authorizeCSRF } from '../middlewares/auth'
 import { createSchedule, unsaved } from '../constants/types'
+import { SUCCESS } from '../constants/strings'
 import urls from '../modules/urls'
+
+
+// =============
+// Notifications
+// =============
+
+export const COVER_STARTED = 'COVER_STARTED'
+export const coverStarted = (scheduleId) => ({
+  type: COVER_STARTED,
+  scheduleId
+})
+
+export const COVER_FINISHED = 'COVER_FINISHED'
+export const coverFinished = (scheduleId, status = SUCCESS) => ({
+  type: COVER_FINISHED,
+  scheduleId, 
+  status
+})
 
 
 // ===================================

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import ThumbUp from 'material-ui/lib/svg-icons/action/thumb-up'
 import ThumbDown from 'material-ui/lib/svg-icons/action/thumb-down'
+import OpenInBrowser from 'material-ui/lib/svg-icons/action/open-in-browser'
 import IconButton from 'material-ui/lib/icon-button'
 
 import { INACTIVE, PRIMARY, SECONDARY } from '../../constants/colors'
@@ -9,6 +10,7 @@ import { INACTIVE, PRIMARY, SECONDARY } from '../../constants/colors'
 export default class NewsItemControl extends React.Component {
   static propTypes = {
     id: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
     rate: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
     currentUserRating: PropTypes.bool
@@ -20,7 +22,12 @@ export default class NewsItemControl extends React.Component {
     marginRight: 3,
   };
 
-  clickHandlerFactory(rating) {
+  openInBrowser() {
+    window.open(this.props.url)
+  }
+
+  // handler factory
+  createRatingHandler(rating) {
     const { currentUserRating, cancel, rate, id } = this.props
     return () => {
       if (typeof currentUserRating !== 'undefined' &&
@@ -39,9 +46,20 @@ export default class NewsItemControl extends React.Component {
     return (
       <div className="row end-md">
         <IconButton
+          tooltip="Open in browser"
+          tooltipPosition="top-left"
+          onClick={::this.openInBrowser}
+          iconStyle={BUTTON_ICON_STYLE}
+        >
+        <OpenInBrowser 
+          color={INACTIVE}
+          hoverColor={SECONDARY} />
+        </IconButton>
+
+        <IconButton
           tooltip="Like"
           tooltipPosition="top-left"
-          onClick={this.clickHandlerFactory(true)}
+          onClick={this.createRatingHandler(true)}
           iconStyle={BUTTON_ICON_STYLE}
         >
           <ThumbUp
@@ -53,7 +71,7 @@ export default class NewsItemControl extends React.Component {
         <IconButton
           tooltip="useless"
           tooltipPosition="top-left"
-          onClick={this.clickHandlerFactory(false)}
+          onClick={this.createRatingHandler(false)}
           iconStyle={BUTTON_ICON_STYLE}
         >
           <ThumbDown

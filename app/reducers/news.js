@@ -5,6 +5,9 @@ import {
   FETCH_NEWS_START,
   FETCH_NEWS_SUCCESS,
   FETCH_NEWS_ERROR,
+  FETCH_LATEST_NEWS_START,
+  FETCH_LATEST_NEWS_SUCCESS,
+  FETCH_LATEST_NEWS_ERROR,
   RATING_START,
   RATING_SUCCESS,
   RATING_ERROR,
@@ -28,8 +31,14 @@ export const initialState = new Immutable.Map({
 export default (state = initialState, action) => {
   switch (action.type) {
     // fetch
-    case FETCH_NEWS_START: return reduceFetchStart(state, action)
-    case FETCH_NEWS_SUCCESS: return reduceFetchSuccess(state, action)
+    case FETCH_NEWS_START: 
+    case FETCH_LATEST_NEWS_START:
+        return reduceFetchStart(state, action)
+
+    case FETCH_NEWS_SUCCESS: return reduceFetchSuccess(state, action, true)
+    case FETCH_LATEST_NEWS_SUCCESS: return reduceFetchSuccess(state, action, false)
+
+    case FETCH_LATEST_NEWS_ERROR:
     case FETCH_NEWS_ERROR: return reduceFetchError(state, action)
 
     // save
@@ -57,14 +66,15 @@ function reduceFetchStart(state) {
   return state.set('isFetching', true)
 }
 
-function reduceFetchSuccess(state, action) {
+function reduceFetchSuccess(state, action, append = true) {
   const { result, entities, link } = action
 
-  const newsList = state
-    .get('newsList')
-    .push(...result)
-    .toOrderedSet()
-    .toList()
+  const previousList = state.get('newsList')
+  const resultList = Immutable.List(result)
+
+  const newsList = append ? 
+    previousList.concat(resultList).toOrderedSet().toList() : 
+    resultList.concat(previousList).toOrderedSet().toList()
 
   const newsListById = state
     .get('newsListById')
