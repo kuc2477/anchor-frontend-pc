@@ -3,7 +3,9 @@ export const FLOW_CLASS = 'flowtype'
 
 export const APP_PREFIX = 'ANCHOR'
 
-export const ROUTER_REALM = 'anchor'
+export const ROUTER_REALM = process.env.NODE_ENV === 'production' ?
+  'anchor' :
+  'realm1'
 export const TOPIC_COVER_STARTED = 'TOPIC_COVER_STARTED'
 export const TOPIC_COVER_FINISHED = 'TOPIC_COVER_FINISHED'
 

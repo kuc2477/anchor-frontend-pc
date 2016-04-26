@@ -42,7 +42,6 @@
       "env": {
         "HOT": true,
         "DEV_SERVER_PORT": 5000,
-        "DEV_ROUTER_PORT": 9000,
         "NODE_ENV": "development",
         "WINDOW_WIDTH": 1072,
         "WINDOW_HEIGHT": 600
