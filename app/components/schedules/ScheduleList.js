@@ -106,14 +106,17 @@ export default class ScheduleList extends React.Component {
         <ChildButton
           icon="ion-social-github"
           label="View on Github"
+          href="/"
         />
         <ChildButton
           icon="ion-social-octcat"
           label="Follow me on Github"
+          href="/"
         />
         <ChildButton
           icon="ion-social-github"
           label="View on Github"
+          href="/"
         />
       </Menu>
     )

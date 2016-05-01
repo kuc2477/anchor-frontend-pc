@@ -33,7 +33,7 @@ export function signup(
   return (dispatch) => {
     dispatch(signupStart())
     request
-      .post(urls.signup()).type('form')
+      .post(urls.signup()).type('json')
       .use(authorizeCSRF())
       .send({ email, firstname, lastname, password,
             password_validation: passwordValidation })

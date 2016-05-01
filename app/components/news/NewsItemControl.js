@@ -23,7 +23,8 @@ export default class NewsItemControl extends React.Component {
   };
 
   openInBrowser() {
-    window.open(this.props.url)
+    const { url } = this.props
+    window.open(url, url, 'width=1300,height=900,resizeable=true')
   }
 
   // handler factory

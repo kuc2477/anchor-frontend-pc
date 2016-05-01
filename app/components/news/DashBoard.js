@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardMedia,
 } from 'material-ui/lib/card'
+import ChromeReaderMode from 'material-ui/lib/svg-icons/action/chrome-reader-mode'
 
 
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
