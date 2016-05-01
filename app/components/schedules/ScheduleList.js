@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react'
-
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
-
+import { Menu, MainButton, ChildButton } from 'react-mfb'
 import InfiniteList from '../base/InfiniteList'
 import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
 import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
+
+import 'react-mfb/mfb.css'
 
 
 export default class ScheduleList extends React.Component {
@@ -87,6 +88,34 @@ export default class ScheduleList extends React.Component {
       >
         <ContentAdd />
       </FloatingActionButton>
+    )
+  }
+
+  _getAnimatedFab() {
+    // TODO: NOT IMPLEMENTED YET
+    const effect = 'zoomin'
+    const position = 'bs'
+    const method = 'hover'
+
+    return (
+      <Menu effect={effect} position={position} method={method}>
+        <MainButton
+          iconResting="ion-plus-round"
+          iconActive="ion-close-round"
+        />
+        <ChildButton
+          icon="ion-social-github"
+          label="View on Github"
+        />
+        <ChildButton
+          icon="ion-social-octcat"
+          label="Follow me on Github"
+        />
+        <ChildButton
+          icon="ion-social-github"
+          label="View on Github"
+        />
+      </Menu>
     )
   }
 
