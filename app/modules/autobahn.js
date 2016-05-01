@@ -21,10 +21,10 @@ connection.onopen = (session) => {
   // ==============
   // TOPIC STARTED
   // ==============
-  
+
   session.subscribe(TOPIC_COVER_STARTED, (args) => {
     const { coverStarted } = require('../actions/schedules')
-    const [ scheduleId ] = args
+    const [scheduleId] = args
     if (!scheduleId) {
       return
     }
@@ -37,11 +37,11 @@ connection.onopen = (session) => {
   // ==============
   // TOPIC FINISHED
   // ==============
-  
+
   session.subscribe(TOPIC_COVER_FINISHED, (args) => {
     const { coverFinished } = require('../actions/schedules')
     const { fetchLatestNews } = require('../actions/news')
-    const [ scheduleId, status ] = args
+    const [scheduleId, status] = args
     if (!scheduleId) {
       return
     }

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Immutable from 'immutable'
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 
@@ -18,13 +19,26 @@ import ColorManipulator from 'material-ui/lib/utils/color-manipulator'
 import Close from 'material-ui/lib/svg-icons/navigation/close'
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert'
 import ContentInbox from 'material-ui/lib/svg-icons/content/inbox'
+import Cloud from 'material-ui/lib/svg-icons/file/cloud'
 import CloudQueue from 'material-ui/lib/svg-icons/file/cloud-queue'
 import CloudDownload from 'material-ui/lib/svg-icons/file/cloud-download'
 import CloudDone from 'material-ui/lib/svg-icons/file/cloud-done'
 import CloudOff from 'material-ui/lib/svg-icons/file/cloud-off'
 
-import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
-
+import {
+  unsaved,
+  SchedulePropType,
+  ValueLinkPropType
+} from '../../constants/types'
+import { SECONDARY, INACTIVE, PRIMARY } from '../../constants/colors'
+import {
+  PENDING,
+  STARTED,
+  SUCCESS,
+  FAILURE,
+  REVOKED,
+  RETRY
+} from '../../constants/strings'
 
 export default class ScheduleItem extends React.Component {
   static propTypes = {
@@ -47,6 +61,25 @@ export default class ScheduleItem extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const listItem = this.refs[this.constructor.LIST_ITEM_REF]
+    listItem.setState({ open: this.props.opened })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const listItem = this.refs[this.constructor.LIST_ITEM_REF]
+    listItem.setState({ open: nextProps.opened })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const props = () => Immutable.fromJS(this.props)
+    const state = () => Immutable.fromJS(this.state)
+    const nextImmutableProps = () => Immutable.fromJS(nextProps)
+    const nextImmutableState = () => Immutable.fromJS(nextState)
+    return !state().equals(nextImmutableState()) ||
+      !props().equals(nextImmutableProps())
+  }
+
   static PROGRESS_STYLE = {
     marginTop: 12,
     width: '80%',
@@ -59,14 +92,18 @@ export default class ScheduleItem extends React.Component {
   static DEFAULT_URL = 'Schedule url to get subscribed';
   static DEFAULT_SAVE_DELAY = 500;
 
-  componentDidMount() {
-    const listItem = this.refs[this.constructor.LIST_ITEM_REF]
-    listItem.setState({ open: this.props.opened })
+  _getStateColor() {
+    const { enabled, state } = this.props.schedule
+    const color =
+      [FAILURE, REVOKED, RETRY].includes(state) ? PRIMARY :
+      enabled && [STARTED, SUCCESS].includes(state) ? SECONDARY : INACTIVE
+    return color
   }
 
-  componentWillReceiveProps(nextProps) {
-    const listItem = this.refs[this.constructor.LIST_ITEM_REF]
-    listItem.setState({ open: nextProps.opened })
+  _getLeftIcon() {
+    return (
+      <ContentInbox />
+    )
   }
 
   _getProgressItem() {
@@ -77,19 +114,24 @@ export default class ScheduleItem extends React.Component {
       'indeterminate' : 'determinate'
 
     const text =
+      schedule.state === FAILURE ? 'Something went wrong with reporters' :
       !schedule.enabled ? 'Disabled' :
-      schedule.state === 'STARTED' ? 'Reporters are collecting news for you..' :
-      schedule.state === 'PENDING' ? 'Reporters are wating to be dispatched..' :
-      schedule.state === 'SUCCESS' ? 'Reporters successfully collected news!' :
-        'Something went wrong with reporters!'
+      schedule.state === STARTED ? 'Reporters are collecting news for you' :
+      schedule.state === PENDING ? 'Reporters are wating to be dispatched' :
+      schedule.state === SUCCESS ? 'Reporters successfully collected news' :
+          'Something went wrong with reporters'
 
     const icon =
       !schedule.enabled ? <CloudOff /> :
       schedule.state === 'STARTED' ? <CloudDownload /> :
       schedule.state === 'PENDING' ? <CloudQueue /> :
-      schedule.state === 'SUCCESS' ? <CloudDone /> : <CloudQueue />
+      schedule.state === 'SUCCESS' ? <CloudDone /> : <Cloud />
 
     const onToggle = (e, v) => {
+      // can't enable unsaved schedule
+      if (unsaved(schedule)) {
+        return
+      }
       enabledValueLink.requestChange(null, v)
       setTimeout(save, DEFAULT_SAVE_DELAY)
     }
@@ -101,8 +143,8 @@ export default class ScheduleItem extends React.Component {
       <div key={schedule.id}>
         <Divider />
         <ListItem
-          secondaryText={text}
           leftIcon={icon}
+          secondaryText={text}
           rightToggle={toggle}
         >
           {progressBar}
@@ -116,9 +158,9 @@ export default class ScheduleItem extends React.Component {
       <IconButton
         touch
         tooltip="more"
-        tooltipPosition="bottom-right">
-        <MoreVertIcon color={Colors.grey400}
-      />
+        tooltipPosition="bottom-right"
+      >
+        <MoreVertIcon color={Colors.grey400} />
       </IconButton>
     )
   }
@@ -176,7 +218,7 @@ export default class ScheduleItem extends React.Component {
 
   render() {
     const { LIST_ITEM_REF, DEFAULT_NAME, DEFAULT_URL } = this.constructor
-    const { schedule, select, toggleOpen, key } = this.props
+    const { schedule, key } = this.props
 
     return (
       <Paper key={key} style={this._getStyle()}>
@@ -184,7 +226,7 @@ export default class ScheduleItem extends React.Component {
           ref={LIST_ITEM_REF}
           primaryText={schedule.name || DEFAULT_NAME}
           secondaryText={schedule.url || DEFAULT_URL}
-          leftIcon={<ContentInbox />}
+          leftIcon={this._getLeftIcon()}
           rightIconButton={this._getActionButtonMenu()}
           nestedListStyle={{ paddingTop: 0, paddingBottom: 0 }}
           nestedItems={[this._getProgressItem()]}

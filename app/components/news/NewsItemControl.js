@@ -17,8 +17,8 @@ export default class NewsItemControl extends React.Component {
   };
 
   static BUTTON_ICON_STYLE = {
-    height: 15,
-    width: 15,
+    height: 17,
+    width: 17,
     marginRight: 3,
   };
 
@@ -51,9 +51,10 @@ export default class NewsItemControl extends React.Component {
           onClick={::this.openInBrowser}
           iconStyle={BUTTON_ICON_STYLE}
         >
-        <OpenInBrowser 
+        <OpenInBrowser
           color={INACTIVE}
-          hoverColor={SECONDARY} />
+          hoverColor={SECONDARY}
+        />
         </IconButton>
 
         <IconButton

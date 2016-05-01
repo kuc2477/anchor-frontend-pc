@@ -1,17 +1,29 @@
 import React, { PropTypes } from 'react'
-import Paper from 'material-ui/lib/paper'
+import {
+  Card,
+  CardTitle,
+  CardHeader,
+  CardMedia,
+} from 'material-ui/lib/card'
+
 
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
+import { SchedulePropType } from '../../constants/types.js'
 
 
 export default class DashBoard extends React.Component {
+  static propTypes = {
+    schedulesById: PropTypes.arrayOf(SchedulePropType),
+    schedules: PropTypes.arrayOf(PropTypes.number)
+  };
+
   // root element style
   static STYLE = {
-    width: WINDOW_WIDTH * 0.4 - 50,
-    height: WINDOW_HEIGHT * 0.5 - 30,
+    width: WINDOW_WIDTH * 0.4 - 20,
+    height: WINDOW_HEIGHT * 0.6 - 30,
     marginTop: 30,
     marginBottom: 20,
-    marginLeft: 100,
+    marginLeft: 80,
     paddingTop: -20,
     paddingLeft: 20,
     zDepth: 1,
@@ -19,14 +31,18 @@ export default class DashBoard extends React.Component {
   };
 
   render() {
+    // TODO: NOT IMPLEMENTED YET
     const { STYLE } = this.constructor
     return (
-      <Paper
-        zDepth={STYLE.zDepth}
+      <Card
         style={STYLE}
+        zDepth={STYLE.zDepth}
       >
-        NOT IMPLEMENTED YET
-      </Paper>
+        <CardTitle
+          title="You might also like"
+          subtitle="Our neural network's recommendation"
+        />
+      </Card>
     )
   }
 }

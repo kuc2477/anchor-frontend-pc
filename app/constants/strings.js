@@ -18,8 +18,8 @@ export const MENUBAR = 'MENUBAR'
 // Crossbar
 // ========
 
-export const ROUTER_REALM = 
-  process.env.NODE_ENV === 'production' ?  'anchor' : 'realm1'
+export const ROUTER_REALM =
+  process.env.NODE_ENV === 'production' ? 'anchor' : 'realm1'
 
 export const TOPIC_COVER_STARTED = 'TOPIC_COVER_STARTED'
 export const TOPIC_COVER_FINISHED = 'TOPIC_COVER_FINISHED'
@@ -30,7 +30,7 @@ export const TOPIC_COVER_FINISHED = 'TOPIC_COVER_FINISHED'
 // =============
 
 export const PENDING = 'PENDING'
-export const RECEIVED ='RECEIVED'
+export const RECEIVED = 'RECEIVED'
 export const STARTED = 'STARTED'
 export const SUCCESS = 'SUCCESS'
 export const FAILURE = 'FAILURE'

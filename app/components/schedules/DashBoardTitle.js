@@ -21,6 +21,16 @@ export default class DashBoardTitle extends React.Component {
     board: PropTypes.oneOf(SCHEDULE_DASH_BOARDS).isRequired,
   };
 
+  constructor(props) {
+    super(props)
+    this.state = { hovering: false }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.board !== nextProps.board ||
+      this.state.hovering !== nextState.hovering
+  }
+
   static RIPPLE_DELAY = 220;
 
   static HOVER_COLORS = {
@@ -52,11 +62,6 @@ export default class DashBoardTitle extends React.Component {
     position: 'relative',
     className: 'clickable',
   };
-
-  constructor(props) {
-    super(props)
-    this.state = { hovering: false }
-  }
 
   _getIcon() {
     const { hovering } = this.state

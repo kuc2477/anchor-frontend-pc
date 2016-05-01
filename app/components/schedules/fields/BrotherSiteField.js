@@ -1,7 +1,6 @@
+import Immutable from 'immutable'
 import React, { PropTypes } from 'react'
 import TextField from 'material-ui/lib/text-field'
-
-import { ValueLinkPropType } from '../../../constants/types'
 
 
 export default class BrotherSiteField extends React.Component {
@@ -12,6 +11,10 @@ export default class BrotherSiteField extends React.Component {
     onChange: PropTypes.func.isRequired,
     style: PropTypes.object,
   };
+
+  shouldComponentUpdate(nextProps) {
+    return !Immutable.fromJS(this.props).equals(Immutable.fromJS(nextProps))
+  }
 
   render() {
     const { style, url, error, onChange } = this.props

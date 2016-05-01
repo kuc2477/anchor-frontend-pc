@@ -58,7 +58,7 @@ export default class NewsItemContent extends React.Component {
       <CardTitle
         titleStyle={TITLE_STYLE}
         title={_.truncate(title, { length: TITLE_MAX_LENGTH })}
-        subtitle={moment(created).fromNow()}
+        subtitle={`Reported ${moment(created).fromNow()}`}
       />
     )
   }

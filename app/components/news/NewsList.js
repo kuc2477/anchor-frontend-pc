@@ -41,7 +41,7 @@ export default class NewsList extends React.Component {
 
   static NEWS_LIST_HEIGHT = WINDOW_HEIGHT - 100;
   static NEWS_ITEM_HEIGHT = 500;
-  static LOAD_EDGE_OFFSET = 20;
+  static LOAD_EDGE_OFFSET = 500;
 
   _getNewsNodes() {
     const { NEWS_LIST_ITEM_STYLE, NEWS_LIST_ITEM_HEIGHT } = this.constructor
