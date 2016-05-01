@@ -1,4 +1,4 @@
-* FEATURE GOALS [25%]
+* FEATURE GOALS [50%]
 
   - [X] Implement *Schedules* container [100%]
         - [X] Save only when needed
@@ -13,7 +13,7 @@
               - [X] brother site field set
               - [X] brother site field
 
-  - [-] Implement *News* container [60%]
+  - [-] Implement *News* container [75%]
         - [X] add news fetch / rating actions and reducers [100%]
               - [X] fetch / rating actions
               - [X] fetch / rating reducers
@@ -21,12 +21,10 @@
         - [X] Implement news item
         - [ ] Implement news dash board
 
-  - [ ] Improve render performance with immutable props
+  - [X] Improve render performance with immutable props
 
-  - [ ] Implement realtime notification with AutobahnJS [0%]
-        - [ ] Design crossbar router subscription architecture
-        - [ ] Subscript to schedule events on application start
-        - [ ] Notify schedule events on app status bar
-
-  - [ ] BUGS [0%]
-        - [ ] Middleware fetch don't get fired before route changes
+  - [-] Implement realtime notification with AutobahnJS [66%]
+        - [X] Design crossbar router subscription architecture
+        - [X] Subscript to schedule events on application start
+        - [ ] Render load latest fetched news loading button on successful 
+              news cover finish
