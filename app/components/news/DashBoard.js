@@ -2,20 +2,28 @@ import React, { PropTypes } from 'react'
 import {
   Card,
   CardTitle,
+  CardText,
   CardHeader,
   CardMedia,
 } from 'material-ui/lib/card'
+import RefreshIndicator from 'material-ui/lib/refresh-indicator'
 import ChromeReaderMode from 'material-ui/lib/svg-icons/action/chrome-reader-mode'
-
-
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
 import { SchedulePropType } from '../../constants/types.js'
 
 
 export default class DashBoard extends React.Component {
   static propTypes = {
-    schedulesById: PropTypes.arrayOf(SchedulePropType),
-    schedules: PropTypes.arrayOf(PropTypes.number)
+    recommendations: PropTypes.arrayOf(PropTypes.number),
+    recommendationsById: PropTypes.arrayOf(SchedulePropType),
+    isFetchingRecommendations: PropTypes.bool.isRequired,
+    didFetchingRecommendationsFail: PropTypes.bool.isRequired,
+  };
+
+  static LOADING_INDICATOR_PROPS = {
+    size: 40,
+    left: WINDOW_WIDTH - 270,
+    top: 250,
   };
 
   // root element style
@@ -31,19 +39,36 @@ export default class DashBoard extends React.Component {
     position: 'fixed',
   };
 
-  render() {
-    // TODO: NOT IMPLEMENTED YET
-    const { STYLE } = this.constructor
+  _getLoadingIndicator() {
     return (
-      <Card
-        style={STYLE}
-        zDepth={STYLE.zDepth}
-      >
-        <CardTitle
-          title="You might also like"
-          subtitle="Our neural network's recommendation"
-        />
-      </Card>
+      <RefreshIndicator
+        {...this.constructor.LOADING_INDICATOR_PROPS}
+        status="loading"
+      />
+    )
+  }
+
+  render() {
+    const { STYLE } = this.constructor
+    const { isFetchingRecommendations } = this.props
+    const indicator = isFetchingRecommendations ?
+      this._getLoadingIndicator() : null
+
+    return (
+      <div>
+        {indicator}
+        <Card
+          style={STYLE}
+          zDepth={STYLE.zDepth}
+        >
+          <CardTitle
+            title="You might also like"
+            subtitle="Our neural network's recommendation"
+          />
+          <CardText>
+          </CardText>
+        </Card>
+      </div>
     )
   }
 }

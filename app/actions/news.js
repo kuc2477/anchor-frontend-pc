@@ -46,6 +46,23 @@ export function fetchLatestNews() {
   }
 }
 
+export const FETCH_NEWS_RECOMMENDATIONS_START = 'FETCH_NEWS_RECOMMENDATIONS_START'
+export const FETCH_NEWS_RECOMMENDATIONS_SUCCESS = 'FETCH_NEWS_RECOMMENDATIONS_SUCCESS'
+export const FETCH_NEWS_RECOMMENDATIONS_ERROR = 'FETCH_NEWS_RECOMMENDATIONS_ERROR'
+export function fetchNewsRecommendations() {
+  return {
+    [CALL_API]: {
+      types: [
+        FETCH_NEWS_RECOMMENDATIONS_START,
+        FETCH_NEWS_RECOMMENDATIONS_SUCCESS,
+        FETCH_NEWS_RECOMMENDATIONS_ERROR
+      ],
+      endpoint: urls.newsRecommendations(),
+      schema: Schemas.NEWS_LIST
+    }
+  }
+}
+
 
 // ====
 // Save
