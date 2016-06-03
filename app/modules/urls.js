@@ -3,8 +3,8 @@
 // ===============
 
 export const app = () => process.env.NODE_ENV === 'production' ?
-  `http://localhost:${process.env.DEV_SERVER_PORT}` :
-  `http://localhost:${process.env.DEV_SERVER_PORT}`
+  `${process.env.PROUDCTION_SERVER}`:
+  `${process.env.DEV_SERVER}`
 
 export const router = () => process.env.NODE_ENV === 'production' ?
   `wss://demo.crossbar.io/ws` :
@@ -33,7 +33,7 @@ export const news = id => id ?
   `${app()}/${api()}/news`
 
 export const latestNews = () => `${news()}/latest`
-export const newsRecommendations = () => `${news()}/recommendations`
+export const newsRecommendations = () => `${news()}/recomms`
 export const newsRatings = (id) => `${news(id)}/ratings`
 
 export const schedules = id => id ?

@@ -92,10 +92,20 @@ class Schedules extends React.Component {
     cycle: {
       presence: true
     },
-    brothers: {
+    'options.maxVisit': {
+      numerciality: true,
+    },
+    'options.maxDist': {
+      numerciality: true,
+    },
+    'options.urlWhiteList': {
       array: true,
-      url: true
-    }
+      url: true,
+    },
+    'options.urlBlackList': {
+      array: true,
+      url: true,
+    },
   };
 
   validateBeforeSave() {
@@ -157,6 +167,8 @@ class Schedules extends React.Component {
     if (!editing) {
       return { value: null, requestChange: (e, v) => v }
     }
+
+    // generate updated value and value link
     const value = editing[name] || (isArrayField ? [] : null)
     const requestChange = (event, changedValue) => {
       const eventChangedValue = event && event.target && event.target.value
@@ -170,9 +182,43 @@ class Schedules extends React.Component {
           v[name] :
           v[name][0] : ''
       })
-
       this.setState({ editing: updated, errors: updatedErrors })
     }
+
+    return { value, requestChange }
+  }
+
+  // get value link to nested editing state (e.g. schedule.options.*)
+  _getNestedValueLink(name, nestedName) {
+    const concatenatedName = `${name}.${nestedName}`
+    const { FORM_CONSTRAINT } = this.constructor
+    const { editing, errors } = this.state
+    const isArrayField =
+      FORM_CONSTRAINT[concatenatedName] &&
+      FORM_CONSTRAINT[concatenatedName].array
+
+    // return disconnected value link if we have no editing schedule
+    if (!editing) {
+      return { value: null, requestChange: (e, v) => v }
+    }
+
+    // generate updated value and value link
+    const value = editing[name][nestedName] || (isArrayField ? [] : null)
+    const requestChange = (event, changedValue) => {
+      const eventChangedValue = event && event.target && event.target.value
+      const finalChangedValue = eventChangedValue || changedValue
+
+      const v = this._validate({ [name]: finalChangedValue })
+      const updated = Object.assign({}, editing, { [name]: finalChangedValue })
+      const updatedErrors = Object.assign({}, errors, {
+        [`${nestedName}Error`]: v && v[concatenatedName] ?
+          isArrayField ?
+          v[concatenatedName] :
+          v[concatenatedName][0] : ''
+      })
+      this.setState({ editing: updated, errors: updatedErrors })
+    }
+
     return { value, requestChange }
   }
 
@@ -252,9 +298,10 @@ class Schedules extends React.Component {
       nameValueLink: this._getValueLink('name'),
       urlValueLink: this._getValueLink('url'),
       cycleValueLink: this._getValueLink('cycle'),
-      maxDepthValueLink: this._getValueLink('maxDepth'),
-      maxDistValueLink: this._getValueLink('maxDist'),
-      brothersValueLink: this._getValueLink('brothers')
+      maxVisitValueLink: this._getNestedValueLink('options', 'maxVisit'),
+      maxDistValueLink: this._getValueLink('options', 'maxDist'),
+      urlWhiteListValueLink: this._getNestedValueLink('options', 'urlWhiteList')
+      urlBlackListValueLink: this._getNestedValueLink('options', 'urlBlackList')
     }
 
     const errors = Object.assign({}, this.state.errors)

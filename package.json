@@ -33,6 +33,7 @@
       "command": "electron ./",
       "env": {
         "NODE_ENV": "production",
+        "PRODUCTION_SERVER": "http://ec2-54-218-75-14.us-west-2.compute.amazonaws.com",
         "WINDOW_WIDTH": 1072,
         "WINDOW_HEIGHT": 600
       }
@@ -41,7 +42,7 @@
       "command": "electron ./",
       "env": {
         "HOT": true,
-        "DEV_SERVER_PORT": 5000,
+        "DEV_SERVER": "http://ec2-54-218-75-14.us-west-2.compute.amazonaws.com",
         "NODE_ENV": "development",
         "WINDOW_WIDTH": 1072,
         "WINDOW_HEIGHT": 600

@@ -28,9 +28,10 @@ export default class DashBoard extends React.Component {
     nameValueLink: ValueLinkPropType.isRequired,
     urlValueLink: ValueLinkPropType.isRequired,
     cycleValueLink: ValueLinkPropType.isRequired,
-    maxDepthValueLink: ValueLinkPropType.isRequired,
+    maxVisitValueLink: ValueLinkPropType.isRequired,
     maxDistValueLink: ValueLinkPropType.isRequired,
-    brothersValueLink: ValueLinkPropType.isRequired,
+    urlWhiteListValueLink: ValueLinkPropType.isRequired,
+    urlBlackListValueLink: ValueLinkPropType.isRequired,
     // errors
     nameError: PropTypes.string,
     urlError: PropTypes.string,
