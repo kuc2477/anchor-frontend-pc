@@ -7,6 +7,7 @@ import SwipeableViews from 'react-swipeable-views'
 
 import DashBoardTitle from './DashBoardTitle'
 import GeneralSettings from './boards/GeneralSettings'
+import URLSettings from './boards/URLSettings'
 import AdvancedSettings from './boards/AdvancedSettings'
 import { ValueLinkPropType } from '../../constants/types'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
@@ -89,11 +90,14 @@ export default class DashBoard extends React.Component {
 
     const generalSettingsProps = _.pick(this.props, [
       'nameValueLink', 'urlValueLink', 'cycleValueLink',
-      'maxVisitValueLink', 'maxDistValueLink',
       'nameError', 'urlError', 'cycleError'
     ])
 
     const advancedSettingsProps = _.pick(this.props, [
+      'maxVisitValueLink', 'maxDistValueLink',
+    ])
+
+    const urlSettingsProps = _.pick(this.props, [
       'urlWhitelistValueLink', 'urlWhitelistError',
       'urlBlacklistValueLink', 'urlBlacklistError',
     ])
@@ -113,6 +117,7 @@ export default class DashBoard extends React.Component {
         >
           <GeneralSettings {...generalSettingsProps} />
           <AdvancedSettings {...advancedSettingsProps} />
+          <URLSettings {...urlSettingsProps} />
         </SwipeableViews>
       </Paper>
     )

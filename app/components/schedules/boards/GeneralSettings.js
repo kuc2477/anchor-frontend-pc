@@ -4,8 +4,6 @@ import { ValueLinkPropType } from '../../../constants/types'
 import ScheduleNameField from '../fields/ScheduleNameField'
 import ScheduleURLField from '../fields/ScheduleURLField'
 import CycleSelectField from '../fields/CycleSelectField'
-import MaxVisitSlider from '../fields/MaxVisitSlider'
-import MaxDistSlider from '../fields/MaxDistSlider'
 
 
 export default class GeneralSettings extends React.Component {
@@ -13,8 +11,6 @@ export default class GeneralSettings extends React.Component {
     nameValueLink: ValueLinkPropType.isRequired,
     urlValueLink: ValueLinkPropType.isRequired,
     cycleValueLink: ValueLinkPropType.isRequired,
-    maxDistValueLink: ValueLinkPropType.isRequired,
-    maxVisitValueLink: ValueLinkPropType.isRequired,
     nameError: PropTypes.string,
     urlError: PropTypes.string,
     cycleError: PropTypes.string,
@@ -43,13 +39,6 @@ export default class GeneralSettings extends React.Component {
     marginBottom: 10
   };
 
-  static MAX_DEPTH_FIELD_STYLE = {
-  };
-
-  static MAX_DIST_FIELD_STYLE = {
-    marginTop: 10
-  };
-
   // ==================
   // Compensated styles
   // ==================
@@ -62,22 +51,15 @@ export default class GeneralSettings extends React.Component {
     marginTop: -30
   };
 
-  static COMPENSATED_MAX_DEPTH_FIELD_STYLE = {
-    marginTop: 0
-  };
-
   render() {
     const {
       // base styles
       NAME_FIELD_STYLE,
       URL_FIELD_STYLE,
       CYCLE_FIELD_STYLE,
-      MAX_DEPTH_FIELD_STYLE,
-      MAX_DIST_FIELD_STYLE,
       // compensated styles
       COMPENSATED_URL_FIELD_STYLE,
       COMPENSATED_CYCLE_FIELD_STYLE,
-      COMPENSATED_MAX_DEPTH_FIELD_STYLE,
     } = this.constructor
 
     const {
@@ -85,14 +67,11 @@ export default class GeneralSettings extends React.Component {
       nameValueLink,
       urlValueLink,
       cycleValueLink,
-      maxVisitValueLink,
-      maxDistValueLink,
       // errors
       nameError,
       urlError,
       cycleError,
     } = this.props
-
 
     return (
       <div>
@@ -110,16 +89,6 @@ export default class GeneralSettings extends React.Component {
           style={urlError ? COMPENSATED_CYCLE_FIELD_STYLE : CYCLE_FIELD_STYLE}
           valueLink={cycleValueLink}
           error={cycleError}
-        />
-        <MaxVisitSlider
-          style={
-            nameError || urlError ?
-            COMPENSATED_MAX_DEPTH_FIELD_STYLE : MAX_DEPTH_FIELD_STYLE}
-          valueLink={maxVisitValueLink}
-        />
-        <MaxDistSlider
-          style={MAX_DIST_FIELD_STYLE}
-          valueLink={maxDistValueLink}
         />
       </div>
     )

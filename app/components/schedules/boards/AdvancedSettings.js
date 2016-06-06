@@ -1,16 +1,14 @@
-import React, { PropTypes } from 'react'
-import ImmutablePropTypes from 'react-immutable-proptypes'
+import React from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { ValueLinkPropType } from '../../../constants/types'
-import OptionURLFieldSet from '../fields/OptionURLFieldSet.js'
+import MaxVisitSlider from '../fields/MaxVisitSlider'
+import MaxDistSlider from '../fields/MaxDistSlider'
 
 
 export default class AdvancedSettings extends React.Component {
   static propTypes = {
-    urlWhitelistValueLink: ValueLinkPropType.isRequired,
-    urlWhitelistError: ImmutablePropTypes.listOf(PropTypes.string),
-    urlBlacklistValueLink: ValueLinkPropType.isRequired,
-    urlBlacklistError: ImmutablePropTypes.listOf(PropTypes.string),
+    maxDistValueLink: ValueLinkPropType.isRequired,
+    maxVisitValueLink: ValueLinkPropType.isRequired,
   };
 
   constructor(props) {
@@ -22,34 +20,28 @@ export default class AdvancedSettings extends React.Component {
   static STYLE = {
     marginLeft: -20
   };
-
-  static OPTION_URL_FIELD_SET_STYLE = {
-    marginTop: 20,
-    marginBottom: 20,
+  static MAX_VISIT_FIELD_STYLE = {
+  };
+  static MAX_DIST_FIELD_STYLE = {
   };
 
   render() {
-    const { STYLE, OPTION_URL_FIELD_SET_STYLE } = this.constructor
+    const { maxDistValueLink, maxVisitValueLink } = this.props
     const {
-      urlWhitelistValueLink,
-      urlWhitelistError,
-      urlBlacklistValueLink,
-      urlBlacklistError,
-    } = this.props
+      STYLE,
+      MAX_VISIT_FIELD_STYLE,
+      MAX_DIST_FIELD_STYLE,
+    } = this.constructor
 
     return (
       <div style={STYLE}>
-        <OptionURLFieldSet
-          label="URL White List"
-          style={OPTION_URL_FIELD_SET_STYLE}
-          valueLink={urlWhitelistValueLink}
-          error={urlWhitelistError}
+        <MaxVisitSlider
+          style={MAX_VISIT_FIELD_STYLE}
+          valueLink={maxVisitValueLink}
         />
-        <OptionURLFieldSet
-          label="URL Black List"
-          style={OPTION_URL_FIELD_SET_STYLE}
-          valueLink={urlBlacklistValueLink}
-          error={urlBlacklistError}
+        <MaxDistSlider
+          style={MAX_DIST_FIELD_STYLE}
+          valueLink={maxDistValueLink}
         />
       </div>
     )

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { immutableRenderDecorator } from 'react-immutable-render-mixin'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import BaseSlider from '../../base/BaseSlider'
 import { ValueLinkPropType } from '../../../constants/types'
 import {
@@ -9,12 +9,18 @@ import {
 } from '../../../constants/numbers'
 
 
-class MaxVisitSlider extends React.Component {
+export default class MaxVisitSlider extends React.Component {
   static propTypes = {
     valueLink: ValueLinkPropType.isRequired,
     sliderStyle: PropTypes.object,
     style: PropTypes.object,
   };
+
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   static STYLE = {
   };
@@ -45,6 +51,3 @@ class MaxVisitSlider extends React.Component {
     )
   }
 }
-
-
-export default immutableRenderDecorator(MaxVisitSlider)

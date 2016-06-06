@@ -1,12 +1,14 @@
 import _ from 'lodash'
 import React, { PropTypes } from 'react'
-import { immutableRenderDecorator } from 'react-immutable-render-mixin'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import Ink from 'react-ink'
 import ActionSettings from 'material-ui/lib/svg-icons/action/settings'
 import ActionFlightTakeoff from 'material-ui/lib/svg-icons/action/flight-takeoff'
+import DeviceHub from 'material-ui/lib/svg-icons/hardware/device-hub'
 import {
   DASH_BOARD_GENERAL_SETTINGS,
-  DASH_BOARD_ADVANCED_SETTINGS
+  DASH_BOARD_ADVANCED_SETTINGS,
+  DASH_BOARD_URL_SETTINGS,
 } from '../../constants/strings'
 import { SECONDARY, INACTIVE } from '../../constants/colors'
 import { SCHEDULE_DASH_BOARDS } from '../../constants/arrays'
@@ -14,7 +16,7 @@ import Title from '../base/Title'
 import BoardMenuIconButton from './menus/BoardMenuIconButton'
 
 
-class DashBoardTitle extends React.Component {
+export default class DashBoardTitle extends React.Component {
   static propTypes = {
     setBoard: PropTypes.func.isRequired,
     board: PropTypes.oneOf(SCHEDULE_DASH_BOARDS).isRequired,
@@ -23,6 +25,8 @@ class DashBoardTitle extends React.Component {
   constructor(props) {
     super(props)
     this.state = { hovering: false }
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
   }
 
   static RIPPLE_DELAY = 220;
@@ -31,8 +35,14 @@ class DashBoardTitle extends React.Component {
     off: INACTIVE,
   };
   static TITLE_LABELS = {
-    DASH_BOARD_GENERAL_SETTINGS: 'General Settings',
-    DASH_BOARD_ADVANCED_SETTINGS: 'Advanced Settings',
+    [DASH_BOARD_GENERAL_SETTINGS]: 'General Settings',
+    [DASH_BOARD_ADVANCED_SETTINGS]: 'Advanced Settings',
+    [DASH_BOARD_URL_SETTINGS]: 'URL Settings',
+  };
+  static TITLE_ICONS = {
+    [DASH_BOARD_GENERAL_SETTINGS]: ActionSettings,
+    [DASH_BOARD_ADVANCED_SETTINGS]: ActionFlightTakeoff,
+    [DASH_BOARD_URL_SETTINGS]: DeviceHub,
   };
   static TITLE_ROW_STYLE = {
     width: '100%',
@@ -55,14 +65,14 @@ class DashBoardTitle extends React.Component {
   _getIcon() {
     const { hovering } = this.state
     const { board } = this.props
-    const { HOVER_COLORS, TITLE_ICON_STYLE } = this.constructor
+    const {
+      HOVER_COLORS,
+      TITLE_ICONS,
+      TITLE_ICON_STYLE,
+    } = this.constructor
 
     const iconColor = hovering ? HOVER_COLORS.on : HOVER_COLORS.off
-    const iconClass =
-      board === DASH_BOARD_GENERAL_SETTINGS ? ActionSettings :
-      board === DASH_BOARD_ADVANCED_SETTINGS ? ActionFlightTakeoff :
-        (() => { throw new Error('invalid dash board type has been given')})()
-
+    const iconClass = TITLE_ICONS[board]
     return React.createElement(iconClass, {
       style: TITLE_ICON_STYLE, color: iconColor
     })
@@ -102,10 +112,8 @@ class DashBoardTitle extends React.Component {
   proceed() {
     const { board, setBoard } = this.props
     const { RIPPLE_DELAY } = this.constructor
-
     const boards = SCHEDULE_DASH_BOARDS
     const currentIndex = _.findIndex(boards, b => b === board)
-
     setTimeout(() => {
       setBoard(boards[(currentIndex + 1) % boards.length])
     }, RIPPLE_DELAY)
@@ -120,18 +128,24 @@ class DashBoardTitle extends React.Component {
   }
 
   render() {
-    const { TITLE_ROW_STYLE } = this.constructor
+    const {
+      TITLE_ROW_STYLE,
+      TITLE_LABELS,
+      TITLE_ICONS,
+    } = this.constructor
     const { board, setBoard } = this.props
     const title = this._getTitle()
 
     return (
       <div style={TITLE_ROW_STYLE} className={TITLE_ROW_STYLE.className}>
         {title}
-        <BoardMenuIconButton board={board} setBoard={setBoard} />
+        <BoardMenuIconButton
+          board={board}
+          setBoard={setBoard}
+          labels={TITLE_LABELS}
+          icons={TITLE_ICONS}
+        />
       </div>
     )
   }
 }
-
-
-export default immutableRenderDecorator(DashBoardTitle)
