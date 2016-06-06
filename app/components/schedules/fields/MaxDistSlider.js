@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-
+import { immutableRenderDecorator } from 'react-immutable-render-mixin'
 import BaseSlider from '../../base/BaseSlider'
 import { ValueLinkPropType } from '../../../constants/types'
 import {
@@ -8,9 +8,10 @@ import {
   MAX_DIST_RANGE_MAX
 } from '../../../constants/numbers'
 
-export default class MaxDistanceSlider extends React.Component {
+class MaxDistSlider extends React.Component {
   static propTypes = {
     valueLink: ValueLinkPropType.isRequired,
+    sliderStyle: PropTypes.object,
     style: PropTypes.object,
   };
 
@@ -33,7 +34,7 @@ export default class MaxDistanceSlider extends React.Component {
         step={1}
         style={mergedStyle}
         sliderStyle={mergedSliderStyle}
-        description="Maximum distance"
+        description="Maximum Reporter Distance"
         max={MAX_DIST_RANGE_MAX}
         min={MAX_DIST_RANGE_MIN}
         defaultValue={MAX_DIST_DEFALT}
@@ -43,3 +44,6 @@ export default class MaxDistanceSlider extends React.Component {
     )
   }
 }
+
+
+export default immutableRenderDecorator(MaxDistSlider)

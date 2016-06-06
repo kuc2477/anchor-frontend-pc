@@ -1,4 +1,5 @@
 import request from 'superagent'
+import Immutable from 'immutable'
 import { ActionCreators } from 'redux-undo'
 import { decamelizeKeys, camelizeKeys } from 'humps'
 
@@ -22,7 +23,7 @@ export const coverStarted = (scheduleId) => ({
 export const COVER_FINISHED = 'COVER_FINISHED'
 export const coverFinished = (scheduleId, status = SUCCESS) => ({
   type: COVER_FINISHED,
-  scheduleId, 
+  scheduleId,
   status
 })
 
@@ -102,11 +103,12 @@ export const saveScheduleError = () => ({
 
 export const saveSchedule = (schedule, callback) => dispatch => {
   // dispatch save start and update the schedule
-  dispatch(saveScheduleStart(schedule.id, schedule))
-  dispatch(updateSchedule(schedule.id, schedule))
+  const id = schedule.get('id')
+  dispatch(saveScheduleStart(id, schedule))
+  dispatch(updateSchedule(id, schedule))
 
   const targetEndPoint = unsaved(schedule) ?
-    urls.schedules() : urls.schedules(schedule.id)
+    urls.schedules() : urls.schedules(id)
 
   const targetRequest = unsaved(schedule) ?
     request.post : request.put
@@ -115,7 +117,7 @@ export const saveSchedule = (schedule, callback) => dispatch => {
   .use(authorize())
   .use(authorizeCSRF())
   .type('json')
-  .send(decamelizeKeys(schedule))
+  .send(decamelizeKeys(schedule.toJS()))
   .end((error, response) => {
     if (error) {
       // undo update on error and dispatch error
@@ -126,7 +128,7 @@ export const saveSchedule = (schedule, callback) => dispatch => {
 
     // dispatch success with response's saved values and fire callback
     const saved = camelizeKeys(response.body)
-    dispatch(saveScheduleSuccess(schedule, saved))
+    dispatch(saveScheduleSuccess(schedule, Immutable.fromJS(saved)))
     if (callback) {
       callback(saved)
     }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { whyDidYouUpdate } from 'why-did-you-update'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
@@ -9,8 +10,11 @@ import router from './router'
 import store from './store'
 import DevTools from './components/dev/DevTools'
 
-import { FLOW_CLASS } from './constants/strings'
 
+// track avoidable renders
+if (process.env.TRACK_AVOIDABLE_RENDERS === 'true') {
+  whyDidYouUpdate(React)
+}
 
 // inject tap event plugin
 injectTapEventPlugin()

@@ -1,10 +1,9 @@
 import _ from 'lodash'
 import React, { PropTypes } from 'react'
-
+import { immutableRenderDecorator } from 'react-immutable-render-mixin'
 import Ink from 'react-ink'
 import ActionSettings from 'material-ui/lib/svg-icons/action/settings'
 import ActionFlightTakeoff from 'material-ui/lib/svg-icons/action/flight-takeoff'
-
 import {
   DASH_BOARD_GENERAL_SETTINGS,
   DASH_BOARD_ADVANCED_SETTINGS
@@ -15,7 +14,7 @@ import Title from '../base/Title'
 import BoardMenuIconButton from './menus/BoardMenuIconButton'
 
 
-export default class DashBoardTitle extends React.Component {
+class DashBoardTitle extends React.Component {
   static propTypes = {
     setBoard: PropTypes.func.isRequired,
     board: PropTypes.oneOf(SCHEDULE_DASH_BOARDS).isRequired,
@@ -26,23 +25,15 @@ export default class DashBoardTitle extends React.Component {
     this.state = { hovering: false }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.board !== nextProps.board ||
-      this.state.hovering !== nextState.hovering
-  }
-
   static RIPPLE_DELAY = 220;
-
   static HOVER_COLORS = {
     on: SECONDARY,
     off: INACTIVE,
   };
-
   static TITLE_LABELS = {
     DASH_BOARD_GENERAL_SETTINGS: 'General Settings',
     DASH_BOARD_ADVANCED_SETTINGS: 'Advanced Settings',
   };
-
   static TITLE_ROW_STYLE = {
     width: '100%',
     paddingTop: 5,
@@ -50,13 +41,11 @@ export default class DashBoardTitle extends React.Component {
     paddingLeft: 30,
     className: 'row middle-md between-md',
   };
-
   static TITLE_ICON_STYLE = {
     height: 25,
     width: 25,
     marginRight: 10,
   };
-
   static TITLE_STYLE = {
     padding: 5,
     position: 'relative',
@@ -143,3 +132,6 @@ export default class DashBoardTitle extends React.Component {
     )
   }
 }
+
+
+export default immutableRenderDecorator(DashBoardTitle)

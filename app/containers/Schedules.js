@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import Immutable from 'immutable'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import validate from 'validate.js'
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { connect } from 'react-redux'
-
 import {
   DASH_BOARD_GENERAL_SETTINGS,
   DASH_BOARD_ADVANCED_SETTINGS,
@@ -23,11 +24,17 @@ import { toast } from '../modules/utils'
 import '../styles/modules/no-scrollbar.scss'
 
 
-class Schedules extends React.Component {
+export default class Schedules extends React.Component {
   static propTypes = {
-    schedule: PropTypes.number,
-    schedules: PropTypes.arrayOf(PropTypes.number),
-    schedulesById: PropTypes.objectOf(SchedulePropType),
+    schedule: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
+    schedules: ImmutablePropTypes.listOf(PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ])),
+    schedulesById: ImmutablePropTypes.contains(SchedulePropType),
     isSaving: PropTypes.bool,
     didSaveFail: PropTypes.bool,
     isFetching: PropTypes.bool,
@@ -42,6 +49,8 @@ class Schedules extends React.Component {
 
   constructor(props) {
     super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
     this.state = this.constructor.INITIAL_STATE
   }
 
@@ -71,14 +80,14 @@ class Schedules extends React.Component {
 
   static INITIAL_STATE = {
     editing: null,
-    errors: {
+    errors: Immutable.fromJS({
       nameError: '',
       urlError: '',
       cycleError: '',
-      brothersError: [],
-    }
+      urlWhitelistError: [],
+      urlBlacklistError: [],
+    })
   };
-
   static FORM_CONSTRAINT = {
     name: {
       length: {
@@ -92,46 +101,46 @@ class Schedules extends React.Component {
     cycle: {
       presence: true
     },
-    'options.maxVisit': {
-      numerciality: true,
-    },
-    'options.maxDist': {
-      numerciality: true,
-    },
-    'options.urlWhiteList': {
+    'options.urlWhitelist': {
       array: true,
       url: true,
     },
-    'options.urlBlackList': {
+    'options.urlBlacklist': {
       array: true,
       url: true,
     },
   };
 
+  // ===========
+  // Validations
+  // ===========
+
   validateBeforeSave() {
     const { editing, errors } = this.state
-    const { name, url, cycle } = editing
-    const { brothersError } = errors
+    const { name, url, cycle } = editing.toJS()
+    const { urlWhitelistError, urlBlacklistError } = errors.toJS()
     let { nameError, urlError, cycleError } = errors
     nameError = !name ? 'Name should not be empty' : nameError
     urlError = !url ? 'Url should not be empty' : urlError
     cycleError = !cycle ? 'Cycle should not be empty' : cycleError
 
     // update error states and return validation result
-    const updatedErrors = Object.assign({}, errors, {
+    const updatedErrors = errors.merge({
       nameError, urlError, cycleError
     })
     this.setState({ errors: updatedErrors })
     return !nameError && !urlError && !cycleError &&
-      brothersError.every(v => !v)
+      urlWhitelistError.every(v => !v) &&
+      urlBlacklistError.every(v => !v)
   }
 
   // Validates form on input value changes. Not that this function has
   // nothing to do with `validateBeforeSave`.
   _validate(values) {
-    const updated = Object.assign({}, this.state.editing, values)
-
     const { FORM_CONSTRAINT } = this.constructor
+    const { editing } = this.state
+    const updated = editing.merge(values).toJS()
+
     const singleConstraint = _.pickBy(FORM_CONSTRAINT, v => !v.array)
     const arrayConstraint =
       _(FORM_CONSTRAINT)
@@ -140,20 +149,19 @@ class Schedules extends React.Component {
       .value()
 
     const singleValidation = validate(updated, singleConstraint)
-    const arrayValidation =
-      _(updated)
-      .pickBy((v, k) => _.has(arrayConstraint, k))
-      .mapValues(
-        (array, key) => array
-        .map(v => validate.single(v, arrayConstraint[key]))
-        .map(validation =>
-             validation && validation[0] &&
-             `${key.replace(/s$/, '')} ${validation[0]}`)
-      )
-      .value()
+    const arrayValidation = _(arrayConstraint).mapValues(
+      (constraints, key) => (_.get(updated, key) || [])
+      .map(v => validate.single(v, constraints))
+      .map(v => v && v[0] && _.capitalize(v[0]))
+    )
+    .value()
 
     return _.merge(singleValidation, arrayValidation)
   }
+
+  // ====================
+  // Value Link Factories
+  // ====================
 
   // get value link to editing state
   _getValueLink(name) {
@@ -169,19 +177,21 @@ class Schedules extends React.Component {
     }
 
     // generate updated value and value link
-    const value = editing[name] || (isArrayField ? [] : null)
+    const value = editing.get(name) || (
+      isArrayField ? new Immutable.List() : null)
+
     const requestChange = (event, changedValue) => {
       const eventChangedValue = event && event.target && event.target.value
       const finalChangedValue = eventChangedValue || changedValue
 
       const v = this._validate({ [name]: finalChangedValue })
-      const updated = Object.assign({}, editing, { [name]: finalChangedValue })
-      const updatedErrors = Object.assign({}, errors, {
-        [`${name}Error`]: v && v[name] ?
-          isArrayField ?
-          v[name] :
-          v[name][0] : ''
-      })
+      const updated = editing.set(name, finalChangedValue)
+      const updatedErrors = errors.set(
+        `${name}Error`,
+        (v && v[name]) ? isArrayField ?
+          new Immutable.List(v[name]) :
+            v[name][0] : ''
+      )
       this.setState({ editing: updated, errors: updatedErrors })
     }
 
@@ -203,24 +213,31 @@ class Schedules extends React.Component {
     }
 
     // generate updated value and value link
-    const value = editing[name][nestedName] || (isArrayField ? [] : null)
+    const value = editing.getIn([name, nestedName]) ||
+      (isArrayField ? new Immutable.List() : null)
+
     const requestChange = (event, changedValue) => {
       const eventChangedValue = event && event.target && event.target.value
       const finalChangedValue = eventChangedValue || changedValue
 
-      const v = this._validate({ [name]: finalChangedValue })
-      const updated = Object.assign({}, editing, { [name]: finalChangedValue })
-      const updatedErrors = Object.assign({}, errors, {
-        [`${nestedName}Error`]: v && v[concatenatedName] ?
-          isArrayField ?
-          v[concatenatedName] :
-          v[concatenatedName][0] : ''
-      })
+      const v = this._validate(editing.setIn([name, nestedName], finalChangedValue))
+      const updated = editing.setIn([name, nestedName], finalChangedValue)
+      const updatedErrors = errors.set(
+        `${nestedName}Error`,
+        v && v[concatenatedName] ? isArrayField ?
+          new Immutable.List(v[concatenatedName]) : v[concatenatedName][0] :
+        isArrayField ? new Immutable.List() : ''
+      )
+
       this.setState({ editing: updated, errors: updatedErrors })
     }
 
     return { value, requestChange }
   }
+
+  // ====================
+  // Container Operations
+  // ====================
 
   select(scheduleId) {
     const { dispatch, schedule } = this.props
@@ -240,7 +257,7 @@ class Schedules extends React.Component {
     const { editing } = this.state
     const { dispatch, schedule, schedulesById } = this.props
 
-    const previous = schedulesById[schedule]
+    const previous = schedulesById.get(schedule)
     const changed = previous && editing &&
       !Immutable.fromJS(previous).equals(
       Immutable.fromJS(editing)
@@ -248,18 +265,18 @@ class Schedules extends React.Component {
 
     if (schedule && changed && this.validateBeforeSave()) {
       dispatch(saveSchedule(editing, () => {
-        toast(`Saved schedule ${editing.name}`)
+        toast(`Saved schedule ${editing.get('name')}`)
       }))
     }
   }
 
   del(scheduleId) {
     const { dispatch, schedulesById } = this.props
-    const toDelete = schedulesById[scheduleId]
+    const toDelete = schedulesById.get(scheduleId)
 
     if (scheduleId && toDelete) {
       dispatch(deleteSchedule(scheduleId, () => {
-        toast(`Deleted schedule ${toDelete.name}`)
+        toast(`Deleted schedule ${toDelete.get('name')}`)
       }))
     }
   }
@@ -274,7 +291,7 @@ class Schedules extends React.Component {
   // store causes performance issue.
   syncEditing(props) {
     const { schedule, schedulesById } = props || this.props
-    const editing = schedulesById[schedule]
+    const editing = schedulesById.get(schedule)
     this.setState({ editing })
   }
 
@@ -284,6 +301,7 @@ class Schedules extends React.Component {
   }
 
   render() {
+    let { errors } = this.state
     const { editing } = this.state
     const {
       schedule,
@@ -299,12 +317,18 @@ class Schedules extends React.Component {
       urlValueLink: this._getValueLink('url'),
       cycleValueLink: this._getValueLink('cycle'),
       maxVisitValueLink: this._getNestedValueLink('options', 'maxVisit'),
-      maxDistValueLink: this._getValueLink('options', 'maxDist'),
-      urlWhiteListValueLink: this._getNestedValueLink('options', 'urlWhiteList')
-      urlBlackListValueLink: this._getNestedValueLink('options', 'urlBlackList')
+      maxDistValueLink: this._getNestedValueLink('options', 'maxDist'),
+      urlWhitelistValueLink: this._getNestedValueLink('options', 'urlWhitelist'),
+      urlBlacklistValueLink: this._getNestedValueLink('options', 'urlBlacklist')
     }
 
-    const errors = Object.assign({}, this.state.errors)
+    errors = {
+      nameError: errors.get('nameError'),
+      urlError: errors.get('urlError'),
+      cycleError: errors.get('cycleError'),
+      urlWhitelistError: errors.get('urlWhitelistError'),
+      urlBlacklistError: errors.get('urlBlacklistError'),
+    }
 
     return (
       <div className="row">
@@ -343,8 +367,8 @@ export default connect(app => {
   const { present } = app.schedules
   return {
     schedule: present.get('schedule'),
-    schedules: present.get('schedules').toJS(),
-    schedulesById: present.get('schedulesById').toJS(),
+    schedules: present.get('schedules'),
+    schedulesById: present.get('schedulesById'),
     isSaving: present.get('isSaving'),
     didSaveFail: present.get('didSaveFail'),
     isFetching: present.get('isFetching'),

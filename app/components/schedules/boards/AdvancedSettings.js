@@ -1,34 +1,55 @@
 import React, { PropTypes } from 'react'
-
+import ImmutablePropTypes from 'react-immutable-proptypes'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { ValueLinkPropType } from '../../../constants/types'
-import BrotherSiteFieldSet from '../fields/BrotherSiteFieldSet'
+import OptionURLFieldSet from '../fields/OptionURLFieldSet.js'
 
 
 export default class AdvancedSettings extends React.Component {
   static propTypes = {
-    brothersValueLink: ValueLinkPropType.isRequired,
-    brothersError: PropTypes.arrayOf(PropTypes.string),
+    urlWhitelistValueLink: ValueLinkPropType.isRequired,
+    urlWhitelistError: ImmutablePropTypes.listOf(PropTypes.string),
+    urlBlacklistValueLink: ValueLinkPropType.isRequired,
+    urlBlacklistError: ImmutablePropTypes.listOf(PropTypes.string),
   };
+
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   static STYLE = {
     marginLeft: -20
   };
 
-  static BROTHER_FIELD_STYLE = {
+  static OPTION_URL_FIELD_SET_STYLE = {
     marginTop: 20,
     marginBottom: 20,
   };
 
   render() {
-    const { STYLE, BROTHER_FIELD_STYLE } = this.constructor
-    const { brothersValueLink, brothersError } = this.props
+    const { STYLE, OPTION_URL_FIELD_SET_STYLE } = this.constructor
+    const {
+      urlWhitelistValueLink,
+      urlWhitelistError,
+      urlBlacklistValueLink,
+      urlBlacklistError,
+    } = this.props
 
     return (
       <div style={STYLE}>
-        <BrotherSiteFieldSet
-          style={BROTHER_FIELD_STYLE}
-          valueLink={brothersValueLink}
-          error={brothersError}
+        <OptionURLFieldSet
+          label="URL White List"
+          style={OPTION_URL_FIELD_SET_STYLE}
+          valueLink={urlWhitelistValueLink}
+          error={urlWhitelistError}
+        />
+        <OptionURLFieldSet
+          label="URL Black List"
+          style={OPTION_URL_FIELD_SET_STYLE}
+          valueLink={urlBlacklistValueLink}
+          error={urlBlacklistError}
         />
       </div>
     )

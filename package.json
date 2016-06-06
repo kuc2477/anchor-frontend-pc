@@ -42,7 +42,8 @@
       "command": "electron ./",
       "env": {
         "HOT": true,
-        "DEV_SERVER": "http://ec2-54-218-75-14.us-west-2.compute.amazonaws.com",
+        "DEV_SERVER": "http://localhost:5000",
+        "TRACK_AVOIDABLE_RENDERS": false,
         "NODE_ENV": "development",
         "WINDOW_WIDTH": 1072,
         "WINDOW_HEIGHT": 600
@@ -83,8 +84,10 @@
     "normalize.css": "^3.0.3",
     "normalizr": "^2.0.0",
     "react": "^15.0.1",
+    "react-addons-pure-render-mixin": "^15.1.0",
     "react-dom": "^15.0.1",
-    "react-immutable-proptypes": "^1.5.1",
+    "react-immutable-proptypes": "^1.7.1",
+    "react-immutable-render-mixin": "^0.9.6",
     "react-infinite": "^0.9.2",
     "react-ink": "^5.1.0",
     "react-mfb": "^0.3.0",
@@ -143,6 +146,7 @@
     "karma-webpack": "^1.7.0",
     "node-sass": "^3.4.2",
     "npm-check": "^5.2.1",
+    "react-addons-perf": "^15.1.0",
     "react-addons-test-utils": "^0.14.6",
     "react-immutable-render-mixin": "^0.9.6",
     "redux-devtools": "^3.0.1",
@@ -155,7 +159,8 @@
     "webpack": "^1.12.10",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0",
-    "webpack-target-electron-renderer": "^0.4.0"
+    "webpack-target-electron-renderer": "^0.4.0",
+    "why-did-you-update": "0.0.8"
   },
   "devEngines": {
     "node": "4.x || 5.x",

@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import ContentAdd from 'material-ui/lib/svg-icons/content/add'
 import { Menu, MainButton, ChildButton } from 'react-mfb'
@@ -7,7 +9,6 @@ import ScheduleItem from './ScheduleItem'
 import { SECONDARY } from '../../constants/colors'
 import { SchedulePropType, ValueLinkPropType } from '../../constants/types'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
-
 import 'react-mfb/mfb.css'
 
 
@@ -16,8 +17,8 @@ export default class ScheduleList extends React.Component {
     // schedules
     editing: SchedulePropType,
     schedule: PropTypes.number,
-    schedules: PropTypes.arrayOf(PropTypes.number).isRequired,
-    schedulesById: PropTypes.objectOf(SchedulePropType).isRequired,
+    schedules: ImmutablePropTypes.listOf(PropTypes.number).isRequired,
+    schedulesById: ImmutablePropTypes.contains(SchedulePropType).isRequired,
     load: PropTypes.func.isRequired,
     isFetching: PropTypes.bool.isRequired,
     // schedule entry manipulation
@@ -31,9 +32,8 @@ export default class ScheduleList extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      opened: null
-    }
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
   }
 
   static STYLE = {
@@ -64,10 +64,6 @@ export default class ScheduleList extends React.Component {
   static SCHEDULE_LIST_HEIGHT = WINDOW_HEIGHT - 150;
   static SCHEDULE_ITEM_HEIGHT = 100;
   static LOAD_EDGE_OFFSET = 50;
-
-  toggleOpen(toToggle) {
-    this.setState({ opened: toToggle !== this.state.opened ? toToggle : null })
-  }
 
   _getFab() {
     const { add, isFetching } = this.props
@@ -124,8 +120,8 @@ export default class ScheduleList extends React.Component {
 
   _getScheduleNodes() {
     const { LIST_ITEM_STYLE } = this.constructor
-    const { opened } = this.state
     const {
+      schedules, schedulesById,
       // editing, value link to editing and currently selected schedule
       editing, enabledValueLink,
       schedule: selected,
@@ -133,20 +129,21 @@ export default class ScheduleList extends React.Component {
       del, save, select
     } = this.props
 
-    return this.props.schedules
-      .map(id => this.props.schedulesById[id])
+    return schedules
+      .map(id => schedulesById.get(id))
       .map(schedule => (
         <ScheduleItem
           style={LIST_ITEM_STYLE}
-          key={schedule.id}
-          opened={schedule.id === opened}
-          selected={schedule.id === selected}
-          schedule={schedule.id === selected ? editing : schedule}
+          key={schedule.get('id')}
+          selected={schedule.get('id') === selected}
+          schedule={schedule.get('id') === selected ? editing : schedule}
           del={del}
-          save={schedule.id === selected ? save : null}
+          save={schedule.get('id') === selected ? save : null}
           select={select}
-          toggleOpen={::this.toggleOpen}
-          enabledValueLink={schedule.id === selected ? enabledValueLink : null}
+          enabledValueLink={
+            schedule.get('id') === selected ?
+              enabledValueLink : null
+          }
         />
       ))
   }

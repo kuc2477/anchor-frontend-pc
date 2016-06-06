@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import React, { PropTypes } from 'react'
-
+import PureRenderMixin from 'react-addons-pure-render-mixin'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import Paper from 'material-ui/lib/paper'
 import SwipeableViews from 'react-swipeable-views'
 
@@ -30,17 +31,24 @@ export default class DashBoard extends React.Component {
     cycleValueLink: ValueLinkPropType.isRequired,
     maxVisitValueLink: ValueLinkPropType.isRequired,
     maxDistValueLink: ValueLinkPropType.isRequired,
-    urlWhiteListValueLink: ValueLinkPropType.isRequired,
-    urlBlackListValueLink: ValueLinkPropType.isRequired,
+    urlWhitelistValueLink: ValueLinkPropType.isRequired,
+    urlBlacklistValueLink: ValueLinkPropType.isRequired,
     // errors
     nameError: PropTypes.string,
     urlError: PropTypes.string,
     cycleError: PropTypes.string,
-    brothersError: PropTypes.arrayOf(PropTypes.string),
+    urlWhitelistError: ImmutablePropTypes.listOf(PropTypes.string),
+    urlBlacklistError: ImmutablePropTypes.listOf(PropTypes.string),
     // schedule entry / board manipulation
     save: PropTypes.func.isRequired,
     setBoard: PropTypes.func.isRequired,
   };
+
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   // root element style
   static STYLE = {
@@ -81,12 +89,13 @@ export default class DashBoard extends React.Component {
 
     const generalSettingsProps = _.pick(this.props, [
       'nameValueLink', 'urlValueLink', 'cycleValueLink',
-      'maxDepthValueLink', 'maxDistValueLink',
+      'maxVisitValueLink', 'maxDistValueLink',
       'nameError', 'urlError', 'cycleError'
     ])
 
     const advancedSettingsProps = _.pick(this.props, [
-      'brothersValueLink', 'brothersError'
+      'urlWhitelistValueLink', 'urlWhitelistError',
+      'urlBlacklistValueLink', 'urlBlacklistError',
     ])
 
     return (

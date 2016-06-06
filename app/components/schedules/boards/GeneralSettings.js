@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
-
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { ValueLinkPropType } from '../../../constants/types'
 import ScheduleNameField from '../fields/ScheduleNameField'
 import ScheduleURLField from '../fields/ScheduleURLField'
 import CycleSelectField from '../fields/CycleSelectField'
-import MaxDepthSlider from '../fields/MaxDepthSlider'
-import MaxDistanceSlider from '../fields/MaxDistanceSlider'
+import MaxVisitSlider from '../fields/MaxVisitSlider'
+import MaxDistSlider from '../fields/MaxDistSlider'
 
 
 export default class GeneralSettings extends React.Component {
@@ -14,11 +14,17 @@ export default class GeneralSettings extends React.Component {
     urlValueLink: ValueLinkPropType.isRequired,
     cycleValueLink: ValueLinkPropType.isRequired,
     maxDistValueLink: ValueLinkPropType.isRequired,
-    maxDepthValueLink: ValueLinkPropType.isRequired,
+    maxVisitValueLink: ValueLinkPropType.isRequired,
     nameError: PropTypes.string,
     urlError: PropTypes.string,
     cycleError: PropTypes.string,
   };
+
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   // ===========
   // Base styles
@@ -49,11 +55,11 @@ export default class GeneralSettings extends React.Component {
   // ==================
 
   static COMPENSATED_URL_FIELD_STYLE = {
-    marginTop: -20
+    marginTop: -30
   };
 
   static COMPENSATED_CYCLE_FIELD_STYLE = {
-    marginTop: -20
+    marginTop: -30
   };
 
   static COMPENSATED_MAX_DEPTH_FIELD_STYLE = {
@@ -79,7 +85,7 @@ export default class GeneralSettings extends React.Component {
       nameValueLink,
       urlValueLink,
       cycleValueLink,
-      maxDepthValueLink,
+      maxVisitValueLink,
       maxDistValueLink,
       // errors
       nameError,
@@ -105,15 +111,15 @@ export default class GeneralSettings extends React.Component {
           valueLink={cycleValueLink}
           error={cycleError}
         />
-        <MaxDepthSlider
+        <MaxVisitSlider
           style={
             nameError || urlError ?
-            COMPENSATED_MAX_DEPTH_FIELD_STYLE: MAX_DEPTH_FIELD_STYLE}
-          valueLink={maxDistValueLink}
+            COMPENSATED_MAX_DEPTH_FIELD_STYLE : MAX_DEPTH_FIELD_STYLE}
+          valueLink={maxVisitValueLink}
         />
-        <MaxDistanceSlider
+        <MaxDistSlider
           style={MAX_DIST_FIELD_STYLE}
-          valueLink={maxDepthValueLink}
+          valueLink={maxDistValueLink}
         />
       </div>
     )

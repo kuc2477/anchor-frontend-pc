@@ -78,7 +78,7 @@ export default (state = initialState, action) => {
 
 function reduceAddSchedule(state, action) {
   const { schedule } = action
-  const scheduleId = Number(schedule.id) || schedule.id
+  const scheduleId = Number(schedule.get('id')) || schedule.get('id')
   const existingUnsaved = state.get('schedules').find(s => unsaved(s))
 
   // just activate existing unsaved schedule if already exists
@@ -174,11 +174,11 @@ function reduceSaveStart(state) {
 function reduceSaveSuccess(state, action) {
   const { previous, saved } = action
 
-  const previousId = Number(previous.id) || previous.id
-  const savedId = Number(saved.id) || saved.id
+  const previousId = Number(previous.get('id')) || previous.get('id')
+  const savedId = Number(saved.get('id')) || saved.get('id')
 
-  const savedSelected = previous.id === state.get('schedule')
-  const index = state.get('schedules').findIndex(s => s === previous.id)
+  const savedSelected = previousId === state.get('schedule')
+  const index = state.get('schedules').findIndex(s => s === previousId)
 
   return state.merge({
     isSaving: false,
@@ -188,7 +188,7 @@ function reduceSaveSuccess(state, action) {
     schedulesById: state
       .get('schedulesById')
       .delete(previousId)
-      .set(savedId, Immutable.fromJS(saved))
+      .set(savedId, saved)
   })
 }
 

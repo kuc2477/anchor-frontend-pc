@@ -1,5 +1,7 @@
 import _ from 'lodash'
+import Immutable from 'immutable'
 import { PropTypes } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 
 
 // ==================
@@ -22,26 +24,35 @@ export const ValueLinkPropType = PropTypes.shape({
 // Scheme proptypes
 // ================
 
-export const UserPropType = PropTypes.shape({
+export const UserPropType = ImmutablePropTypes.contains({
   id: PropTypes.number,
   firstname: PropTypes.string,
   lastname: PropTypes.string,
 })
 
-export const NewsPropType = PropTypes.shape({
+export const NewsPropType = ImmutablePropTypes.contains({
   id: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
   ]).isRequired,
-  src: PropTypes.number,
+  parent: PropTypes.number,
   url: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  author: PropTypes.string,
+  published: PropTypes.string,
+  summary: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  currentUserRating: PropTypes.bool
+  userRating: PropTypes.bool
 })
 
-export const SchedulePropType = PropTypes.shape({
+export const ScheduleOptionPropType = ImmutablePropTypes.contains({
+  urlWhitelist: ImmutablePropTypes.list,
+  urlBlacklist: ImmutablePropTypes.list,
+  maxVisit: PropTypes.number,
+  maxDist: PropTypes.number,
+})
+
+export const SchedulePropType = ImmutablePropTypes.contains({
   id: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
@@ -50,12 +61,8 @@ export const SchedulePropType = PropTypes.shape({
   enabled: PropTypes.bool.isRequired,
   url: PropTypes.string.isRequired,
   cycle: PropTypes.number.isRequired,
-  maxDepth: PropTypes.number,
-  maxDistance: PropTypes.number,
-  brothers: PropTypes.arrayOf(PropTypes.oneOfType(
-    [PropTypes.string, PropTypes.number]
-  )),
-  state: PropTypes.string.isRequired
+  state: PropTypes.string.isRequired,
+  options: ScheduleOptionPropType.isRequired,
 })
 
 
@@ -81,17 +88,20 @@ export const unsaved = (instance) => {
 
 
 export const createSchedule =
-  schedule => schedule ? Object.assign({}, schedule) : {
+  schedule => schedule || Immutable.fromJS({
     id: _.uniqueId(UNSAVED_PREFIX),
     url: '',
     name: '',
     enabled: false,
     state: 'PENDING',
     cycle: null,
-    maxDepth: null,
-    maxDistance: null,
-    brothers: [],
-  }
+    options: {
+      urlBlacklist: [],
+      urlWhitelist: [],
+      maxDist: null,
+      maxVisit: null,
+    },
+  })
 
 
 export default {

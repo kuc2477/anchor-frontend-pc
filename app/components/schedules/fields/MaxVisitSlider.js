@@ -1,17 +1,18 @@
 import React, { PropTypes } from 'react'
-
+import { immutableRenderDecorator } from 'react-immutable-render-mixin'
 import BaseSlider from '../../base/BaseSlider'
 import { ValueLinkPropType } from '../../../constants/types'
 import {
-  MAX_DEPTH_DEFAULT,
-  MAX_DEPTH_RANGE_MIN,
-  MAX_DEPTH_RANGE_MAX,
+  MAX_VISIT_DEFAULT,
+  MAX_VISIT_RANGE_MAX,
+  MAX_VISIT_RANGE_MIN,
 } from '../../../constants/numbers'
 
 
-export default class MaxDepthSlider extends React.Component {
+class MaxVisitSlider extends React.Component {
   static propTypes = {
     valueLink: ValueLinkPropType.isRequired,
+    sliderStyle: PropTypes.object,
     style: PropTypes.object,
   };
 
@@ -34,13 +35,16 @@ export default class MaxDepthSlider extends React.Component {
         step={1}
         style={mergedStyle}
         sliderStyle={mergedSliderStyle}
-        description="Maximum depth"
-        defaultValue={MAX_DEPTH_DEFAULT}
-        max={MAX_DEPTH_RANGE_MAX}
-        min={MAX_DEPTH_RANGE_MIN}
+        description="Maximum Reporter Visit"
+        defaultValue={MAX_VISIT_DEFAULT}
+        max={MAX_VISIT_RANGE_MAX}
+        min={MAX_VISIT_RANGE_MIN}
         value={value}
         onChange={requestChange}
       />
     )
   }
 }
+
+
+export default immutableRenderDecorator(MaxVisitSlider)

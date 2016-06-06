@@ -1,30 +1,25 @@
-* FEATURE GOALS [50%]
+* TODO Implement News container [60%]
+  - [X] add news fetch / rating actions and reducers [100%]
+        - [X] fetch / rating actions
+        - [X] fetch / rating reducers
+  - [X] Implement news list
+  - [X] Implement news item
+  - [ ] Implement news dash board
+  - [ ] Implement news reading mode
 
-  - [X] Implement *Schedules* container [100%]
-        - [X] Save only when needed
-        - [X] Validate before save
-        - [X] Optimistic save / delete [100%]
-              - [X] save
-              - [X] delete
-        - [X] Better layout ratio
-        - [X] Implement schedule enable toggle
-        - [X] Implement accordion - selectable list
-        - [X] Implement AdvancedSettings [100%]
-              - [X] brother site field set
-              - [X] brother site field
+* DONE Replace collapsed schedule toggle with swipeable view
 
-  - [-] Implement *News* container [75%]
-        - [X] add news fetch / rating actions and reducers [100%]
-              - [X] fetch / rating actions
-              - [X] fetch / rating reducers
-        - [X] Implement news list
-        - [X] Implement news item
-        - [ ] Implement news dash board
+* TODO Improve render performance with immutable props & states [50%]
+  - [X] Refactor Schedules.js [100%]
+        - [X] Schedules.js
+        - [X] ScheduleList.js
+        - [X] DashBoard.js
+  - [ ] Refactor News.js [0%]
+        - [ ] News.js
+        - [ ] NewsList.js
+        - [ ] DashBoard.js
 
-  - [X] Improve render performance with immutable props
-
-  - [-] Implement realtime notification with AutobahnJS [66%]
-        - [X] Design crossbar router subscription architecture
-        - [X] Subscript to schedule events on application start
-        - [ ] Render load latest fetched news loading button on successful 
-              news cover finish
+* TODO Implement realtime notification system [0%]
+  - [ ] Update schedule states on news cover start / success / error.
+  - [ ] Display push notification on successful news cover finish
+  - [ ] Render news loading button on successful news cover finish

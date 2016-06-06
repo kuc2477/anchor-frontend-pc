@@ -1,9 +1,8 @@
 import _ from 'lodash'
-
 import React, { PropTypes } from 'react'
+import { immutableRenderDecorator } from 'react-immutable-render-mixin'
 import SelectField from 'material-ui/lib/select-field'
 import MenuItem from 'material-ui/lib/menus/menu-item'
-
 import {
   CYCLE_OPTIONS,
   CYCLE_OPTION_TEXTS
@@ -11,10 +10,11 @@ import {
 import { ValueLinkPropType } from '../../../constants/types'
 
 
-export default class CycleSelectField extends React.Component {
+class CycleSelectField extends React.Component {
   static propTypes = {
     valueLink: ValueLinkPropType.isRequired,
     style: PropTypes.object,
+    error: PropTypes.string,
   };
 
   static STYLE = {
@@ -57,3 +57,6 @@ export default class CycleSelectField extends React.Component {
     )
   }
 }
+
+
+export default immutableRenderDecorator(CycleSelectField)

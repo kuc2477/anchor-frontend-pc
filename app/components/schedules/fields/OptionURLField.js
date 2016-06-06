@@ -1,27 +1,29 @@
-import Immutable from 'immutable'
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import TextField from 'material-ui/lib/text-field'
 
 
-export default class BrotherSiteField extends React.Component {
+export default class OptionURLField extends React.Component {
   static propTypes = {
-    index: PropTypes.number.isRequired,
     url: PropTypes.string.isRequired,
     error: PropTypes.string,
+    hintText: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     style: PropTypes.object,
   };
 
-  shouldComponentUpdate(nextProps) {
-    return !Immutable.fromJS(this.props).equals(Immutable.fromJS(nextProps))
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
   }
 
   render() {
-    const { style, url, error, onChange } = this.props
+    const { style, url, error, hintText, onChange } = this.props
     return (
       <TextField
         style={style}
-        hintText="Brother site url"
+        hintText={hintText}
         value={url}
         errorText={error}
         onChange={onChange}

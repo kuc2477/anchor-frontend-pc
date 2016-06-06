@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import TextField from 'material-ui/lib/text-field'
 import { ValueLinkPropType } from '../../../constants/types'
 
@@ -10,6 +11,11 @@ export default class ScheduleURLField extends React.Component {
     valueLink: ValueLinkPropType.isRequired,
   };
 
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   render() {
     const { style, error } = this.props
