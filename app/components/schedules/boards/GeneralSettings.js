@@ -4,6 +4,7 @@ import { ValueLinkPropType } from '../../../constants/types'
 import ScheduleNameField from '../fields/ScheduleNameField'
 import ScheduleURLField from '../fields/ScheduleURLField'
 import CycleSelectField from '../fields/CycleSelectField'
+import TypeSelectField from '../fields/TypeSelectField'
 
 
 export default class GeneralSettings extends React.Component {
@@ -11,6 +12,7 @@ export default class GeneralSettings extends React.Component {
     nameValueLink: ValueLinkPropType.isRequired,
     urlValueLink: ValueLinkPropType.isRequired,
     cycleValueLink: ValueLinkPropType.isRequired,
+    typeValueLink: ValueLinkPropType.isRequired,
     nameError: PropTypes.string,
     urlError: PropTypes.string,
     cycleError: PropTypes.string,
@@ -31,12 +33,15 @@ export default class GeneralSettings extends React.Component {
   };
 
   static URL_FIELD_STYLE = {
-    marginTop: 0
+    marginTop: 0,
   };
 
   static CYCLE_FIELD_STYLE = {
-    marginTop: 0,
-    marginBottom: 10
+    marginTop: 5,
+  };
+
+  static TYPE_FIELD_STYLE = {
+    marginTop: 5,
   };
 
   // ==================
@@ -44,11 +49,11 @@ export default class GeneralSettings extends React.Component {
   // ==================
 
   static COMPENSATED_URL_FIELD_STYLE = {
-    marginTop: -30
+    marginTop: -25
   };
 
   static COMPENSATED_CYCLE_FIELD_STYLE = {
-    marginTop: -30
+    marginTop: -10
   };
 
   render() {
@@ -57,6 +62,7 @@ export default class GeneralSettings extends React.Component {
       NAME_FIELD_STYLE,
       URL_FIELD_STYLE,
       CYCLE_FIELD_STYLE,
+      TYPE_FIELD_STYLE,
       // compensated styles
       COMPENSATED_URL_FIELD_STYLE,
       COMPENSATED_CYCLE_FIELD_STYLE,
@@ -67,6 +73,7 @@ export default class GeneralSettings extends React.Component {
       nameValueLink,
       urlValueLink,
       cycleValueLink,
+      typeValueLink,
       // errors
       nameError,
       urlError,
@@ -89,6 +96,10 @@ export default class GeneralSettings extends React.Component {
           style={urlError ? COMPENSATED_CYCLE_FIELD_STYLE : CYCLE_FIELD_STYLE}
           valueLink={cycleValueLink}
           error={cycleError}
+        />
+        <TypeSelectField
+          style={TYPE_FIELD_STYLE}
+          valueLink={typeValueLink}
         />
       </div>
     )

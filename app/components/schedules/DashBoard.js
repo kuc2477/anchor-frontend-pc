@@ -30,6 +30,7 @@ export default class DashBoard extends React.Component {
     nameValueLink: ValueLinkPropType.isRequired,
     urlValueLink: ValueLinkPropType.isRequired,
     cycleValueLink: ValueLinkPropType.isRequired,
+    typeValueLink: ValueLinkPropType.isRequired,
     maxVisitValueLink: ValueLinkPropType.isRequired,
     maxDistValueLink: ValueLinkPropType.isRequired,
     urlWhitelistValueLink: ValueLinkPropType.isRequired,
@@ -71,7 +72,8 @@ export default class DashBoard extends React.Component {
 
   static SLIDE_STYLE = {
     overflow: 'none',
-    marginRight: 20,
+    marginLeft: 12,
+    marginRight: 12,
   };
 
   _getContainerStyle() {
@@ -89,7 +91,7 @@ export default class DashBoard extends React.Component {
     const { board, setBoard, save } = this.props
 
     const generalSettingsProps = _.pick(this.props, [
-      'nameValueLink', 'urlValueLink', 'cycleValueLink',
+      'nameValueLink', 'urlValueLink', 'cycleValueLink', 'typeValueLink',
       'nameError', 'urlError', 'cycleError'
     ])
 

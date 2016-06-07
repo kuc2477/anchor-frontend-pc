@@ -10,7 +10,8 @@ import {
   SUCCESS,
   FAILURE,
   REVOKED,
-  RETRY
+  RETRY,
+  URL, ATOM, RSS,
 } from './strings'
 
 
@@ -30,6 +31,9 @@ function _getText(cycle) {
 
 export const CYCLE_OPTIONS = [10, 45, 60, 180, 360]
 export const CYCLE_OPTION_TEXTS = CYCLE_OPTIONS.map(_getText)
+
+export const SCHEDULE_TYPES = [ URL, RSS, ATOM ]
+export const SCHEDULE_TYPE_TEXTS = SCHEDULE_TYPES.map(t => t.toUpperCase())
 
 export const SCHEDULE_DASH_BOARDS = [
   DASH_BOARD_GENERAL_SETTINGS,

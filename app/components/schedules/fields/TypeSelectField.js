@@ -3,14 +3,12 @@ import React, { PropTypes } from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import SelectField from 'material-ui/lib/select-field'
 import MenuItem from 'material-ui/lib/menus/menu-item'
-import {
-  CYCLE_OPTIONS,
-  CYCLE_OPTION_TEXTS
-} from '../../../constants/arrays'
+import { URL } from '../../../constants/strings'
+import { SCHEDULE_TYPES, SCHEDULE_TYPE_TEXTS } from '../../../constants/arrays'
 import { ValueLinkPropType } from '../../../constants/types'
 
 
-export default class CycleSelectField extends React.Component {
+export default class TypeSelectField extends React.Component {
   static propTypes = {
     valueLink: ValueLinkPropType.isRequired,
     style: PropTypes.object,
@@ -28,9 +26,9 @@ export default class CycleSelectField extends React.Component {
   };
 
   _getMenuItemNodes() {
-    return _.zip(CYCLE_OPTIONS, CYCLE_OPTION_TEXTS).map(zipped => {
-      const [cycle, text] = zipped
-      return <MenuItem key={cycle} value={cycle} primaryText={text} />
+    return _.zip(SCHEDULE_TYPES, SCHEDULE_TYPE_TEXTS).map(zipped => {
+      const [ type, text ] = zipped
+      return <MenuItem key={type} value={type} primaryText={text} />
     })
   }
 
@@ -39,26 +37,23 @@ export default class CycleSelectField extends React.Component {
     requestChange(null, value)
   }
 
-
   render() {
     const { STYLE } = this.constructor
     const { style, valueLink, error, ...rest } = this.props
-
     const mergedStyle = Object.assign({}, STYLE, style)
     const { value } = valueLink
-
-    const cycleMenuItemNodes = this._getMenuItemNodes()
+    const typeMenuItemNodes = this._getMenuItemNodes()
 
     return (
         <SelectField
-          floatingLabelText="News arrival cycle"
+          floatingLabelText="News type"
           style={mergedStyle}
-          value={value}
+          value={value || URL}
           errorText={error}
           onChange={::this._handleChange}
           {...rest}
         >
-          {cycleMenuItemNodes}
+          {typeMenuItemNodes}
         </SelectField>
     )
   }

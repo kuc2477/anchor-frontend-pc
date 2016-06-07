@@ -18,11 +18,14 @@ export default class AdvancedSettings extends React.Component {
   }
 
   static STYLE = {
-    marginLeft: -20
+    marginTop: 20,
+    marginLeft: -20,
   };
   static MAX_VISIT_FIELD_STYLE = {
+    marginTop: 10,
   };
   static MAX_DIST_FIELD_STYLE = {
+    marginTop: 10,
   };
 
   render() {

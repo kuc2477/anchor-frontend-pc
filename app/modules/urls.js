@@ -2,9 +2,15 @@
 // Component Bases
 // ===============
 
-export const app = () => process.env.NODE_ENV === 'production' ?
-  `${process.env.PROUDCTION_SERVER}`:
-  `${process.env.DEV_SERVER}`
+export const app = () => {
+  if (process.env.USE_PRODUCTION_SERVER &&
+      process.env.USE_PRODUCTION_SERVER === 'true') {
+    return process.env.PRODUCTION_SERVER
+  }
+  return process.env.NODE_ENV === 'production' ?
+    `${process.env.PROUDCTION_SERVER}`:
+    `${process.env.DEV_SERVER}`
+}
 
 export const router = () => process.env.NODE_ENV === 'production' ?
   `wss://demo.crossbar.io/ws` :

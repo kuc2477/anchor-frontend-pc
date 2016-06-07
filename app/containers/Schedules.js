@@ -316,6 +316,7 @@ export default class Schedules extends React.Component {
       nameValueLink: this._getValueLink('name'),
       urlValueLink: this._getValueLink('url'),
       cycleValueLink: this._getValueLink('cycle'),
+      typeValueLink: this._getValueLink('type'),
       maxVisitValueLink: this._getNestedValueLink('options', 'maxVisit'),
       maxDistValueLink: this._getNestedValueLink('options', 'maxDist'),
       urlWhitelistValueLink: this._getNestedValueLink('options', 'urlWhitelist'),

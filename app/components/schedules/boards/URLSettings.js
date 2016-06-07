@@ -20,7 +20,7 @@ export default class URLSettings extends React.Component {
   }
 
   static STYLE = {
-    marginLeft: -20
+    marginLeft: -50
   };
 
   static OPTION_URL_FIELD_SET_STYLE = {

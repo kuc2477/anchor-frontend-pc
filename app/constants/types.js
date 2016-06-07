@@ -2,6 +2,8 @@ import _ from 'lodash'
 import Immutable from 'immutable'
 import { PropTypes } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import { URL } from './strings'
+import { SCHEDULE_TYPES } from './arrays'
 
 
 // ==================
@@ -59,6 +61,7 @@ export const SchedulePropType = ImmutablePropTypes.contains({
   ]).isRequired,
   name: PropTypes.string.isRequired,
   enabled: PropTypes.bool.isRequired,
+  type: PropTypes.oneOf(SCHEDULE_TYPES).isRequired,
   url: PropTypes.string.isRequired,
   cycle: PropTypes.number.isRequired,
   state: PropTypes.string.isRequired,
@@ -94,6 +97,7 @@ export const createSchedule =
     name: '',
     enabled: false,
     state: 'PENDING',
+    type: URL,
     cycle: null,
     options: {
       urlBlacklist: [],

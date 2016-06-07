@@ -97,8 +97,8 @@ export const saveScheduleSuccess = (previous, saved) => ({
 })
 
 export const SAVE_SCHEDULE_ERROR = 'SAVE_SCHEDULE_ERROR'
-export const saveScheduleError = () => ({
-  type: SAVE_SCHEDULE_ERROR
+export const saveScheduleError = (reason) => ({
+  type: SAVE_SCHEDULE_ERROR, reason
 })
 
 export const saveSchedule = (schedule, callback) => dispatch => {

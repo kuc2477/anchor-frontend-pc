@@ -38,6 +38,15 @@ export const REVOKED = 'REVOKED'
 export const RETRY = 'RETRY'
 
 
+// =====
+// Types
+// =====
+
+export const URL = 'url'
+export const RSS = 'rss'
+export const ATOM = 'atom'
+
+
 // ====
 // Auth
 // ====
@@ -81,6 +90,10 @@ export default {
   FAILURE,
   REVOKED,
   RETRY,
+  // schedule types
+  URL,
+  RSS,
+  ATOM,
   // authentication
   CSRF_TOKEN_HEADER,
   LOCAL_STORAGE_SESSION_KEY,
