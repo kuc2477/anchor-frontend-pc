@@ -45,7 +45,7 @@
         "NODE_ENV": "development",
         "PRODUCTION_SERVER": "http://ec2-54-218-75-14.us-west-2.compute.amazonaws.com",
         "DEV_SERVER": "http://localhost:5000",
-        "USE_PRODUCTION_SERVER": true,
+        "USE_PRODUCTION_SERVER": false,
         "TRACK_AVOIDABLE_RENDERS": false,
         "WINDOW_WIDTH": 1072,
         "WINDOW_HEIGHT": 600

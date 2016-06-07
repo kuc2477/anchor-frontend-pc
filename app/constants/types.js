@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { PropTypes } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { URL } from './strings'
+import { MAX_VISIT_DEFAULT, MAX_DIST_DEFALT } from './numbers'
 import { SCHEDULE_TYPES } from './arrays'
 
 
@@ -102,8 +103,8 @@ export const createSchedule =
     options: {
       urlBlacklist: [],
       urlWhitelist: [],
-      maxDist: null,
-      maxVisit: null,
+      maxDist: MAX_DIST_DEFALT,
+      maxVisit: MAX_VISIT_DEFAULT,
     },
   })
 
