@@ -1,20 +1,26 @@
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import ThumbUp from 'material-ui/lib/svg-icons/action/thumb-up'
 import ThumbDown from 'material-ui/lib/svg-icons/action/thumb-down'
 import OpenInBrowser from 'material-ui/lib/svg-icons/action/open-in-browser'
 import IconButton from 'material-ui/lib/icon-button'
 
+import { NewsPropType } from '../../constants/types'
 import { INACTIVE, PRIMARY, SECONDARY } from '../../constants/colors'
 
 
 export default class NewsItemControl extends React.Component {
   static propTypes = {
-    id: PropTypes.number.isRequired,
-    url: PropTypes.string.isRequired,
+    news: NewsPropType.isRequired,
     rate: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
-    currentUserRating: PropTypes.bool
   };
+
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   static BUTTON_ICON_STYLE = {
     height: 17,
@@ -23,17 +29,18 @@ export default class NewsItemControl extends React.Component {
   };
 
   openInBrowser() {
-    const { url } = this.props
-    window.open(url, url, 'width=1300,height=900,resizeable=true')
+    const { news } = this.props
+    window.open(news.url, news.url, 'width=1300,height=900,resizeable=true')
   }
 
   // handler factory
   createRatingHandler(rating) {
-    const { currentUserRating, cancel, rate, id } = this.props
+    const { news, cancel, rate} = this.props
+    const { id, userRating } = news.toJS()
     return () => {
-      if (typeof currentUserRating !== 'undefined' &&
-          currentUserRating !== null &&
-          currentUserRating === rating) {
+      if (typeof userRating !== 'undefined' &&
+          userRating !== null &&
+          userRating === rating) {
         cancel(id)
         return
       }
@@ -42,7 +49,9 @@ export default class NewsItemControl extends React.Component {
   }
 
   render() {
-    const { currentUserRating } = this.props
+    const { news } = this.props
+    const { userRating } = news.toJS()
+
     const { BUTTON_ICON_STYLE } = this.constructor
     return (
       <div className="row end-md">
@@ -65,7 +74,7 @@ export default class NewsItemControl extends React.Component {
           iconStyle={BUTTON_ICON_STYLE}
         >
           <ThumbUp
-            color={currentUserRating === true ? SECONDARY : INACTIVE}
+            color={userRating === true ? SECONDARY : INACTIVE}
             hoverColor={SECONDARY}
           />
         </IconButton>
@@ -77,7 +86,7 @@ export default class NewsItemControl extends React.Component {
           iconStyle={BUTTON_ICON_STYLE}
         >
           <ThumbDown
-            color={currentUserRating === false ? PRIMARY : INACTIVE}
+            color={userRating === false ? PRIMARY : INACTIVE}
             hoverColor={PRIMARY}
           />
         </IconButton>

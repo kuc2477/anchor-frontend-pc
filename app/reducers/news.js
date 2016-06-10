@@ -162,7 +162,7 @@ function reduceRatingStart(state, action) {
   const index = newsList.findIndex(n => n === newsId)
   const news = newsListById.get(newsId)
 
-  const updated = news.set('currentUserRating', rating)
+  const updated = news.set('userRating', rating)
   const updatedNewsList = rating === false ?
     newsList.delete(index) :
     newsList
@@ -190,7 +190,7 @@ function reduceCancelRatingStart(state, action) {
   const newsListById = state.get('newsListById')
   const news = newsListById.get(newsId)
 
-  const updated = news.set('currentUserRating', null)
+  const updated = news.set('userRating', null)
   const updatedNewsListById = newsListById.set(newsId, updated)
   return state.merge({
     newsListById: updatedNewsListById,

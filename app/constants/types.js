@@ -40,11 +40,11 @@ export const NewsPropType = ImmutablePropTypes.contains({
   parent: PropTypes.number,
   url: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  summary: PropTypes.string.isRequired,
   author: PropTypes.string,
   published: PropTypes.string,
-  summary: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  userRating: PropTypes.bool
+  userRating: PropTypes.bool,
 })
 
 export const ScheduleOptionPropType = ImmutablePropTypes.contains({

@@ -7,6 +7,7 @@ export const app = () => {
       process.env.USE_PRODUCTION_SERVER === 'true') {
     return process.env.PRODUCTION_SERVER
   }
+  debugger
   return process.env.NODE_ENV === 'production' ?
     `${process.env.PROUDCTION_SERVER}`:
     `${process.env.DEV_SERVER}`

@@ -1,7 +1,16 @@
 @import '../modules/mi-shim.scss';
 @import '../modules/clickable.scss';
+@import '../mixins/dragging.scss';
+
 
 // font
 * {
   font-family: 'Roboto', 'Spoqa Han Sans', 'sans-serif';
+}
+
+
+.draggable {
+  @include draggable;
+  button { @include not-draggable; }
+  input { @include not-draggable; }
 }

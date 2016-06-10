@@ -1,6 +1,8 @@
 import moment from 'moment'
 import _ from 'lodash'
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
+import { NewsPropType } from '../../constants/types'
 import {
   CardTitle,
   CardHeader,
@@ -8,28 +10,29 @@ import {
 } from 'material-ui/lib/card'
 
 
+// TODO: NEED TO CLEANUP NESTED MEDIA STYLES
 export default class NewsItemContent extends React.Component {
   static propTypes = {
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    created: PropTypes.string.isRequired,
-    currentUserRating: PropTypes.bool,
+    news: NewsPropType.isRequired
   };
+
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   static TITLE_MAX_LENGTH = 60;
   static URL_MAX_LENGTH = 50;
-  static DESCRIPTION_MIN_LENGTH = 15;
-  static DESCRIPTION_MAX_LENGTH = 50;
+  static SUMAMRY_MIN_LENGTH = 15;
+  static SUMMARY_MAX_LENGTH = 50;
 
   static TITLE_STYLE = {
     fontSize: 18,
     lineHeight: '150%'
   };
 
-  static DESCRIPTION_STYLE = {
+  static SUMMARY_STYLE = {
     padding: 10
   };
 
@@ -42,18 +45,19 @@ export default class NewsItemContent extends React.Component {
     paddingRight: 20
   };
 
-  open() {
-    window.open(this.props.url)
-  }
+  static IMAGE_STYLE = {
+    maxHeight: 300,
+  };
 
-  _getDescription() {
-    const { description } = this.props
-    return description
+  open() {
+    const { news } = this.props
+    window.open(news.get('url'))
   }
 
   _getTitleNode() {
     const { TITLE_STYLE, TITLE_MAX_LENGTH } = this.constructor
-    const { title, created } = this.props
+    const { news } = this.props
+    const { title, created } = news.toJS()
     return (
       <CardTitle
         titleStyle={TITLE_STYLE}
@@ -64,31 +68,38 @@ export default class NewsItemContent extends React.Component {
   }
 
   _getMediaNode() {
-    const { image } = this.props
-    const { MEDIA_CONTAINER_STYLE, MEDIA_STYLE } = this.constructor
+    const { news } = this.props
+    const { image } = news.toJS()
+    const {
+      MEDIA_CONTAINER_STYLE,
+      MEDIA_STYLE,
+      IMAGE_STYLE,
+    } = this.constructor
+
     return (
       <CardMedia
-        className="row center-md middle-md"
+        className="row center-md middle-md clickable"
         style={MEDIA_CONTAINER_STYLE}
         mediaStyle={MEDIA_STYLE}
       >
-        <img src={image} />
+        <img src={image} style={IMAGE_STYLE}/>
       </CardMedia>
     )
   }
 
-  _getDescriptionNode() {
-    const { description, url } = this.props
+  _getSummaryNode() {
+    const { news } = this.props
+    const { summary, url } = news.toJS()
     const {
       URL_MAX_LENGTH,
-      DESCRIPTION_STYLE,
-      DESCRIPTION_MAX_LENGTH
+      SUMMARY_STYLE,
+      SUMMARY_MAX_LENGTH
     } = this.constructor
 
     return (
       <CardHeader
-        style={DESCRIPTION_STYLE}
-        title={_.truncate(description, { length: DESCRIPTION_MAX_LENGTH })}
+        style={SUMMARY_STYLE}
+        title={_.truncate(summary, { length: SUMMARY_MAX_LENGTH })}
         subtitle={_.truncate(url, { length: URL_MAX_LENGTH })}
       />
     )
@@ -97,13 +108,13 @@ export default class NewsItemContent extends React.Component {
   render() {
     const titleNode = this._getTitleNode()
     const mediaNode = this._getMediaNode()
-    const descriptionNode = this._getDescriptionNode()
+    const summaryNode = this._getSummaryNode()
 
     return (
       <div onClick={::this.open}>
         {titleNode}
         {mediaNode}
-        {descriptionNode}
+        {summaryNode}
       </div>
     )
   }

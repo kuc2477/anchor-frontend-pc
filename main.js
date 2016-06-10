@@ -38,7 +38,10 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
   let mainWindow = new BrowserWindow({
-    width: 1072, height: 600, resizable: false
+    width: Number(process.env.WINDOW_WIDTH),
+    height: Number(process.env.WINDWO_HEIGHT),
+    resizable: false,
+    frame: false,
   })
 
   // open browser and load index page
