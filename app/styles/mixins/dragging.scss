@@ -1,0 +1,7 @@
+@mixin draggable {
+  -webkit-app-region: drag;
+}
+
+@mixin not-draggable {
+  -webkit-app-region: no-drag;
+}

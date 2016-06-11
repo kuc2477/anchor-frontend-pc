@@ -109,6 +109,7 @@ export default class Nav extends React.Component {
 
     return (
       <AppBar
+        className="draggable"
         style={this.constructor.APP_BAR_STYLE}
         title={this.props.title}
         iconElementLeft={icon}

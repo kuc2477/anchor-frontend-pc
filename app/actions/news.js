@@ -79,8 +79,8 @@ export const ratingSuccess = (updated) => ({
 })
 
 export const RATING_ERROR = 'RATING_ERROR'
-export const ratingError = () => ({
-  type: RATING_ERROR
+export const ratingError = (reason) => ({
+  type: RATING_ERROR, reason
 })
 
 export const rateNews = (newsId, rating) => dispatch => {
@@ -120,8 +120,8 @@ export const cancelRatingSuccess = (updated) => ({
 })
 
 export const CANCEL_RATING_ERROR = 'CANCEL_RATING_ERROR'
-export const cancelRatingError = () => ({
-  type: CANCEL_RATING_ERROR
+export const cancelRatingError = (reason) => ({
+  type: CANCEL_RATING_ERROR, reason
 })
 
 export const cancelRating = (newsId) => dispatch => {

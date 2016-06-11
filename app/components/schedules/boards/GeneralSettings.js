@@ -82,6 +82,10 @@ export default class GeneralSettings extends React.Component {
 
     return (
       <div>
+        <TypeSelectField
+          style={TYPE_FIELD_STYLE}
+          valueLink={typeValueLink}
+        />
         <ScheduleNameField
           style={NAME_FIELD_STYLE}
           valueLink={nameValueLink}
@@ -96,10 +100,6 @@ export default class GeneralSettings extends React.Component {
           style={urlError ? COMPENSATED_CYCLE_FIELD_STYLE : CYCLE_FIELD_STYLE}
           valueLink={cycleValueLink}
           error={cycleError}
-        />
-        <TypeSelectField
-          style={TYPE_FIELD_STYLE}
-          valueLink={typeValueLink}
         />
       </div>
     )

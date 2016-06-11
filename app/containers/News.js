@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { connect } from 'react-redux'
 
 import { NewsPropType } from '../constants/types'
@@ -33,6 +34,12 @@ class News extends React.Component {
     // dispatch
     dispatch: PropTypes.func,
   };
+
+  constructor(props) {
+    super(props)
+    this.shouldComponentUpdate =
+      PureRenderMixin.shouldComponentUpdate.bind(this)
+  }
 
   componentDidMount() {
     this.loadRecommendations()
@@ -107,10 +114,10 @@ class News extends React.Component {
 export default connect(app => {
   const { present } = app.news
   return {
-    newsList: present.get('newsList').toJS(),
-    newsListById: present.get('newsListById').toJS(),
-    recommendations: present.get('recommendations').toJS(),
-    recommendationsById: present.get('recommendationsById').toJS(),
+    newsList: present.get('newsList'),
+    newsListById: present.get('newsListById'),
+    recommendations: present.get('recommendations'),
+    recommendationsById: present.get('recommendationsById'),
     isRating: present.get('isRating'),
     didRatingFail: present.get('didRatingFail'),
     isFetching: present.get('isFetching'),
