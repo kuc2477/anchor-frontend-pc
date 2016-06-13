@@ -2,7 +2,9 @@ import Immutable from 'immutable'
 
 import urls from '../modules/urls'
 import { unsaved } from '../constants/types'
-import { DASH_BOARD_GENERAL_SETTINGS } from '../constants/strings'
+import {
+  DASH_BOARD_GENERAL_SETTINGS
+} from '../constants/strings'
 import {
   FETCH_SCHEDULES_START,
   FETCH_SCHEDULES_SUCCESS,
@@ -18,9 +20,12 @@ import {
   UPDATE_SCHEDULE,
   SELECT_SCHEDULE,
   SET_BOARD,
-  COVER_STARTED,
-  COVER_FINISHED,
 } from '../actions/schedules'
+import {
+  COVER_START,
+  COVER_SUCCESS,
+  COVER_ERROR,
+} from '../actions/autobahn'
 import { LOGOUT } from '../actions/auth'
 
 
@@ -40,9 +45,11 @@ export const initialState = new Immutable.Map({
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    // notifications
-    case COVER_STARTED: return reduceCoverStarted(state, action)
-    case COVER_FINISHED: return reduceCoverFinished(state, action)
+    // autobahn
+    case COVER_START: return reduceCoverStart(state, action)
+    case COVER_SUCCESS: return reduceCoverSuccess(state, action)
+    case COVER_ERROR: return reduceCoverError(state, action)
+
     // client level schedule manipulation
     case ADD_SCHEDULE: return reduceAddSchedule(state, action)
     case REMOVE_SCHEDULE: return reduceRemoveSchedule(state, action)
@@ -221,32 +228,26 @@ function reduceDeleteError(state) {
 // Notifications
 // =============
 
-function reduceCoverStarted(state, action) {
-  const { scheduleId, status } = action
-
-  const schedulesById = state.get('schedulesById')
+function reduceCoverStart(state, action) {
+  const { scheduleId, state: scheduleState } = action
   const schedule = schedulesById.get(scheduleId)
-
-  if (!schedule) {
-    return state
-  }
-
-  const updated = schedule.set('state', status)
-  const updatedSchedulesById = schedulesById.set(scheduleId, updated)
-  return state.merge({ schedulesById: updatedSchedulesById })
+  return schedule ?
+    state.setIn(['schedulesById', scheduleId, 'state'], scheduleState) :
+    state
 }
 
-function reduceCoverFinished(state, action) {
-  const { scheduleId, status } = action
-
-  const schedulesById = state.get('schedulesById')
+function reduceCoverSuccess(state, action) {
+  const { scheduleId, state: scheduleState } = action
   const schedule = schedulesById.get(scheduleId)
+  return schedule ?
+    state.setIn(['schedulesById', scheduleId, 'state'], scheduleState) :
+    state
+}
 
-  if (!schedule) {
-    return state
-  }
-
-  const updated = schedule.set('state', status)
-  const updatedSchedulesById = schedulesById.set(scheduleId, updated)
-  return state.merge({ schedulesById: updatedSchedulesById })
+function reduceCoverError(state, action) {
+  const { scheduleId, state: scheduleState } = action
+  const schedule = schedulesById.get(scheduleId)
+  return schedule ?
+    state.setIn(['schedulesById', scheduleId, 'state'], scheduleState) :
+    state
 }

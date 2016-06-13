@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { connect } from 'react-redux'
-
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { NewsPropType } from '../constants/types'
 import NewsList from '../components/news/NewsList'
 import DashBoard from '../components/news/DashBoard'
 import {
   fetchNews,
-  fetchNewsRecommendations,
+  fetchNewsRecomms,
   rateNews,
   cancelRating
 } from '../actions/news'
@@ -16,10 +16,10 @@ import {
 class News extends React.Component {
   static propTypes = {
     // news
-    newsList: PropTypes.arrayOf(PropTypes.number),
-    newsListById: PropTypes.objectOf(NewsPropType),
-    recommendations: PropTypes.arrayOf(PropTypes.number),
-    recommendationsById: PropTypes.objectOf(NewsPropType),
+    newsList: ImmutablePropTypes.listOf(PropTypes.number),
+    newsListById: ImmutablePropTypes.contains(NewsPropType),
+    recomms: ImmutablePropTypes.listOf(PropTypes.number),
+    recommsById: ImmutablePropTypes.contains(NewsPropType),
     // rating status
     isRating: PropTypes.bool,
     didRatingFail: PropTypes.bool,
@@ -27,8 +27,8 @@ class News extends React.Component {
     isFetching: PropTypes.bool,
     didFetchFail: PropTypes.bool,
     // fetching recommendation status
-    isFetchingRecommendations: PropTypes.bool,
-    didFetchingRecommendationsFail: PropTypes.bool,
+    isFetchingRecomms: PropTypes.bool,
+    didFetchingRecommsFailed: PropTypes.bool,
     // url
     urlToFetch: PropTypes.string,
     // dispatch
@@ -53,9 +53,9 @@ class News extends React.Component {
   }
 
   loadRecommendations() {
-    const { dispatch, isFetchingRecommendations } = this.props
-    if (!isFetchingRecommendations) {
-      dispatch(fetchNewsRecommendations())
+    const { dispatch, isFetchingRecomms } = this.props
+    if (!isFetchingRecomms) {
+      dispatch(fetchNewsRecomms())
     }
   }
 
@@ -77,12 +77,12 @@ class News extends React.Component {
     const {
       newsList,
       newsListById,
-      recommendations,
-      recommendationsById,
+      recomms,
+      recommsById,
       isFetching,
-      isFetchingRecommendations,
+      isFetchingRecomms,
       didFetchFail,
-      didFetchingRecommendationsFail,
+      didFetchingRecommsFailed,
     } = this.props
     return (
       <div className="row">
@@ -99,10 +99,10 @@ class News extends React.Component {
       </div>
       <div className="col-md-6">
         <DashBoard
-          recommendations={recommendations}
-          recommendationsById={recommendationsById}
-          isFetchingRecommendations={isFetchingRecommendations}
-          didFetchingRecommendationsFail={didFetchingRecommendationsFail}
+          recomms={recomms}
+          recommsById={recommsById}
+          isFetchingRecomms={isFetchingRecomms}
+          didFetchingRecommsFailed={didFetchingRecommsFailed}
         />
       </div>
       </div>
@@ -116,14 +116,14 @@ export default connect(app => {
   return {
     newsList: present.get('newsList'),
     newsListById: present.get('newsListById'),
-    recommendations: present.get('recommendations'),
-    recommendationsById: present.get('recommendationsById'),
+    recomms: present.get('recomms'),
+    recommsById: present.get('recommsById'),
     isRating: present.get('isRating'),
     didRatingFail: present.get('didRatingFail'),
     isFetching: present.get('isFetching'),
     didFetchFail: present.get('didFetchFail'),
-    isFetchingRecommendations: present.get('isFetchingRecommendations'),
-    didFetchingRecommendationsFail: present.get('didFetchingRecommendationsFail'),
+    isFetchingRecomms: present.get('isFetchingRecomms'),
+    didFetchingRecommsFailed: present.get('didFetchingRecommsFailed'),
     urlToFetch: present.get('urlToFetch')
   }
 })(News)

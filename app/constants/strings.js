@@ -21,8 +21,9 @@ export const MENUBAR = 'MENUBAR'
 export const ROUTER_REALM =
   process.env.NODE_ENV === 'production' ? 'anchor' : 'realm1'
 
-export const TOPIC_COVER_STARTED = 'TOPIC_COVER_STARTED'
-export const TOPIC_COVER_FINISHED = 'TOPIC_COVER_FINISHED'
+export const COVER_START = 'COVER_START'
+export const COVER_SUCCESS = 'COVER_SUCCESS'
+export const COVER_ERROR = 'COVER_ERROR'
 
 
 // =============
@@ -80,8 +81,9 @@ export default {
   MENUBAR,
   // crossbar
   ROUTER_REALM,
-  TOPIC_COVER_STARTED,
-  TOPIC_COVER_FINISHED,
+  COVER_START,
+  COVER_SUCCESS,
+  COVER_ERROR,
   // celery states
   PENDING,
   RECEIVED,

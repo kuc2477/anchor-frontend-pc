@@ -32,7 +32,7 @@ export function fetchNews(url) {
 export const FETCH_LATEST_NEWS_START = 'FETCH_LATEST_NEWS_START'
 export const FETCH_LATEST_NEWS_SUCCESS = 'FETCH_LATEST_NEWS_START'
 export const FETCH_LATEST_NEWS_ERROR = 'FETCH_LATEST_NEWS_ERROR'
-export function fetchLatestNews() {
+export function fetchLatestNews(size) {
   return {
     [CALL_API]: {
       types: [
@@ -40,24 +40,24 @@ export function fetchLatestNews() {
         FETCH_LATEST_NEWS_SUCCESS,
         FETCH_LATEST_NEWS_ERROR
       ],
-      endpoint: urls.latestNews(),
+      endpoint: urls.latestNews(size),
       schema: Schemas.NEWS_LIST
     }
   }
 }
 
-export const FETCH_NEWS_RECOMMENDATIONS_START = 'FETCH_NEWS_RECOMMENDATIONS_START'
-export const FETCH_NEWS_RECOMMENDATIONS_SUCCESS = 'FETCH_NEWS_RECOMMENDATIONS_SUCCESS'
-export const FETCH_NEWS_RECOMMENDATIONS_ERROR = 'FETCH_NEWS_RECOMMENDATIONS_ERROR'
-export function fetchNewsRecommendations() {
+export const FETCH_NEWS_RECOMMS_START = 'FETCH_NEWS_RECOMMS_START'
+export const FETCH_NEWS_RECOMMS_SUCCESS = 'FETCH_NEWS_RECOMMS_SUCCESS'
+export const FETCH_NEWS_RECOMMS_ERROR = 'FETCH_NEWS_RECOMMS_ERROR'
+export function fetchNewsRecomms() {
   return {
     [CALL_API]: {
       types: [
-        FETCH_NEWS_RECOMMENDATIONS_START,
-        FETCH_NEWS_RECOMMENDATIONS_SUCCESS,
-        FETCH_NEWS_RECOMMENDATIONS_ERROR
+        FETCH_NEWS_RECOMMS_START,
+        FETCH_NEWS_RECOMMS_SUCCESS,
+        FETCH_NEWS_RECOMMS_ERROR
       ],
-      endpoint: urls.newsRecommendations(),
+      endpoint: urls.newsRecomms(),
       schema: Schemas.NEWS_LIST
     }
   }

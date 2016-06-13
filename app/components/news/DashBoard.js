@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import {
   Card,
   CardTitle,
@@ -9,15 +10,15 @@ import {
 import RefreshIndicator from 'material-ui/lib/refresh-indicator'
 import ChromeReaderMode from 'material-ui/lib/svg-icons/action/chrome-reader-mode'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../constants/numbers'
-import { SchedulePropType } from '../../constants/types.js'
+import { NewsPropType, SchedulePropType } from '../../constants/types.js'
 
 
 export default class DashBoard extends React.Component {
   static propTypes = {
-    recommendations: PropTypes.arrayOf(PropTypes.number),
-    recommendationsById: PropTypes.arrayOf(SchedulePropType),
-    isFetchingRecommendations: PropTypes.bool.isRequired,
-    didFetchingRecommendationsFail: PropTypes.bool.isRequired,
+    recomms: ImmutablePropTypes.listOf(PropTypes.number),
+    recommsById: ImmutablePropTypes.contains(SchedulePropType),
+    isFetchingRecomms: PropTypes.bool.isRequired,
+    didFetchingRecommsFailed: PropTypes.bool.isRequired,
   };
 
   static LOADING_INDICATOR_PROPS = {
@@ -50,8 +51,8 @@ export default class DashBoard extends React.Component {
 
   render() {
     const { STYLE } = this.constructor
-    const { isFetchingRecommendations } = this.props
-    const indicator = isFetchingRecommendations ?
+    const { isFetchingRecomms } = this.props
+    const indicator = isFetchingRecomms ?
       this._getLoadingIndicator() : null
 
     return (

@@ -3,8 +3,9 @@ import urls from './urls'
 import {
   ROUTER_REALM,
   SUCCESS,
-  TOPIC_COVER_STARTED,
-  TOPIC_COVER_FINISHED
+  COVER_START,
+  COVER_SUCCESS,
+  COVER_ERROR,
 } from '../constants/strings'
 import store from '../store'
 
@@ -18,40 +19,49 @@ export const connection = new autobahn.Connection({
 
 // subscribe router events
 connection.onopen = (session) => {
-  // ==============
-  // TOPIC STARTED
-  // ==============
+  const {
+    coverStart,
+    coverSuccess,
+    coverError,
+  } = require('../actions/autobahn')
 
-  session.subscribe(TOPIC_COVER_STARTED, (args) => {
-    const { coverStarted } = require('../actions/schedules')
-    const [scheduleId] = args
+  // cover start
+  session.subscribe(COVER_START, (args) => {
+    const [scheduleId, state] = args
     if (!scheduleId) {
+      console.warn(
+        'Empty schedule id has been received from the router. ' +
+        'You should check your notifier component or celery callbacks.'
+      )
       return
     }
-
-    // dispatch cover started
-    store.dispatch(coverStarted(scheduleId))
+    store.dispatch(coverStart(scheduleId, state))
   })
 
-
-  // ==============
-  // TOPIC FINISHED
-  // ==============
-
-  session.subscribe(TOPIC_COVER_FINISHED, (args) => {
-    const { coverFinished } = require('../actions/schedules')
-    const { fetchLatestNews } = require('../actions/news')
-    const [scheduleId, status] = args
+  // cover success
+  session.subscribe(COVER_SUCCESS, (args) => {
+    const [scheduleId, state, size] = args
     if (!scheduleId) {
+      console.warn(
+        'Empty schedule id has been received from the router. ' +
+        'You should check your notifier component or celery callbacks.'
+      )
       return
     }
+    store.dispatch(coverFinished(scheduleId, state, size))
+  })
 
-    // dispatch cover finished and fetch latest news if cover finished
-    // succcessfully
-    store.dispatch(coverFinished(scheduleId, status))
-    if (status === SUCCESS) {
-      store.dispatch(fetchLatestNews())
+  // cover error
+  session.subscribe(COVER_ERROR, (args) => {
+    const [scheduleId, state] = args
+    if (!scheduleId) {
+      console.warn(
+        'Empty schedule id has been received from the router. ' +
+        'You should check your notifier component or celery callbacks.'
+      )
+      return
     }
+    store.dispatch(coverError(scheduleId, state))
   })
 }
 

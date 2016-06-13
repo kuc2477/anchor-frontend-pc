@@ -8,9 +8,9 @@ import {
   FETCH_LATEST_NEWS_START,
   FETCH_LATEST_NEWS_SUCCESS,
   FETCH_LATEST_NEWS_ERROR,
-  FETCH_NEWS_RECOMMENDATIONS_START,
-  FETCH_NEWS_RECOMMENDATIONS_SUCCESS,
-  FETCH_NEWS_RECOMMENDATIONS_ERROR,
+  FETCH_NEWS_RECOMMS_START,
+  FETCH_NEWS_RECOMMS_SUCCESS,
+  FETCH_NEWS_RECOMMS_ERROR,
   RATING_START,
   RATING_SUCCESS,
   RATING_ERROR,
@@ -18,6 +18,7 @@ import {
   CANCEL_RATING_SUCCESS,
   CANCEL_RATING_ERROR
 } from '../actions/news'
+import { COVER_SUCCESS } from '../actions/autobahn'
 import { LOGOUT } from '../actions/auth'
 
 
@@ -25,43 +26,41 @@ export const initialState = new Immutable.Map({
   // news
   newsList: new Immutable.List(),
   newsListById: new Immutable.Map(),
-  recommendations: new Immutable.List(),
-  recommendationsById: new Immutable.Map(),
+  recomms: new Immutable.List(),
+  recommsById: new Immutable.Map(),
   // rating status
   isRating: false,
   didRatingFail: false,
   // fetching status
   isFetching: false,
   didFetchFail: false,
-  // fetching recommendations status
-  isFetchingRecommendations: false,
-  didFetchingRecommendationsFail: false,
+  // fetching recomms status
+  isFetchingRecomms: false,
+  didFetchingRecommsFailed: false,
+  // latest news existance status
+  latestNewsToFetch: 0,
   // url
   urlToFetch: urls.news(),
 })
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    // autobahn
+    case COVER_SUCCESS: return reduceCoverSuccess(state, action)
+
     // fetch
-    case FETCH_NEWS_START:
-    case FETCH_LATEST_NEWS_START:
-      return reduceFetchStart(state, action)
-
-    case FETCH_NEWS_SUCCESS: return reduceFetchSuccess(state, action, true)
-    case FETCH_LATEST_NEWS_SUCCESS: return reduceFetchSuccess(state, action, false)
-
-    case FETCH_LATEST_NEWS_ERROR:
+    case FETCH_NEWS_START: return reduceFetchStart(state, action)
+    case FETCH_NEWS_SUCCESS: return reduceFetchSuccess(state, action)
     case FETCH_NEWS_ERROR: return reduceFetchError(state, action)
 
-    // fetch recommendations
-    case FETCH_NEWS_RECOMMENDATIONS_START:
-      return reduceFetchRecommendationsStart(state, action)
+    case FETCH_LATEST_NEWS_START: return reduceFetchStart(state, action)
+    case FETCH_LATEST_NEWS_SUCCESS: return reduceFetchLatestSuccess(state, action)
+    case FETCH_LATEST_NEWS_ERROR: return reduceFetchError(state, action)
 
-    case FETCH_NEWS_RECOMMENDATIONS_SUCCESS:
-      return reduceFetchRecommendationsSuccess(state, action)
-
-    case FETCH_NEWS_RECOMMENDATIONS_ERROR:
-      return reduceFetchRecommendationsError(state, action)
+    // fetch (recomms)
+    case FETCH_NEWS_RECOMMS_START: return reduceFetchRecommsStart(state, action)
+    case FETCH_NEWS_RECOMMS_SUCCESS: return reduceFetchRecommsSuccess(state, action)
+    case FETCH_NEWS_RECOMMS_ERROR: return reduceFetchRecommsError(state, action)
 
     // save
     case RATING_START: return reduceRatingStart(state, action)
@@ -112,40 +111,47 @@ function reduceFetchSuccess(state, action, append = true) {
   })
 }
 
+function reduceFetchLatestSuccess(state, action) {
+  const size = action.result.length
+  const previous = state.get('latestNewsToFetch')
+  const reduced = reduceFetchSuccess(state, action, false)
+  return reduced.set('latestNewsToFetch', previous - size)
+}
+
 function reduceFetchError(state) {
   return state.merge({ isFetching: false, didFetchFail: true })
 }
 
-function reduceFetchRecommendationsStart(state) {
-  return state.set('isFetchingRecommendations', true)
+function reduceFetchRecommsStart(state) {
+  return state.set('isFetchingRecomms', true)
 }
 
-function reduceFetchRecommendationsSuccess(state, action) {
+function reduceFetchRecommsSuccess(state, action) {
   const { result, entities } = action
 
-  const previousList = state.get('recommendations')
+  const previousList = state.get('recomms')
   const resultList = new Immutable.List(result)
 
-  const recommendations =
+  const recomms =
     previousList.concat(resultList).toOrderedSet().toList()
 
-  const recommendationsById = state
-    .get('recommendationsById')
+  const recommsById = state
+    .get('recommsById')
     .merge(entities.news)
     .mapKeys(k => Number(k) || k)
 
   return state.merge({
-    recommendations,
-    recommendationsById,
-    isFetchingRecommendations: false,
-    didFetchingRecommendationsFail: false,
+    recomms,
+    recommsById,
+    isFetchingRecomms: false,
+    didFetchingRecommsFailed: false,
   })
 }
 
-function reduceFetchRecommendationsError(state) {
+function reduceFetchRecommsError(state) {
   return state.merge({
-    isFetchingRecommendations: false,
-    didFetchingRecommendationsFail: true
+    isFetchingRecomms: false,
+    didFetchingRecommsFailed: true
   })
 }
 
@@ -204,4 +210,15 @@ function reduceCancelRatingSuccess(state) {
 
 function reduceCancelRatingError(state) {
   return state.merge({ isRating: false, didRatingFail: true })
+}
+
+
+// =============
+// Notifications
+// =============
+
+function reduceCoverSuccess(state, action) {
+  const { size } = action
+  const previous = state.get('latestNewsToFetch')
+  return state.set('latestNewsToFetch', previous + size)
 }

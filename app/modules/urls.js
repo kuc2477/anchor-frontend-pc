@@ -39,8 +39,8 @@ export const news = id => id ?
   `${app()}/${api()}/news/${id}` :
   `${app()}/${api()}/news`
 
-export const latestNews = () => `${news()}/latest`
-export const newsRecommendations = () => `${news()}/recomms`
+export const latestNews = (size) => `${news()}/latest?size=${size}`
+export const newsRecomms = () => `${news()}/recomms`
 export const newsRatings = (id) => `${news(id)}/ratings`
 
 export const schedules = id => id ?
@@ -50,5 +50,5 @@ export const schedules = id => id ?
 
 export default {
   app, router, login, logout, signup, csrf, userinfo, resend,
-  users, schedules, news, newsRecommendations, latestNews, newsRatings,
+  users, schedules, news, newsRecomms, latestNews, newsRatings,
 }
