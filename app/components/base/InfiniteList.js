@@ -7,6 +7,9 @@ import { WINDOW_WIDTH } from '../../constants/numbers'
 
 export default class InfiniteList extends React.Component {
   static propTypes = {
+    onLatestLoad: PropTypes.func,
+    latestContentExists: PropTypes.bool,
+    latestContentIndicatorProps: PropTypes.object,
     isInfiniteLoading: PropTypes.bool,
     loadingIndicatorProps: PropTypes.object,
     children: PropTypes.node,
@@ -21,6 +24,14 @@ export default class InfiniteList extends React.Component {
     },
   };
 
+  // TODO: NOT IMPLEMENTED YET
+  _getLatestContentIndicator() {
+    const { onLatestLoad, latestContentIndicatorProps } = this.props
+    return (
+      <div onclick={onLatestLoad}>LOAD LATEST NEWS</div>
+    )
+  }
+
   _getLoadingIndicator() {
     return (
       <RefreshIndicator
@@ -31,11 +42,23 @@ export default class InfiniteList extends React.Component {
   }
 
   render() {
-    const { isInfiniteLoading, children, ...rest } = this.props
-    const indicator = isInfiniteLoading ? this._getLoadingIndicator() : null
+    const {
+      latestContentExists,
+      isInfiniteLoading,
+      children,
+      ...rest
+    } = this.props
+
+    // indicators
+    const latestContentIndicator = latestContentExists ?
+      this._getLatestContentIndicator() : null
+    const loadingIndicator = isInfiniteLoading ?
+      this._getLoadingIndicator() : null
+
     return (
       <div>
-        {indicator}
+        {latestContentIndicator}
+        {loadingIndicator}
         <Infinite {...rest}>
           {children}
         </Infinite>

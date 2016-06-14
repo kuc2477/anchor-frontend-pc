@@ -34,6 +34,7 @@
       "env": {
         "NODE_ENV": "production",
         "PRODUCTION_SERVER": "http://ec2-54-218-75-14.us-west-2.compute.amazonaws.com",
+        "PRODUCTION_ROUTER": "wss://ec2-54-218-75-14.us-west-2.compute.amazonaws.com:8080/ws",
         "WINDOW_WIDTH": 1072,
         "WINDOW_HEIGHT": 720
       }
@@ -44,8 +45,11 @@
         "HOT": true,
         "NODE_ENV": "development",
         "PRODUCTION_SERVER": "http://ec2-54-218-75-14.us-west-2.compute.amazonaws.com",
+        "PRODUCTION_ROUTER": "wss://ec2-54-218-75-14.us-west-2.compute.amazonaws.com:8080/ws",
         "DEV_SERVER": "http://localhost:5000",
-        "USE_PRODUCTION_SERVER": false,
+        "DEV_ROUTER": "wss://demo.crossbar.io/ws",
+        "USE_PRODUCTION_SERVER": true,
+        "USE_PRODUCTION_ROUTER": true,
         "TRACK_AVOIDABLE_RENDERS": false,
         "WINDOW_WIDTH": 1072,
         "WINDOW_HEIGHT": 720

@@ -7,6 +7,7 @@ import NewsList from '../components/news/NewsList'
 import DashBoard from '../components/news/DashBoard'
 import {
   fetchNews,
+  fetchLatestNews,
   fetchNewsRecomms,
   rateNews,
   cancelRating
@@ -31,6 +32,8 @@ class News extends React.Component {
     didFetchingRecommsFailed: PropTypes.bool,
     // url
     urlToFetch: PropTypes.string,
+    // latest news
+    latestNewsToFetch: PropTypes.number,
     // dispatch
     dispatch: PropTypes.func,
   };
@@ -49,6 +52,13 @@ class News extends React.Component {
     const { dispatch, urlToFetch, isFetching } = this.props
     if (urlToFetch && !isFetching) {
       dispatch(fetchNews(urlToFetch))
+    }
+  }
+
+  loadLatest() {
+    const { dispatch, latestNewsToFetch } = this.props
+    if (latestNewsToFetch) {
+      dispatch(fetchLatestNews(latestNewsToFetch))
     }
   }
 
@@ -93,6 +103,7 @@ class News extends React.Component {
           isFetching={isFetching}
           didFetchFail={didFetchFail}
           load={::this.load}
+          loadLatest={::this.loadLatest}
           rate={::this.rate}
           cancel={::this.cancel}
         />
@@ -124,6 +135,7 @@ export default connect(app => {
     didFetchFail: present.get('didFetchFail'),
     isFetchingRecomms: present.get('isFetchingRecomms'),
     didFetchingRecommsFailed: present.get('didFetchingRecommsFailed'),
-    urlToFetch: present.get('urlToFetch')
+    urlToFetch: present.get('urlToFetch'),
+    latestNewsToFetch = present.get('latestNewsToFetch'),
   }
 })(News)

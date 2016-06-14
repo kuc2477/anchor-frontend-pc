@@ -14,6 +14,7 @@ export default class NewsList extends React.Component {
     newsListById: ImmutablePropTypes.contains(NewsPropType).isRequired,
     isFetching: PropTypes.bool.isRequired,
     load: PropTypes.func.isRequired,
+    loadLatest: PropTypes.func.isRequired,
     rate: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired
   };
@@ -73,7 +74,7 @@ export default class NewsList extends React.Component {
       CONTAINER_HEIGHT,
       LOADING_INDICATOR_PROPS,
     } = this.constructor
-    const { load, isFetching } = this.props
+    const { load, loadLatest, isFetching } = this.props
     const { height: elementHeight } = NEWS_ITEM_STYLE
     const newsNodes = this._getNewsNodes()
 
@@ -84,6 +85,7 @@ export default class NewsList extends React.Component {
           preloadBatchSize={CONTAINER_HEIGHT * 5}
           containerHeight={CONTAINER_HEIGHT}
           elementHeight={elementHeight}
+          onLatestLoad={loadLatest}
           onInfiniteLoad={load}
           isInfiniteLoading={isFetching}
           infiniteLoadBeginEdgeOffset={LOAD_EDGE_OFFSET}

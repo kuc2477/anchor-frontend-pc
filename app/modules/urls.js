@@ -7,15 +7,20 @@ export const app = () => {
       process.env.USE_PRODUCTION_SERVER === 'true') {
     return process.env.PRODUCTION_SERVER
   }
-  debugger
   return process.env.NODE_ENV === 'production' ?
-    `${process.env.PROUDCTION_SERVER}`:
-    `${process.env.DEV_SERVER}`
+    process.env.PROUDCTION_SERVER :
+    process.env.DEV_SERVER
 }
 
-export const router = () => process.env.NODE_ENV === 'production' ?
-  `wss://demo.crossbar.io/ws` :
-  `wss://demo.crossbar.io/ws`
+export const router = () => {
+  if (process.env.USE_PRODUCTION_ROUTER &&
+      process.env.USE_PRODUCTION_ROUTER === 'true') {
+    return process.env.PRODUCTION_ROUTER
+  }
+  return process.env.NODE_ENV === 'production' ?
+    process.env.PRODUCTION_ROUTER :
+    process.env.DEV_ROUTER
+}
 
 export const api = () => 'api'
 
