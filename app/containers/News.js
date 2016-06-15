@@ -136,6 +136,6 @@ export default connect(app => {
     isFetchingRecomms: present.get('isFetchingRecomms'),
     didFetchingRecommsFailed: present.get('didFetchingRecommsFailed'),
     urlToFetch: present.get('urlToFetch'),
-    latestNewsToFetch = present.get('latestNewsToFetch'),
+    latestNewsToFetch: present.get('latestNewsToFetch'),
   }
 })(News)

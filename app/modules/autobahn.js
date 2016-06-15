@@ -25,6 +25,8 @@ connection.onopen = (session) => {
     coverError,
   } = require('../actions/autobahn')
 
+  console.info('connected to the wamp router')
+
   // cover start
   session.subscribe(COVER_START, (args) => {
     const [scheduleId, state] = args
